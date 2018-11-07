@@ -1,0 +1,10 @@
+Temp
+/.vs/uMMORPG/v15/*.suo
+*.csproj
+Library
+obj
+/*.sln
+.vs
+/*.csproj
+Builds
+/Database.sqlite

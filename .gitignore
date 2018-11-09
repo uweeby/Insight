@@ -9,3 +9,6 @@ obj
 Builds
 /Database.sqlite
 /JenkinsBuild.bat
+/UnityPackageManager
+/Packages
+/ProjectSettings

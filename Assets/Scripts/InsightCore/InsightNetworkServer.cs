@@ -7,12 +7,13 @@ using UnityEngine;
 public class InsightNetworkServer
 {
     public int port;
-
+    public int serverHostId = -1;
     public bool logNetworkMessages;
 
     Telepathy.Server server;
 
-    Dictionary<short, NetworkMessageDelegate> m_MessageHandlers;
+    Dictionary<int, InsightNetworkConnection> clientConnections;
+    Dictionary<short, InsightNetworkMessageDelegate> messageHandlers;
 
     public Action<Message> Connected { get; internal set; }
     public Action<Message> Disconnected { get; internal set; }
@@ -21,22 +22,26 @@ public class InsightNetworkServer
     public delegate void OnDisconnect(string msg);
 
     #region Core
-    public void StartServer(int Port)
+    public InsightNetworkServer()
     {
-
-        port = Port;
         Application.runInBackground = true;
 
         // create and start the server
         server = new Telepathy.Server();
+
+        clientConnections = new Dictionary<int, InsightNetworkConnection>();
 
         // use Debug.Log functions for Telepathy so we can see it in the console
         Telepathy.Logger.LogMethod = Debug.Log;
         Telepathy.Logger.LogWarningMethod = Debug.LogWarning;
         Telepathy.Logger.LogErrorMethod = Debug.LogError;
 
-        m_MessageHandlers = new Dictionary<short, NetworkMessageDelegate>();
+        messageHandlers = new Dictionary<short, InsightNetworkMessageDelegate>();
+    }
 
+    public void StartServer(int Port)
+    {
+        port = Port;
         server.Start(Port);
     }
 
@@ -117,14 +122,14 @@ public class InsightNetworkServer
             //if (logNetworkMessages) { Debug.Log("ConnectionRecv con:" + connectionId + " msgType:" + msgType + " content:" + BitConverter.ToString(content)); }
             if (logNetworkMessages) { Debug.Log(" msgType:" + msgType + " content:" + BitConverter.ToString(content)); }
 
-            NetworkMessageDelegate msgDelegate;
-            if (m_MessageHandlers.TryGetValue((short)msgType, out msgDelegate))
+            InsightNetworkMessageDelegate msgDelegate;
+            if (messageHandlers.TryGetValue((short)msgType, out msgDelegate))
             {
                 // create message here instead of caching it. so we can add it to queue more easily.
-                NetworkMessage msg = new NetworkMessage();
+                InsightNetworkMessage msg = new InsightNetworkMessage();
                 msg.msgType = (short)msgType;
                 msg.reader = new NetworkReader(content);
-                //msg.conn = this;
+                msg.conn = this;
 
                 msgDelegate(msg);
                 //lastMessageTime = Time.time;
@@ -141,14 +146,14 @@ public class InsightNetworkServer
         }
     }
 
-    public void RegisterHandler(short msgType, NetworkMessageDelegate handler)
+    public void RegisterHandler(short msgType, InsightNetworkMessageDelegate handler)
     {
-        if (m_MessageHandlers.ContainsKey(msgType))
+        if (messageHandlers.ContainsKey(msgType))
         {
             //if (LogFilter.Debug) { Debug.Log("NetworkConnection.RegisterHandler replacing " + msgType); }
             Debug.Log("NetworkConnection.RegisterHandler replacing " + msgType);
         }
-        m_MessageHandlers[msgType] = handler;
+        messageHandlers[msgType] = handler;
     }
 
     public string GetConnectionInfo(int connectionId)
@@ -156,6 +161,25 @@ public class InsightNetworkServer
         string address;
         server.GetConnectionInfo(connectionId, out address);
         return address;
+    }
+
+    public bool AddConnection(InsightNetworkConnection conn)
+    {
+        if (!clientConnections.ContainsKey(conn.connectionId))
+        {
+            // connection cannot be null here or conn.connectionId
+            // would throw NRE
+            clientConnections[conn.connectionId] = conn;
+            conn.SetHandlers(messageHandlers);
+            return true;
+        }
+        // already a connection with this id
+        return false;
+    }
+
+    public bool RemoveConnection(int connectionId)
+    {
+        return clientConnections.Remove(connectionId);
     }
 
     private void OnApplicationQuit()

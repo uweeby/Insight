@@ -34,21 +34,29 @@ public class InsightMaster : MonoBehaviour
     public virtual void OnZoneConnect(Telepathy.Message msg)
     {
         print("OnZoneConnect");
+        InsightNetworkConnection conn = new InsightNetworkConnection();
+        conn.Initialize(zoneServerConnection, zoneServerConnection.GetConnectionInfo(msg.connectionId), zoneServerConnection.serverHostId, msg.connectionId);
+        zoneServerConnection.AddConnection(conn);
     }
 
     public virtual void OnZoneDisconnect(Telepathy.Message msg)
     {
         print("OnZoneDisconnect");
+        zoneServerConnection.RemoveConnection(msg.connectionId);
     }
 
     public virtual void OnPlayerConnect(Telepathy.Message msg)
     {
         print("OnPlayerConnect");
+        InsightNetworkConnection conn = new InsightNetworkConnection();
+        conn.Initialize(playerServerConnection, playerServerConnection.GetConnectionInfo(msg.connectionId), playerServerConnection.serverHostId, msg.connectionId);
+        playerServerConnection.AddConnection(conn);
     }
 
     public virtual void OnPlayerDisconnect(Telepathy.Message msg)
     {
         print("OnPlayerDisconnect");
+        playerServerConnection.RemoveConnection(msg.connectionId);
     }
 
     private void RegisterInsightZoneHandlers()
@@ -61,7 +69,7 @@ public class InsightMaster : MonoBehaviour
         playerServerConnection.RegisterHandler(ClientToMasterTestMsg.MsgId, HandleClientToMasterTestMsg);
     }
 
-    private void HandleZoneToMasterTestMsg(NetworkMessage netMsg)
+    private void HandleZoneToMasterTestMsg(InsightNetworkMessage netMsg)
     {
         ZoneToMasterTestMsg message = netMsg.ReadMessage<ZoneToMasterTestMsg>();
 
@@ -69,7 +77,7 @@ public class InsightMaster : MonoBehaviour
         netMsg.conn.Send(ZoneToMasterTestMsg.MsgId, new ZoneToMasterTestMsg() { Source = "master:5000", Desintation = "zone:5000", Data = "" });
     }
 
-    private void HandleClientToMasterTestMsg(NetworkMessage netMsg)
+    private void HandleClientToMasterTestMsg(InsightNetworkMessage netMsg)
     {
         ClientToMasterTestMsg message = netMsg.ReadMessage<ClientToMasterTestMsg>();
 

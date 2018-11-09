@@ -32,7 +32,7 @@ public class InsightZone : MonoBehaviour
         insight.RegisterHandler(ZoneToMasterTestMsg.MsgId, HandleZoneToMasterTestMsg);
     }
 
-    private void HandleZoneToMasterTestMsg(NetworkMessage netMsg)
+    private void HandleZoneToMasterTestMsg(InsightNetworkMessage netMsg)
     {
         ZoneToMasterTestMsg message = netMsg.ReadMessage<ZoneToMasterTestMsg>();
 

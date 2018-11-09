@@ -32,7 +32,7 @@ public class InsightClient : MonoBehaviour
         insight.RegisterHandler(ClientToMasterTestMsg.MsgId, HandleClientToMasterTestMsg);
     }
 
-    private void HandleClientToMasterTestMsg(NetworkMessage netMsg)
+    private void HandleClientToMasterTestMsg(InsightNetworkMessage netMsg)
     {
         ClientToMasterTestMsg message = netMsg.ReadMessage<ClientToMasterTestMsg>();
 

@@ -5,15 +5,20 @@ using UnityEngine;
 
 public class InsightNetworkClient
 {
+    public int clientID = -1;
+    public int connectionID = 0;
+
     public string address;
     public int port;
     public string AuthCode;
 
     public bool logNetworkMessages;
 
+    InsightNetworkConnection insightNetworkConnection;
+
     Telepathy.Client client;
 
-    Dictionary<short, NetworkMessageDelegate> m_MessageHandlers;
+    Dictionary<short, InsightNetworkMessageDelegate> m_MessageHandlers;
 
     #region Core
     public InsightNetworkClient()
@@ -28,7 +33,10 @@ public class InsightNetworkClient
         Telepathy.Logger.LogWarningMethod = Debug.LogWarning;
         Telepathy.Logger.LogErrorMethod = Debug.LogError;
 
-        m_MessageHandlers = new Dictionary<short, NetworkMessageDelegate>();
+        m_MessageHandlers = new Dictionary<short, InsightNetworkMessageDelegate>();
+
+        insightNetworkConnection = new InsightNetworkConnection();
+        insightNetworkConnection.Initialize(this, address, clientID, connectionID);
     }
     public void StartClient(string Address, int Port)
     {
@@ -119,11 +127,11 @@ public class InsightNetworkClient
             //if (logNetworkMessages) { Debug.Log("ConnectionRecv con:" + connectionId + " msgType:" + msgType + " content:" + BitConverter.ToString(content)); }
             if (logNetworkMessages) { Debug.Log(" msgType:" + msgType + " content:" + BitConverter.ToString(content)); }
 
-            NetworkMessageDelegate msgDelegate;
+            InsightNetworkMessageDelegate msgDelegate;
             if (m_MessageHandlers.TryGetValue((short)msgType, out msgDelegate))
             {
                 // create message here instead of caching it. so we can add it to queue more easily.
-                NetworkMessage msg = new NetworkMessage();
+                InsightNetworkMessage msg = new InsightNetworkMessage();
                 msg.msgType = (short)msgType;
                 msg.reader = new NetworkReader(content);
                 //msg.conn = this;
@@ -143,7 +151,7 @@ public class InsightNetworkClient
         }
     }
 
-    public void RegisterHandler(short msgType, NetworkMessageDelegate handler)
+    public void RegisterHandler(short msgType, InsightNetworkMessageDelegate handler)
     {
         if (m_MessageHandlers.ContainsKey(msgType))
         {

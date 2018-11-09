@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using Insight;
 using UnityEngine;
 
-public class InsightSpawner : MonoBehaviour
+public class SpawnerModule : InsightModule
 {
+    InsightServer insightServer;
+
     public string ProcessPath;
     public string ProcessName;
     public int MaxProcesses;
@@ -17,6 +20,18 @@ public class InsightSpawner : MonoBehaviour
     [Range(1, 10)] public float writeInterval = 1;
     [Range(2, 10)] public float timeoutMultiplier = 3;
     public float timeoutInterval { get { return writeInterval * timeoutMultiplier; } }
+
+    public override void Initialize(InsightServer server)
+    {
+        base.Initialize(server);
+    }
+
+    public override void RegisterHandlers()
+    {
+        base.RegisterHandlers();
+
+
+    }
 
     public void SpawnStaticZones()
     {

@@ -1,15 +1,16 @@
 ﻿using UnityEngine;
+using Insight;
 
-public class InsightZone : MonoBehaviour
+public class ZoneBehaviour : MonoBehaviour
 {
-    InsightNetworkClient insight;
+    InsightClient insight;
 
 	// Use this for initialization
 	void Start ()
     {
         DontDestroyOnLoad(gameObject);
 
-        insight = new InsightNetworkClient();
+        insight = new InsightClient();
         RegisterHandlers();
         insight.StartClient("localhost", 5000);
     }

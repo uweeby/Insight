@@ -1,4 +1,5 @@
 ﻿using Mirror;
+using Insight;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,10 +20,10 @@ public class InsightNetworkConnection : IDisposable
     public bool logNetworkMessages;
     public bool isConnected { get { return hostId != -1; } }
 
-    InsightNetworkClient client;
-    InsightNetworkServer server;
+    Insight.InsightClient client;
+    InsightServer server;
 
-    public virtual void Initialize(InsightNetworkClient clientTransport, string networkAddress, int networkHostId, int networkConnectionId)
+    public virtual void Initialize(InsightClient clientTransport, string networkAddress, int networkHostId, int networkConnectionId)
     {
         address = networkAddress;
         hostId = networkHostId;
@@ -30,7 +31,7 @@ public class InsightNetworkConnection : IDisposable
         client = clientTransport;
     }
 
-    public virtual void Initialize(InsightNetworkServer serverTransport, string networkAddress, int networkHostId, int networkConnectionId)
+    public virtual void Initialize(InsightServer serverTransport, string networkAddress, int networkHostId, int networkConnectionId)
     {
         address = networkAddress;
         hostId = networkHostId;

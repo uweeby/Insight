@@ -21,7 +21,6 @@ public class InsightNetworkServer
     public delegate void OnConnect(string msg);
     public delegate void OnDisconnect(string msg);
 
-    #region Core
     public InsightNetworkServer()
     {
         Application.runInBackground = true;
@@ -43,17 +42,22 @@ public class InsightNetworkServer
     {
         port = Port;
         server.Start(Port);
+        serverHostId = 0;
     }
 
     public void StopServer()
     {
         // stop the server when you don't need it anymore
         server.Stop();
+        serverHostId = -1;
     }
 
     // grab all new messages. do this in your Update loop.
     public void HandleNewMessages()
     {
+        if (serverHostId == -1)
+            return;
+
         Telepathy.Message msg;
         while (server.GetNextMessage(out msg))
         {
@@ -64,7 +68,7 @@ public class InsightNetworkServer
                     Connected(msg);
                     break;
                 case Telepathy.EventType.Data:
-                    HandleBytes(msg.data);
+                    HandleData(msg.connectionId, msg.data, 0);
                     break;
                 case Telepathy.EventType.Disconnected:
                     Disconnected(msg);
@@ -73,77 +77,27 @@ public class InsightNetworkServer
         }
     }
 
-    public bool SendMsg(int connectionId, short msgType, MessageBase msg)
+    void HandleData(int connectionId, byte[] data, byte error)
     {
-        NetworkWriter writer = new NetworkWriter();
-        msg.Serialize(writer);
-
-        // pack message and send
-        byte[] message = Protocol.PackMessage((ushort)msgType, writer.ToArray());
-        return SendBytes(connectionId, message);
-    }
-
-    // protected because no one except NetworkConnection should ever send bytes directly to the client, as they
-    // would be detected as some kind of message. send messages instead.
-    protected virtual bool SendBytes(int connectionId, byte[] bytes)
-    {
-        if (logNetworkMessages) { Debug.Log("ConnectionSend con:" + connectionId + " bytes:" + BitConverter.ToString(bytes)); }
-
-        if (bytes.Length > Transport.MaxPacketSize)
+        InsightNetworkConnection conn;
+        if (clientConnections.TryGetValue(connectionId, out conn))
         {
-            Debug.LogError("NetworkConnection:SendBytes cannot send packet larger than " + Transport.MaxPacketSize + " bytes");
-            return false;
-        }
-
-        if (bytes.Length == 0)
-        {
-            // zero length packets getting into the packet queues are bad.
-            Debug.LogError("NetworkConnection:SendBytes cannot send zero bytes");
-            return false;
-        }
-
-        return server.Send(connectionId, bytes);
-    }
-
-    // handle this message
-    // note: original HLAPI HandleBytes function handled >1 message in a while loop, but this wasn't necessary
-    //       anymore because NetworkServer/NetworkClient.Update both use while loops to handle >1 data events per
-    //       frame already.
-    //       -> in other words, we always receive 1 message per Receive call, never two.
-    //       -> can be tested easily with a 1000ms send delay and then logging amount received in while loops here
-    //          and in NetworkServer/Client Update. HandleBytes already takes exactly one.
-    protected void HandleBytes(byte[] buffer)
-    {
-        // unpack message
-        ushort msgType;
-        byte[] content;
-        if (Protocol.UnpackMessage(buffer, out msgType, out content))
-        {
-            //if (logNetworkMessages) { Debug.Log("ConnectionRecv con:" + connectionId + " msgType:" + msgType + " content:" + BitConverter.ToString(content)); }
-            if (logNetworkMessages) { Debug.Log(" msgType:" + msgType + " content:" + BitConverter.ToString(content)); }
-
-            InsightNetworkMessageDelegate msgDelegate;
-            if (messageHandlers.TryGetValue((short)msgType, out msgDelegate))
-            {
-                // create message here instead of caching it. so we can add it to queue more easily.
-                InsightNetworkMessage msg = new InsightNetworkMessage();
-                msg.msgType = (short)msgType;
-                msg.reader = new NetworkReader(content);
-                msg.conn = this;
-
-                msgDelegate(msg);
-                //lastMessageTime = Time.time;
-            }
-            else
-            {
-                //NOTE: this throws away the rest of the buffer. Need moar error codes
-                Debug.LogError("Unknown message ID " + msgType);// + " connId:" + connectionId);
-            }
+            OnData(conn, data);
         }
         else
         {
-            Debug.LogError("HandleBytes UnpackMessage failed for: " + BitConverter.ToString(buffer));
+            Debug.LogError("HandleData Unknown connectionId:" + connectionId);
         }
+    }
+
+    void OnData(InsightNetworkConnection conn, byte[] data)
+    {
+        conn.TransportReceive(data);
+    }
+
+    public bool Send(int connectionId, byte[] data)
+    {
+        return server.Send(connectionId, data);
     }
 
     public void RegisterHandler(short msgType, InsightNetworkMessageDelegate handler)
@@ -186,5 +140,4 @@ public class InsightNetworkServer
     {
         server.Stop();
     }
-    #endregion
 }

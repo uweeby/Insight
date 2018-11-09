@@ -82,7 +82,7 @@ public class InsightMaster : MonoBehaviour
         ClientToMasterTestMsg message = netMsg.ReadMessage<ClientToMasterTestMsg>();
 
         print("HandleClientToMasterTestMsg - Source: " + message.Source + " Destination: " + message.Desintation);
-        netMsg.conn.Send(ClientToMasterTestMsg.MsgId, new ClientToMasterTestMsg() { Source = "client:7000", Desintation = "client:7000", Data = "" });
+        netMsg.conn.Send(ClientToMasterTestMsg.MsgId, new ClientToMasterTestMsg() { Source = "master:7000", Desintation = "client:7000", Data = "" });
     }
 
     private void OnApplicationQuit()
@@ -91,23 +91,3 @@ public class InsightMaster : MonoBehaviour
         playerServerConnection.StopServer();
     }
 }
-
-//[Serializable]
-//public struct ZoneContainer
-//{
-//    public string Address;
-//    public int Port;
-//    public string AuthCode;
-//    public string HostedScene;
-//    //public Dictionary<string, string> ZoneProperties;
-//}
-
-//[Serializable]
-//public struct PlayerContainer
-//{
-//    public string Address;
-//    public int Port;
-//    public string AuthCode;
-//    public string HostedScene;
-//    //public Dictionary<string, string> ZoneProperties;
-//}

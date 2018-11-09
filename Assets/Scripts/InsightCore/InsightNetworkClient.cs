@@ -20,7 +20,6 @@ public class InsightNetworkClient
 
     Dictionary<short, InsightNetworkMessageDelegate> m_MessageHandlers;
 
-    #region Core
     public InsightNetworkClient()
     {
         Application.runInBackground = true;
@@ -76,6 +75,16 @@ public class InsightNetworkClient
                     break;
             }
         }
+    }
+
+    public bool Send(byte[] data)
+    {
+        if (client.Connected)
+        {
+            return SendBytes(connectionID, data);
+        }
+        Debug.Log("Client.Send: not connected!");
+        return false;
     }
 
     public bool SendMsg(short msgType, MessageBase msg)
@@ -160,5 +169,4 @@ public class InsightNetworkClient
         }
         m_MessageHandlers[msgType] = handler;
     }
-    #endregion
 }

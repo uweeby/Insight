@@ -1,1 +1,0 @@
-C:\Progra~1\Unity\Hub\Editor\2017.4.13f1\Editor\Unity.exe -quit -batchmode -projectPath "%cd%" -executeMethod "BuildScript.BuildJenkins" -logFile ".\unity3d_editor.log"

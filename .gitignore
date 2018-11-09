@@ -8,3 +8,4 @@ obj
 /*.csproj
 Builds
 /Database.sqlite
+/JenkinsBuild.bat

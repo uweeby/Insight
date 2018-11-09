@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Mirror;
+using UnityEngine;
 
 public class InsightClient : MonoBehaviour
 {
@@ -8,9 +9,10 @@ public class InsightClient : MonoBehaviour
 	void Start ()
     {
         DontDestroyOnLoad(gameObject);
-        insight = new InsightNetworkClient();
-        insight.StartClient("localhost", 7000);
 
+        insight = new InsightNetworkClient();
+        RegisterHandlers();
+        insight.StartClient("localhost", 7000);
     }
 	
 	// Update is called once per frame
@@ -18,6 +20,23 @@ public class InsightClient : MonoBehaviour
     {
         insight.HandleNewMessages();
 
+        //Msg to Master
+        if(Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            insight.SendMsg(ClientToMasterTestMsg.MsgId, new ClientToMasterTestMsg() { Source = "client:7000", Desintation = "master:7000", Data = "sdfwer234" });
+        }
+    }
+
+    void RegisterHandlers()
+    {
+        insight.RegisterHandler(ClientToMasterTestMsg.MsgId, HandleClientToMasterTestMsg);
+    }
+
+    private void HandleClientToMasterTestMsg(NetworkMessage netMsg)
+    {
+        ClientToMasterTestMsg message = netMsg.ReadMessage<ClientToMasterTestMsg>();
+
+        print("HandleClientToMasterTestMsg - Source: " + message.Source + " Destination: " + message.Desintation);
     }
 
     private void OnApplicationQuit()

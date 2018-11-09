@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Mirror;
+using UnityEngine;
 
 public class InsightZone : MonoBehaviour
 {
@@ -8,9 +9,10 @@ public class InsightZone : MonoBehaviour
 	void Start ()
     {
         DontDestroyOnLoad(gameObject);
-        insight = new InsightNetworkClient();
-        insight.StartClient("localhost", 5000);
 
+        insight = new InsightNetworkClient();
+        RegisterHandlers();
+        insight.StartClient("localhost", 5000);
     }
 	
 	// Update is called once per frame
@@ -18,6 +20,23 @@ public class InsightZone : MonoBehaviour
     {
         insight.HandleNewMessages();
 
+        //Msg to Master
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            insight.SendMsg(ZoneToMasterTestMsg.MsgId, new ZoneToMasterTestMsg() { Source = "zone:5000", Desintation = "master:5000", Data = "cvbdfgert" });
+        }
+    }
+
+    private void RegisterHandlers()
+    {
+        insight.RegisterHandler(ZoneToMasterTestMsg.MsgId, HandleZoneToMasterTestMsg);
+    }
+
+    private void HandleZoneToMasterTestMsg(NetworkMessage netMsg)
+    {
+        ZoneToMasterTestMsg message = netMsg.ReadMessage<ZoneToMasterTestMsg>();
+
+        print("HandleZoneToMasterTestMsg - Source: " + message.Source + " Destination: " + message.Desintation);
     }
 
     private void OnApplicationQuit()

@@ -16,11 +16,8 @@ public class InsightNetworkClient
     Dictionary<short, NetworkMessageDelegate> m_MessageHandlers;
 
     #region Core
-    public void StartClient(string Address, int Port)
+    public InsightNetworkClient()
     {
-        address = Address;
-        port = Port;
-
         Application.runInBackground = true;
 
         // create and connect the client
@@ -32,6 +29,11 @@ public class InsightNetworkClient
         Telepathy.Logger.LogErrorMethod = Debug.LogError;
 
         m_MessageHandlers = new Dictionary<short, NetworkMessageDelegate>();
+    }
+    public void StartClient(string Address, int Port)
+    {
+        address = Address;
+        port = Port;
 
         Debug.Log("Connecting to Insight Server: " + Address + ":" + Port);
         client.Connect(Address, Port);

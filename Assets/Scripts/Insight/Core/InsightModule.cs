@@ -8,10 +8,6 @@ public interface IServerModule
     IEnumerable<Type> Dependencies { get; }
     IEnumerable<Type> OptionalDependencies { get; }
 
-    /// <summary>
-    /// Server, which initialized this module.
-    /// Will be null, until the module is initialized
-    /// </summary>
     InsightServer Server { get; set; }
 
     void Initialize(InsightServer server);

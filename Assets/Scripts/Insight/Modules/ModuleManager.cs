@@ -16,6 +16,8 @@ public class ModuleManager : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
+        insightServer = GameObject.Find("MasterServer").GetComponent<MasterBehaviour>().masterServer;
+
         _modules = new Dictionary<Type, InsightModule>();
         _initializedModules = new HashSet<Type>();
 
@@ -27,18 +29,12 @@ public class ModuleManager : MonoBehaviour
             AddModule(module);
 
         // Initialize modules
-        InitializeModules();
+        InitializeModules(insightServer);
 
         //Register Handlers
         foreach (var module in modules)
             module.RegisterHandlers();
     }
-	
-	// Update is called once per frame
-	void Update ()
-    {
-		
-	}
 
     public void AddModule(InsightModule module)
     {
@@ -50,7 +46,7 @@ public class ModuleManager : MonoBehaviour
         _modules[module.GetType()] = module;
     }
 
-    public bool InitializeModules()
+    public bool InitializeModules(InsightServer server)
     {
         var checkOptional = true;
 
@@ -74,7 +70,7 @@ public class ModuleManager : MonoBehaviour
 
                 // If we got here, we can initialize our module
                 //entry.Value.Server = this;
-                entry.Value.Initialize(insightServer);
+                entry.Value.Initialize(server);
                 _initializedModules.Add(entry.Key);
                 Debug.LogWarning("Loaded Module: " + entry.Key.ToString());
 

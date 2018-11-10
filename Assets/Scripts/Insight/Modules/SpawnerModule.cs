@@ -23,14 +23,13 @@ public class SpawnerModule : InsightModule
 
     public override void Initialize(InsightServer server)
     {
-        base.Initialize(server);
+        insightServer = server;
+        SpawnStaticZones();
     }
 
     public override void RegisterHandlers()
     {
-        base.RegisterHandlers();
-
-
+        
     }
 
     public void SpawnStaticZones()
@@ -38,11 +37,11 @@ public class SpawnerModule : InsightModule
         print("[Zones]: Spawn Static Zones...");
         foreach (string scenePath in scenePathsToSpawn)
         {
-            SpawnZone();
+            SpawnZone(scenePath);
         }
     }
 
-    private void SpawnZone()
+    private void SpawnZone(string SceneName)
     {
         if (processCount >= MaxProcesses)
         {
@@ -54,7 +53,7 @@ public class SpawnerModule : InsightModule
         Process p = new Process();
         p.StartInfo.FileName = ProcessPath + ProcessName;
         //Args to pass: port, scene, AuthCode, UniqueID...
-        //p.StartInfo.Arguments = ArgsString() + " -scenePath " + SceneName;
+        p.StartInfo.Arguments = ArgsString() + " -ScenePath " + SceneName;
         print("[Zones]: spawning: " + p.StartInfo.FileName + "; args=" + p.StartInfo.Arguments);
         p.Start();
 

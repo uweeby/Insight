@@ -5,6 +5,8 @@ public class ClientBehaviour : MonoBehaviour
 {
     InsightClient insight;
 
+    public int Port;
+
 	// Use this for initialization
 	void Start ()
     {
@@ -12,7 +14,7 @@ public class ClientBehaviour : MonoBehaviour
 
         insight = new InsightClient();
         RegisterHandlers();
-        insight.StartClient("localhost", 7000);
+        insight.StartClient("localhost", Port);
     }
 	
 	// Update is called once per frame
@@ -25,6 +27,17 @@ public class ClientBehaviour : MonoBehaviour
         {
             insight.SendMsg(ClientToMasterTestMsg.MsgId, new ClientToMasterTestMsg() { Source = "client:7000", Desintation = "master:7000", Data = "sdfwer234" });
         }
+
+        //Msg to Master
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            insight.SendMsg(ChatMessage.MsgId, new ChatMessage() { Message = "/t player testing" });
+            insight.SendMsg(ChatMessage.MsgId, new ChatMessage() { Message = "/s local chat here" });
+            insight.SendMsg(ChatMessage.MsgId, new ChatMessage() { Message = "/y global chat here" });
+            insight.SendMsg(ChatMessage.MsgId, new ChatMessage() { Message = "/g guild chat here" });
+            insight.SendMsg(ChatMessage.MsgId, new ChatMessage() { Message = "/p party chat here" });
+        }
+
     }
 
     void RegisterHandlers()

@@ -124,7 +124,6 @@ GameObject:
   - component: {fileID: 626635190}
   - component: {fileID: 626635189}
   - component: {fileID: 626635188}
-  - component: {fileID: 626635192}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -195,28 +194,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &626635192
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 626635187}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3e190785e1ded444a02253c8edac2b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Title: Console
-  Show: 1
-  ShowDateTime: 1
-  ShowLatest: 1
-  CollapseDuplicates: 0
-  toggleKey: 27
-  MaxLogEntries: 1000
-  LeftMargin: 20
-  TopMargin: 20
-  RightMargin: 20
-  BottomMargin: 20
 --- !u!1 &1374688560
 GameObject:
   m_ObjectHideFlags: 0
@@ -257,6 +234,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81b6cc53b65579b4baedcfadbea5c5f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Port: 5000
 --- !u!1 &1553523709
 GameObject:
   m_ObjectHideFlags: 0
@@ -266,6 +244,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1553523711}
   - component: {fileID: 1553523710}
+  - component: {fileID: 1553523712}
   m_Layer: 0
   m_Name: ClientNetworkManager
   m_TagString: Untagged
@@ -313,3 +292,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1553523712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1553523709}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3e190785e1ded444a02253c8edac2b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Title: Console
+  Show: 1
+  ShowDateTime: 1
+  ShowLatest: 1
+  CollapseDuplicates: 0
+  toggleKey: 27
+  MaxLogEntries: 1000
+  LeftMargin: 20
+  TopMargin: 20
+  RightMargin: 20
+  BottomMargin: 20

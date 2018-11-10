@@ -1,4 +1,8 @@
 ﻿using Mirror;
+using System;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ZoneNetworkManager : NetworkManager
 {
@@ -9,6 +13,8 @@ public class ZoneNetworkManager : NetworkManager
         networkPort = 7777;
         StartServer();
         RegisterHandlers();
+
+        ParseArgs();
     }
 	
 	// Update is called once per frame
@@ -28,5 +34,15 @@ public class ZoneNetworkManager : NetworkManager
 
         print("HandleClientToZoneTestMsg - Source: " + message.Source + " Destination: " + message.Desintation);
         netMsg.conn.Send(ClientToZoneTestMsg.MsgId, new ClientToZoneTestMsg() { Source = "zone:7777", Desintation = "client:7777", Data = "" });
+    }
+
+    public void ParseArgs()
+    {
+        InsightArgs args = new InsightArgs();
+        if(args.IsProvided("-ScenePath"))
+        {
+            Debug.Log("ScenePath: " + args.ExtractValue("-ScenePath"));
+            SceneManager.LoadScene(args.ExtractValue("-ScenePath"));
+        }
     }
 }

@@ -153,6 +153,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1a58a575e3908d4aabc31c174a11f8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NetworkPort: 5000
 --- !u!1 &626635187
 GameObject:
   m_ObjectHideFlags: 0

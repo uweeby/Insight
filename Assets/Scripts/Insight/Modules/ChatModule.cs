@@ -13,12 +13,12 @@ public class ChatModule : InsightModule
 
     public override void RegisterHandlers()
     {
-        insightServer.RegisterHandler(ChatMessage.MsgId, HandleChatMessage);
+        insightServer.RegisterHandler(InsightChatMessage.MsgId, HandleChatMessage);
     }
 
     private void HandleChatMessage(InsightNetworkMessage netMsg)
     {
-        ChatMessage message = netMsg.ReadMessage<ChatMessage>();
+        InsightChatMessage message = netMsg.ReadMessage<InsightChatMessage>();
 
         //Find the Chat Code
         if(message.Message.Substring(0, 2).Equals("/t"))
@@ -49,7 +49,7 @@ public class ChatModule : InsightModule
     }
 }
 
-public class ChatMessage : MessageBase
+public class InsightChatMessage : MessageBase
 {
     public static short MsgId = 9999;
     public string Message;

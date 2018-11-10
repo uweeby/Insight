@@ -4,36 +4,47 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+[RequireComponent(typeof(MasterBehaviour))]
 public class ModuleManager : MonoBehaviour
 {
-    public InsightServer insightServer;
+    InsightServer insightServer;
 
     public bool SearchChildrenForModule;
 
     private Dictionary<Type, InsightModule> _modules;
     private HashSet<Type> _initializedModules;
 
+    private bool _initializeComplete;
     // Use this for initialization
     void Start ()
     {
-        insightServer = GameObject.Find("MasterServer").GetComponent<MasterBehaviour>().masterServer;
+        insightServer = GetComponent<MasterBehaviour>();
 
         _modules = new Dictionary<Type, InsightModule>();
         _initializedModules = new HashSet<Type>();
+    }
 
-        var modules = SearchChildrenForModule ? GetComponentsInChildren<InsightModule>() :
-                    FindObjectsOfType<InsightModule>();
+    void Update()
+    {
+        if(!_initializeComplete)
+        {
+            _initializeComplete = true;
 
-        // Add modules
-        foreach (var module in modules)
-            AddModule(module);
+            var modules = SearchChildrenForModule ? GetComponentsInChildren<InsightModule>() :
+            FindObjectsOfType<InsightModule>();
 
-        // Initialize modules
-        InitializeModules(insightServer);
+            // Add modules
+            foreach (var module in modules)
+                AddModule(module);
 
-        //Register Handlers
-        foreach (var module in modules)
-            module.RegisterHandlers();
+            // Initialize modules
+            InitializeModules(insightServer);
+
+            //Register Handlers
+            foreach (var module in modules)
+                module.RegisterHandlers();
+
+        }
     }
 
     public void AddModule(InsightModule module)

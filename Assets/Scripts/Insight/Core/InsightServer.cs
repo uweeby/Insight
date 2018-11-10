@@ -1,31 +1,31 @@
-﻿using System;
+﻿using Mirror;
 using System.Collections.Generic;
 using Telepathy;
 using UnityEngine;
 
 namespace Insight
 {
-    public class InsightServer
+    [SerializeField]
+    public class InsightServer : MonoBehaviour
     {
-        public int port;
-        public int serverHostId = -1;
-        public bool logNetworkMessages;
+        [SerializeField]
+        public LogFilter.FilterLevel logLevel = LogFilter.FilterLevel.Developer;
+
+        public int networkPort;
+        protected int serverHostId = -1;
 
         Telepathy.Server server;
 
         Dictionary<int, InsightNetworkConnection> clientConnections;
         Dictionary<short, InsightNetworkMessageDelegate> messageHandlers;
 
-        public Action<Message> Connected { get; internal set; }
-        public Action<Message> Disconnected { get; internal set; }
-
-        public delegate void OnConnect(string msg);
-        public delegate void OnDisconnect(string msg);
+        private void Awake()
+        {
+            Application.runInBackground = true;
+        }
 
         public InsightServer()
         {
-            Application.runInBackground = true;
-
             // create and start the server
             server = new Telepathy.Server();
 
@@ -41,9 +41,11 @@ namespace Insight
 
         public void StartServer(int Port)
         {
-            port = Port;
+            networkPort = Port;
             server.Start(Port);
             serverHostId = 0;
+
+            OnServerStart();
         }
 
         public void StopServer()
@@ -51,6 +53,8 @@ namespace Insight
             // stop the server when you don't need it anymore
             server.Stop();
             serverHostId = -1;
+
+            OnServerStop();
         }
 
         // grab all new messages. do this in your Update loop.
@@ -65,14 +69,13 @@ namespace Insight
                 switch (msg.eventType)
                 {
                     case Telepathy.EventType.Connected:
-                        //OnClientConnect(msg);
-                        Connected(msg);
+                        OnConnect(msg);
                         break;
                     case Telepathy.EventType.Data:
                         HandleData(msg.connectionId, msg.data, 0);
                         break;
                     case Telepathy.EventType.Disconnected:
-                        Disconnected(msg);
+                        OnDisconnect(msg);
                         break;
                 }
             }
@@ -140,6 +143,28 @@ namespace Insight
         private void OnApplicationQuit()
         {
             server.Stop();
+        }
+
+        //----------virtual handlers--------------//
+
+        public virtual void OnConnect(Message msg)
+        {
+
+        }
+
+        public virtual void OnDisconnect(Message msg)
+        {
+
+        }
+
+        public virtual void OnServerStart()
+        {
+
+        }
+
+        public virtual void OnServerStop()
+        {
+
         }
     }
 }

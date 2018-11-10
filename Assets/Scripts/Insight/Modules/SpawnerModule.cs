@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using Insight;
+using Mirror;
 using UnityEngine;
 
 public class SpawnerModule : InsightModule
@@ -29,7 +30,12 @@ public class SpawnerModule : InsightModule
 
     public override void RegisterHandlers()
     {
-        
+        insightServer.RegisterHandler(ZoneServerSpawnRequest.MsgId, HandleZoneServerSpawnRequest);
+    }
+
+    private void HandleZoneServerSpawnRequest(InsightNetworkMessage netMsg)
+    {
+
     }
 
     public void SpawnStaticZones()
@@ -89,4 +95,13 @@ public class SpawnerModule : InsightModule
             return args != null ? args[0] : "";
         }
     }
+}
+
+public class ZoneServerSpawnRequest : MessageBase
+{
+    public static short MsgId = 10001;
+    public string SceneName;
+    public bool IsStatic;
+    public bool IsPublic;
+    public string Password;
 }

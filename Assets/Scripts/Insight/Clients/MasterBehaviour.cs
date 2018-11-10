@@ -1,49 +1,48 @@
 ﻿using Insight;
-using Mirror;
-using UnityEngine;
 
-public class MasterBehaviour : MonoBehaviour
+public class MasterBehaviour : InsightServer
 {
-    public LogFilter.FilterLevel logLevel { get; set; }
-
-    public int Port;
-
-    public InsightServer masterServer;
-
     // Use this for initialization
     void Start ()
     {        
-        masterServer = new InsightServer();
-        masterServer.StartServer(Port);
+        StartServer(networkPort);
         RegisterHandlers();
-        masterServer.Connected += OnConnect;
-        masterServer.Disconnected += OnDisconnect;
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
-        masterServer.HandleNewMessages();
+        HandleNewMessages();
     }
 
-    public virtual void OnConnect(Telepathy.Message msg)
+    public override void OnConnect(Telepathy.Message msg)
     {
         print("OnConnect");
         InsightNetworkConnection conn = new InsightNetworkConnection();
-        conn.Initialize(masterServer, masterServer.GetConnectionInfo(msg.connectionId), masterServer.serverHostId, msg.connectionId);
-        masterServer.AddConnection(conn);
+        conn.Initialize(this, GetConnectionInfo(msg.connectionId), serverHostId, msg.connectionId);
+        AddConnection(conn);
     }
 
-    public virtual void OnDisconnect(Telepathy.Message msg)
+    public override void OnDisconnect(Telepathy.Message msg)
     {
         print("OnDisconnect");
-        masterServer.RemoveConnection(msg.connectionId);
+        RemoveConnection(msg.connectionId);
+    }
+
+    public override void OnServerStart()
+    {
+
+    }
+
+    public override void OnServerStop()
+    {
+
     }
 
     private void RegisterHandlers()
     {
-        masterServer.RegisterHandler(ClientToMasterTestMsg.MsgId, HandleClientToMasterTestMsg);
-        masterServer.RegisterHandler(ZoneToMasterTestMsg.MsgId, HandleZoneToMasterTestMsg);
+        RegisterHandler(ClientToMasterTestMsg.MsgId, HandleClientToMasterTestMsg);
+        RegisterHandler(ZoneToMasterTestMsg.MsgId, HandleZoneToMasterTestMsg);
     }
 
     private void HandleClientToMasterTestMsg(InsightNetworkMessage netMsg)
@@ -64,6 +63,6 @@ public class MasterBehaviour : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        masterServer.StopServer();
+        StopServer();
     }
 }

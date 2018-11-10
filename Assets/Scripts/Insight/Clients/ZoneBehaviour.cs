@@ -3,6 +3,8 @@ using Insight;
 
 public class ZoneBehaviour : MonoBehaviour
 {
+    public int NetworkPort;
+
     InsightClient insight;
 
 	// Use this for initialization
@@ -12,7 +14,7 @@ public class ZoneBehaviour : MonoBehaviour
 
         insight = new InsightClient();
         RegisterHandlers();
-        insight.StartClient("localhost", 5000);
+        insight.StartClient("localhost", NetworkPort);
     }
 	
 	// Update is called once per frame

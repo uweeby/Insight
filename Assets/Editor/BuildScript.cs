@@ -33,7 +33,7 @@ public class BuildScript
             // Add all the game scenes
             ScenesRoot+"Game01.unity",
         };
-        PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.HiddenByDefault;
+        //PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.HiddenByDefault;
         BuildPipeline.BuildPlayer(clientScenes, path + "/Client.exe", TargetPlatform, BuildOptions);
     }
 
@@ -45,7 +45,7 @@ public class BuildScript
         {
             ScenesRoot+ "MasterServer.unity"
         };
-        PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.HiddenByDefault;
+        //PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.HiddenByDefault;
         BuildPipeline.BuildPlayer(masterScenes, path + "/MasterServer.exe", TargetPlatform, BuildOptions);
     }
 
@@ -59,7 +59,7 @@ public class BuildScript
             // Add all the game scenes
             ScenesRoot+"Game01.unity",
         };
-        PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.HiddenByDefault;
+        //PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.HiddenByDefault;
         BuildPipeline.BuildPlayer(gameServerScenes, path + "/ZoneServer.exe", TargetPlatform, BuildOptions);
     }
 

@@ -20,31 +20,38 @@ public class ChatModule : InsightModule
     {
         InsightChatMessage message = netMsg.ReadMessage<InsightChatMessage>();
 
-        //Find the Chat Code
-        if(message.Message.Substring(0, 2).Equals("/t"))
+        switch(message.ChannelType)
         {
-            string player = message.Message.Substring(3, message.Message.IndexOf(" ", 4));
-            Debug.Log("Received Tell: " + player);
-        }
-        if (message.Message.Substring(0, 2).Equals("/s"))
-        {
-            string data = message.Message.Substring(3, message.Message.Length - 3);
-            Debug.Log("Received Local: " + data);
-        }
-        if (message.Message.Substring(0, 2).Equals("/y"))
-        {
-            string data = message.Message.Substring(3, message.Message.Length - 3);
-            Debug.Log("Received Global: " + data);
-        }
-        if (message.Message.Substring(0, 2).Equals("/g"))
-        {
-            string data = message.Message.Substring(3, message.Message.Length - 3);
-            Debug.Log("Received Guild: " + data);
-        }
-        if (message.Message.Substring(0, 2).Equals("/p"))
-        {
-            string data = message.Message.Substring(3, message.Message.Length - 3);
-            Debug.Log("Received party: " + data);
+            //Send message from Origin to Target
+            case (short)ChatChannelType.Private:
+                Debug.Log("Type: " + message.ChannelType + " Origin: " + message.Origin + " Target: " + message.Target + " Message: " + message.Message);
+                //NetworkConnection conn = insightServer.FindConnectionByPlayer(message.Target);
+                //conn.Send(InsightChatMessage.MsgId, message);
+                break;
+
+            //Send message to all players on same Zone
+            case (short)ChatChannelType.Public:
+                Debug.Log("Type: " + message.ChannelType + " Origin: " + message.Origin + " Message: " + message.Message);
+                //How to find what zone an player is in?
+                break;
+
+            //Send to all players on all zones (admin only later)
+            case (short)ChatChannelType.Global:
+                Debug.Log("Type: " + message.ChannelType + " Origin: " + message.Origin + " Message: " + message.Message);
+                //How to find all players logged into all zones.
+                break;
+
+            case (short)ChatChannelType.Party:
+                Debug.Log("Type: " + message.ChannelType + " Origin: " + message.Origin + " Message: " + message.Message);
+                break;
+
+            case (short)ChatChannelType.Guild:
+                Debug.Log("Type: " + message.ChannelType + " Origin: " + message.Origin + " Message: " + message.Message);
+                break;
+
+            default:
+                Debug.LogError("Received unexpected ChatChannelType");
+                break;
         }
     }
 }
@@ -52,5 +59,17 @@ public class ChatModule : InsightModule
 public class InsightChatMessage : MessageBase
 {
     public static short MsgId = 9999;
+    public short ChannelType;
     public string Message;
+    public string Origin; 
+    public string Target; //Used for private messages
 }
+
+public enum ChatChannelType : short
+{
+    Private,
+    Public,
+    Global,
+    Party,
+    Guild
+};

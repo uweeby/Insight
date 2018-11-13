@@ -31,13 +31,12 @@ public class ClientBehaviour : MonoBehaviour
         //Msg to Master
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            insight.SendMsg(InsightChatMessage.MsgId, new InsightChatMessage() { Message = "/t player testing" });
-            insight.SendMsg(InsightChatMessage.MsgId, new InsightChatMessage() { Message = "/s local chat here" });
-            insight.SendMsg(InsightChatMessage.MsgId, new InsightChatMessage() { Message = "/y global chat here" });
-            insight.SendMsg(InsightChatMessage.MsgId, new InsightChatMessage() { Message = "/g guild chat here" });
-            insight.SendMsg(InsightChatMessage.MsgId, new InsightChatMessage() { Message = "/p party chat here" });
+            insight.SendMsg(InsightChatMessage.MsgId, new InsightChatMessage() { ChannelType = (short)ChatChannelType.Private, Origin = "", Target = "", Message = "private chat test msg" });
+            insight.SendMsg(InsightChatMessage.MsgId, new InsightChatMessage() { ChannelType = (short)ChatChannelType.Public, Origin = "", Message = "public chat test msg" });
+            insight.SendMsg(InsightChatMessage.MsgId, new InsightChatMessage() { ChannelType = (short)ChatChannelType.Global, Origin = "", Message = "global chat test msg" });
+            insight.SendMsg(InsightChatMessage.MsgId, new InsightChatMessage() { ChannelType = (short)ChatChannelType.Party, Origin = "", Message = "party chat test msg" });
+            insight.SendMsg(InsightChatMessage.MsgId, new InsightChatMessage() { ChannelType = (short)ChatChannelType.Guild, Origin = "", Message = "guild chat test msg" });
         }
-
     }
 
     void RegisterHandlers()

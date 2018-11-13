@@ -20,21 +20,21 @@ namespace Insight
 
         Telepathy.Client client;
 
-        Dictionary<short, InsightNetworkMessageDelegate> m_MessageHandlers;
+        Dictionary<short, InsightNetworkMessageDelegate> messageHandlers;
 
         public InsightClient()
         {
             Application.runInBackground = true;
-
-            // create and connect the client
-            client = new Telepathy.Client();
 
             // use Debug.Log functions for Telepathy so we can see it in the console
             Telepathy.Logger.LogMethod = Debug.Log;
             Telepathy.Logger.LogWarningMethod = Debug.LogWarning;
             Telepathy.Logger.LogErrorMethod = Debug.LogError;
 
-            m_MessageHandlers = new Dictionary<short, InsightNetworkMessageDelegate>();
+            // create and connect the client
+            client = new Telepathy.Client();
+            
+            messageHandlers = new Dictionary<short, InsightNetworkMessageDelegate>();
 
             insightNetworkConnection = new InsightNetworkConnection();
             insightNetworkConnection.Initialize(this, address, clientID, connectionID);
@@ -139,7 +139,7 @@ namespace Insight
                 if (logNetworkMessages) { Debug.Log(" msgType:" + msgType + " content:" + BitConverter.ToString(content)); }
 
                 InsightNetworkMessageDelegate msgDelegate;
-                if (m_MessageHandlers.TryGetValue((short)msgType, out msgDelegate))
+                if (messageHandlers.TryGetValue((short)msgType, out msgDelegate))
                 {
                     // create message here instead of caching it. so we can add it to queue more easily.
                     InsightNetworkMessage msg = new InsightNetworkMessage();
@@ -164,12 +164,12 @@ namespace Insight
 
         public void RegisterHandler(short msgType, InsightNetworkMessageDelegate handler)
         {
-            if (m_MessageHandlers.ContainsKey(msgType))
+            if (messageHandlers.ContainsKey(msgType))
             {
                 //if (LogFilter.Debug) { Debug.Log("NetworkConnection.RegisterHandler replacing " + msgType); }
                 Debug.Log("NetworkConnection.RegisterHandler replacing " + msgType);
             }
-            m_MessageHandlers[msgType] = handler;
+            messageHandlers[msgType] = handler;
         }
     }
 }

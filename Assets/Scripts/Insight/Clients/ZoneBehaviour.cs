@@ -1,48 +1,96 @@
 ﻿using UnityEngine;
 using Insight;
+using Telepathy;
 
-public class ZoneBehaviour : MonoBehaviour
+[RequireComponent(typeof(ZoneNetworkManager))]
+public class ZoneBehaviour : InsightClient
 {
-    public int NetworkPort;
+    public ZoneNetworkManager networkManager;
 
-    InsightClient insight;
+    public ZoneContainer container;
 
-	// Use this for initialization
-	void Start ()
+    private InsightArgs insightArguments = new InsightArgs();
+    
+
+    // Use this for initialization
+    public override void Start ()
     {
-        DontDestroyOnLoad(gameObject);
+        base.Start();
 
-        insight = new InsightClient();
+        networkManager = GetComponent<ZoneNetworkManager>();
+
         RegisterHandlers();
-        insight.StartClient("localhost", NetworkPort);
-    }
-	
-	// Update is called once per frame
-	void Update ()
-    {
-        insight.HandleNewMessages();
 
-        //Msg to Master
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        CacheArgs();
+
+        if (insightArguments.IsProvided("-MasterIp") && insightArguments.IsProvided("-MasterPort"))
         {
-            insight.SendMsg(ZoneToMasterTestMsg.MsgId, new ZoneToMasterTestMsg() { Source = "zone:5000", Desintation = "master:5000", Data = "cvbdfgert" });
+            Debug.Log("Master Server Args: " + insightArguments.ExtractValue("-MasterIp") + ":" + insightArguments.ExtractValueInt("-MasterPort"));
+            StartClient(insightArguments.ExtractValue("-MasterIp"), insightArguments.ExtractValueInt("-MasterPort"));
+        }
+        else
+        {
+            Debug.Log("Master Server Args Not Provided. Assuming Defaults: localhost:5000");
+            StartClient("localhost", 5000);
         }
     }
-
+	
     private void RegisterHandlers()
     {
-        insight.RegisterHandler(ZoneToMasterTestMsg.MsgId, HandleZoneToMasterTestMsg);
+        RegisterHandler(RegisterServerConnectionMsg.MsgId, HandleRegisterServerConnectionMsgReply);
     }
 
-    private void HandleZoneToMasterTestMsg(InsightNetworkMessage netMsg)
+    public override void OnClientStart()
     {
-        ZoneToMasterTestMsg message = netMsg.ReadMessage<ZoneToMasterTestMsg>();
+        print("OnClientStart");
 
-        print("HandleZoneToMasterTestMsg - Source: " + message.Source + " Destination: " + message.Desintation);
+        base.OnClientStart();
     }
 
-    private void OnApplicationQuit()
+    public override void OnClientStop()
     {
-        insight.StopClient();
+        print("OnClientStop");
+
+        base.OnClientStop();
+    }
+
+    public override void OnConnected(Message msg)
+    {
+        print("OnConnected");
+
+        base.OnConnected(msg);
+
+        if (!insightArguments.IsProvided("-UniqueID"))
+        {
+            Debug.LogError("Not a spawned Instanced.");
+            return;
+        }
+
+        //SendMsg(RegisterServerConnectionMsg.MsgId, new RegisterServerConnectionMsg() { UniqueID = container.UniqueID });
+    }
+
+    private void CacheArgs()
+    {
+        container = new ZoneContainer();
+        container.UniqueID = insightArguments.ExtractValue("-UniqueID");
+        container.ScenePath = insightArguments.ExtractValue("-ScenePath");
+        container.NetworkAddress = networkManager.networkAddress;
+        container.NetworkPort = networkManager.networkPort;
+        container.MaxPlayers = networkManager.maxPlayers;
+        container.CurentPlayers = networkManager.currentPlayers;
+    }
+
+    private void HandleRegisterServerConnectionMsgReply(InsightNetworkMessage netMsg)
+    {
+        print("HandleRegisterServerConnectionMsgReply");
+
+        SendMsg(RegisterZoneMsg.MsgId, new RegisterZoneMsg()
+        {
+            UniqueID = container.UniqueID,
+            ScenePath = container.ScenePath,
+            NetworkAddress = container.NetworkAddress,
+            NetworkPort = container.NetworkPort,
+            MaxPlayers = container.MaxPlayers,
+        });
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Insight;
@@ -9,13 +10,20 @@ public class SpawnerModule : InsightModule
 {
     InsightServer insightServer;
 
+    public string EditorPath;
     public string ProcessPath;
-    public string ProcessName;
+    public string ZoneProcessName;
+    public string LoginProcessName;
     public int MaxProcesses;
     private int processCount;
 
+    public int SpawnerStartingPort;
+    private int portCounter;
+
     // paths to the scenes to spawn
     public string[] scenePathsToSpawn;
+
+    public bool SpawnLoginServer = true;
 
     [Header("AliveCheck")]
     [Range(1, 10)] public float writeInterval = 1;
@@ -24,30 +32,33 @@ public class SpawnerModule : InsightModule
 
     public override void Initialize(InsightServer server)
     {
+        portCounter = SpawnerStartingPort;
         insightServer = server;
         SpawnStaticZones();
     }
 
     public override void RegisterHandlers()
     {
-        insightServer.RegisterHandler(ZoneServerSpawnRequest.MsgId, HandleZoneServerSpawnRequest);
+        insightServer.RegisterServerHandler(ZoneServerSpawnRequest.MsgId, HandleZoneServerSpawnRequest);
     }
 
     private void HandleZoneServerSpawnRequest(InsightNetworkMessage netMsg)
     {
+        ZoneServerSpawnRequest message = netMsg.ReadMessage<ZoneServerSpawnRequest>();
 
+        print("HandleZoneServerSpawnRequest - " + message.SceneName);
     }
 
-    public void SpawnStaticZones()
+    private void SpawnLogin()
     {
-        print("[Zones]: Spawn Static Zones...");
-        foreach (string scenePath in scenePathsToSpawn)
-        {
-            SpawnZone(scenePath);
-        }
+        if (!SpawnLoginServer)
+            return;
+
+        //Login Server does not use Args
+        SpawnZone(LoginProcessName, "");
     }
 
-    private void SpawnZone(string SceneName)
+    private void SpawnZone(string ProcessName, string SceneName)
     {
         if (processCount >= MaxProcesses)
         {
@@ -55,30 +66,42 @@ public class SpawnerModule : InsightModule
             //return;
         }
 
+        //Generate AuthID:
+        string _authID = Guid.NewGuid().ToString();
+
+#if UNITY_EDITOR
+        ProcessPath = EditorPath;
+#endif
         // spawn process, pass scene argument
         Process p = new Process();
         p.StartInfo.FileName = ProcessPath + ProcessName;
         //Args to pass: port, scene, AuthCode, UniqueID...
-        p.StartInfo.Arguments = ArgsString() + " -ScenePath " + SceneName;
+        p.StartInfo.Arguments = ArgsString() + 
+            " -ScenePath " + SceneName + 
+            " -UniqueID " + _authID +
+            " -AssignedPort " + (portCounter++) +
+            " -MasterIp " + "localhost" + 
+            " -MasterPort " + insightServer.networkPort;
         print("[Zones]: spawning: " + p.StartInfo.FileName + "; args=" + p.StartInfo.Arguments);
         p.Start();
 
         processCount++;
+
+        //registeredServersList.Add(new RegisteredServers() { AuthID = _authID, ServerType = serverType });
     }
 
-    //public static string ParseScenePathFromArgs()
-    //{
-    //    // note: args are null on android
-    //    String[] args = System.Environment.GetCommandLineArgs();
-    //    if (args != null)
-    //    {
-    //        int index = args.ToList().FindIndex(arg => arg == "-scenePath");
-    //        return 0 <= index && index < args.Length - 1 ? args[index + 1] : "";
-    //    }
-    //    return "";
-    //}
+    private void SpawnStaticZones()
+    {
+        SpawnLogin();
 
-    public static string ArgsString()
+        print("[Zones]: Spawn Static Zones...");
+        foreach (string scenePath in scenePathsToSpawn)
+        {
+            SpawnZone(ZoneProcessName, scenePath);
+        }
+    }
+
+    private static string ArgsString()
     {
         // note: first arg is always process name or empty
         // note: args are null on android
@@ -86,7 +109,7 @@ public class SpawnerModule : InsightModule
         return args != null ? String.Join(" ", args.Skip(1).ToArray()) : "";
     }
 
-    public static string processPath
+    private static string processPath
     {
         get
         {

@@ -1,57 +1,73 @@
 ﻿using Mirror;
 using System;
 using System.Collections.Generic;
+using Telepathy;
 using UnityEngine;
 
 namespace Insight
 {
-    public class InsightClient
+    public class InsightClient : MonoBehaviour
     {
         public int clientID = -1;
         public int connectionID = 0;
 
-        public string address;
-        public int port;
-        public string AuthCode;
-
+        public string networkAddress = "localhost";
+        public int networkPort = 5000;
         public bool logNetworkMessages;
 
         InsightNetworkConnection insightNetworkConnection;
 
-        Telepathy.Client client;
+        Client client = new Client();
 
         Dictionary<short, InsightNetworkMessageDelegate> messageHandlers;
 
-        public InsightClient()
+        protected enum ConnectState
         {
-            Application.runInBackground = true;
+            None,
+            Connecting,
+            Connected,
+            Disconnected,
+        }
+        protected ConnectState connectState = ConnectState.None;
+
+        public bool isConnected { get { return connectState == ConnectState.Connected; } }
+
+        public virtual void Start()
+        {
+            DontDestroyOnLoad(gameObject);
 
             // use Debug.Log functions for Telepathy so we can see it in the console
             Telepathy.Logger.LogMethod = Debug.Log;
             Telepathy.Logger.LogWarningMethod = Debug.LogWarning;
             Telepathy.Logger.LogErrorMethod = Debug.LogError;
 
-            // create and connect the client
-            client = new Telepathy.Client();
-            
             messageHandlers = new Dictionary<short, InsightNetworkMessageDelegate>();
 
             insightNetworkConnection = new InsightNetworkConnection();
-            insightNetworkConnection.Initialize(this, address, clientID, connectionID);
+            insightNetworkConnection.Initialize(this, networkAddress, clientID, connectionID);
         }
+        void Update()
+        {
+            HandleNewMessages();
+        }
+
         public void StartClient(string Address, int Port)
         {
-            address = Address;
-            port = Port;
+            networkAddress = Address;
+            networkPort = Port;
 
             Debug.Log("Connecting to Insight Server: " + Address + ":" + Port);
             client.Connect(Address, Port);
+
+            OnClientStart();
         }
 
         public void StopClient()
         {
             Debug.Log("Disconnecting from Insight Server");
             client.Disconnect();
+
+            OnClientStop();
         }
 
         public void HandleNewMessages()
@@ -60,20 +76,24 @@ namespace Insight
                 return;
 
             // grab all new messages. do this in your Update loop.
-            Telepathy.Message msg;
+            Message msg;
             while (client.GetNextMessage(out msg))
             {
                 switch (msg.eventType)
                 {
                     case Telepathy.EventType.Connected:
-                        Debug.Log("Connected to Insight Server");
+                        //Debug.Log("Connected to Insight Server");
+                        connectState = ConnectState.Connected;
+                        OnConnected(msg);
                         break;
                     case Telepathy.EventType.Data:
                         //Debug.Log("Data: " + BitConverter.ToString(msg.data));
                         HandleBytes(msg.data);
                         break;
                     case Telepathy.EventType.Disconnected:
-                        Debug.Log("Disconnected");
+                        //Debug.Log("Disconnected");
+                        connectState = ConnectState.Disconnected;
+                        OnDisconnected(msg);
                         break;
                 }
             }
@@ -91,6 +111,21 @@ namespace Insight
 
         public bool SendMsg(short msgType, MessageBase msg)
         {
+            NetworkWriter writer = new NetworkWriter();
+            msg.Serialize(writer);
+
+            // pack message and send
+            byte[] message = Protocol.PackMessage((ushort)msgType, writer.ToArray());
+            return SendBytes(0, message);
+        }
+
+        public bool SendMsg(short msgType, MessageBase msg, bool Callback)
+        {
+            if(!Callback)
+            {
+                SendMsg(msgType, msg);
+            }
+
             NetworkWriter writer = new NetworkWriter();
             msg.Serialize(writer);
 
@@ -170,6 +205,32 @@ namespace Insight
                 Debug.Log("NetworkConnection.RegisterHandler replacing " + msgType);
             }
             messageHandlers[msgType] = handler;
+        }
+
+        private void OnApplicationQuit()
+        {
+            StopClient();
+        }
+
+        //------------Virtual Handlers-------------
+        public virtual void OnConnected(Message msg)
+        {
+
+        }
+
+        public virtual void OnDisconnected(Message msg)
+        {
+
+        }
+
+        public virtual void OnClientStart()
+        {
+
+        }
+
+        public virtual void OnClientStop()
+        {
+
         }
     }
 }

@@ -4,7 +4,7 @@ public class InsightArgs
 {
     private readonly string[] _args;
 
-    public SpectrumArgNames Names;
+    public InsightArgNames Names;
 
     public InsightArgs()
     {
@@ -14,63 +14,23 @@ public class InsightArgs
         if (_args == null)
             _args = new string[0];
 
-        Names = new SpectrumArgNames();
+        Names = new InsightArgNames();
 
         ScenePath = IsProvided(Names.ScenePath);
-        //StartMaster = IsProvided(Names.StartMaster);
-        //StartSpawner = IsProvided(Names.StartSpawner);
-        //StartGameServer = IsProvided(Names.StartGameServer);
-        //MasterPort = ExtractValueInt(Names.MasterPort, 5000);
-        //MasterIp = ExtractValue(Names.MasterIp);
-        //MachineIp = ExtractValue(Names.MachineIp);
-        //AssignedPort = ExtractValueInt(Names.AssignedPort);
+        MasterPort = ExtractValueInt(Names.MasterPort, 5000);
+        MasterIp = ExtractValue(Names.MasterIp);
+        NetworkAddress = ExtractValue(Names.NetworkAddress);
+        NetworkPort = ExtractValueInt(Names.NetworkPort);
     }
 
-    #region Arguments
+    public string UniqueID { get; private set; }
     public bool ScenePath { get; private set; }
-
-    /// <summary>
-    /// If true, master server should be started
-    /// </summary>
-    public bool StartMaster { get; private set; }
-
-    /// <summary>
-    /// If true, master server should be started
-    /// </summary>
-    public bool StartSpawner { get; private set; }
-
-    public bool StartGameServer { get; private set; }
-
-    /// <summary>
-    /// Port, which will be open on the master server
-    /// </summary>
     public int MasterPort { get; private set; }
-
-    /// <summary>
-    /// Ip address to the master server
-    /// </summary>
     public string MasterIp { get; private set; }
-
-    /// <summary>
-    /// Public ip of the machine, on which the process is running
-    /// </summary>
-    public string MachineIp { get; private set; }
-
-    /// <summary>
-    /// Port, assigned to the spawned process (most likely a game server)
-    /// </summary>
-    public int AssignedPort { get; private set; }
-
-    #endregion
+    public string NetworkAddress { get; private set; }
+    public int NetworkPort { get; private set; }
 
     #region Helper methods
-
-    /// <summary>
-    ///     Extracts a value for command line arguments provided
-    /// </summary>
-    /// <param name="argName"></param>
-    /// <param name="defaultValue"></param>
-    /// <returns></returns>
     public string ExtractValue(string argName, string defaultValue = null)
     {
         if (!_args.Contains(argName))
@@ -90,19 +50,15 @@ public class InsightArgs
     {
         return _args.Contains(argName);
     }
-
     #endregion
 
-    public class SpectrumArgNames
+    public class InsightArgNames
     {
+        public string UniqueID { get { return "-UniqueID"; } }
         public string ScenePath { get { return "-ScenePath"; } }
-        //public string StartMaster { get { return "-SpectrumMaster"; } }
-        //public string StartSpawner { get { return "-SpectrumSpawner"; } }
-        //public string StartGameServer { get { return "-SpectrumGameServer"; } }
-        //public string MasterPort { get { return "-SpectrumMasterPort"; } }
-        //public string MasterIp { get { return "-SpectrumMasterIp"; } }
-        //public string MachineIp { get { return "-SpectrumMachineIp"; } }
-        //public string AssignedPort { get { return "-SpectrumAssignedPort"; } }
-
+        public string MasterPort { get { return "-MasterPort"; } }
+        public string MasterIp { get { return "-MasterIp"; } }
+        public string NetworkAddress { get { return "-NetworkAddress"; } }
+        public string NetworkPort { get { return "-NetworkPort"; } }
     }
 }

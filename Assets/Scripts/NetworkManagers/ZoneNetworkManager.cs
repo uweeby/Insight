@@ -6,9 +6,11 @@ using UnityEngine.SceneManagement;
 
 public class ZoneNetworkManager : NetworkManager
 {
+    public int maxPlayers;
+    public int currentPlayers;
 
-	// Use this for initialization
-	void Start ()
+    // Use this for initialization
+    void Start ()
     {
         networkPort = 7777;
         StartServer();

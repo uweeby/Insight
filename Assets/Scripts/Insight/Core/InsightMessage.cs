@@ -1,5 +1,17 @@
 ﻿using Mirror;
 
+public class EmptyReply : MessageBase
+{
+
+}
+
+public class RegisterServerConnectionMsg : MessageBase
+{
+    public static short MsgId = 1000;
+    public string UniqueID;
+}
+
+//Test msgs for Demo only
 public class ClientToZoneTestMsg : MessageBase
 {
     public static short MsgId = 1000;
@@ -8,6 +20,7 @@ public class ClientToZoneTestMsg : MessageBase
     public string Data;
 }
 
+//Test msgs for Demo only
 public class ClientToMasterTestMsg : MessageBase
 {
     public static short MsgId = 1001;
@@ -16,6 +29,7 @@ public class ClientToMasterTestMsg : MessageBase
     public string Data;
 }
 
+//Test msgs for Demo only
 public class ZoneToMasterTestMsg : MessageBase
 {
     public static short MsgId = 1002;

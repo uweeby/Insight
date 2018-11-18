@@ -14,16 +14,32 @@ namespace Insight
         public int networkPort;
         protected int serverHostId = -1;
 
-        Telepathy.Server server;
+        Server server;
 
-        Dictionary<int, InsightNetworkConnection> clientConnections;
-        Dictionary<int, InsightNetworkConnection> serverConnections;
+        //Connection Lists
+        Dictionary<int, InsightNetworkConnection> connections;
+        //Dictionary<int, InsightNetworkConnection> clientConnections;
+        //Dictionary<int, InsightNetworkConnection> serverConnections;
 
+        //Peer Lists
         public List<PlayerInformation> playerInformation;
         public List<ZoneInformation> zoneInformation;
 
-        Dictionary<short, InsightNetworkMessageDelegate> messageHandlers;
-        Dictionary<short, InsightNetworkMessageDelegate> serverMessageHandlers;
+        //Handlers
+        Dictionary<short, InsightNetworkMessageDelegate> unregisteredMessageHandlers; //Default Handlers
+        Dictionary<short, InsightNetworkMessageDelegate> clientMessageHandlers; //Applied only to clients after AuthID provided
+        Dictionary<short, InsightNetworkMessageDelegate> serverMessageHandlers; //Applies only to servers after AuthID provided
+
+        protected enum ConnectState
+        {
+            None,
+            Connecting,
+            Connected,
+            Disconnected,
+        }
+        protected ConnectState connectState = ConnectState.None;
+
+        public bool isConnected { get { return connectState == ConnectState.Connected; } }
 
         private void Awake()
         {
@@ -38,12 +54,14 @@ namespace Insight
             Telepathy.Logger.LogErrorMethod = Debug.LogError;
 
             // create and start the server
-            server = new Telepathy.Server();
+            server = new Server();
 
-            clientConnections = new Dictionary<int, InsightNetworkConnection>();
-            serverConnections = new Dictionary<int, InsightNetworkConnection>();
+            connections = new Dictionary<int, InsightNetworkConnection>();
+            //clientConnections = new Dictionary<int, InsightNetworkConnection>();
+            //serverConnections = new Dictionary<int, InsightNetworkConnection>();
 
-            messageHandlers = new Dictionary<short, InsightNetworkMessageDelegate>();
+            unregisteredMessageHandlers = new Dictionary<short, InsightNetworkMessageDelegate>();
+            clientMessageHandlers = new Dictionary<short, InsightNetworkMessageDelegate>();
             serverMessageHandlers = new Dictionary<short, InsightNetworkMessageDelegate>();
         }
 
@@ -52,6 +70,8 @@ namespace Insight
             networkPort = Port;
             server.Start(Port);
             serverHostId = 0;
+
+            connectState = ConnectState.Connected;
 
             OnServerStart();
         }
@@ -62,6 +82,8 @@ namespace Insight
             server.Stop();
             serverHostId = -1;
 
+            connectState = ConnectState.Disconnected;
+
             OnServerStop();
         }
 
@@ -71,31 +93,70 @@ namespace Insight
             if (serverHostId == -1)
                 return;
 
-            Telepathy.Message msg;
+            Message msg;
             while (server.GetNextMessage(out msg))
             {
                 switch (msg.eventType)
                 {
                     case Telepathy.EventType.Connected:
-                        OnConnect(msg);
+                        HandleConnect(msg);
                         break;
                     case Telepathy.EventType.Data:
                         HandleData(msg.connectionId, msg.data, 0);
                         break;
                     case Telepathy.EventType.Disconnected:
-                        OnDisconnect(msg);
+                        HandleDisconnect(msg);
                         break;
                 }
+            }
+        }
+
+        void HandleConnect(Message msg)
+        {
+            // get ip address from connection
+            string address = GetConnectionInfo(msg.connectionId);
+
+            // add player info
+            InsightNetworkConnection conn = new InsightNetworkConnection();
+            conn.Initialize(this, address, serverHostId, msg.connectionId);
+            AddConnection(conn);
+
+            OnConnected(conn);
+        }
+
+        void HandleDisconnect(Message msg)
+        {
+            InsightNetworkConnection conn;
+            if (connections.TryGetValue(msg.connectionId, out conn))
+            {
+                conn.Disconnect();
+                RemoveConnection(msg.connectionId);
+
+                OnDisconnected(conn);
             }
         }
 
         void HandleData(int connectionId, byte[] data, byte error)
         {
             InsightNetworkConnection conn;
-            if (clientConnections.TryGetValue(connectionId, out conn))
+            if (connections.TryGetValue(connectionId, out conn))
             {
+                print("unregisteredConnections");
                 OnData(conn, data);
+                return;
             }
+            //if (clientConnections.TryGetValue(connectionId, out conn))
+            //{
+            //    print("clientConnections");
+            //    OnData(conn, data);
+            //    return;
+            //}
+            //if (serverConnections.TryGetValue(connectionId, out conn))
+            //{
+            //    print("serverConnections");
+            //    OnData(conn, data);
+            //    return;
+            //}
             else
             {
                 Debug.LogError("HandleData Unknown connectionId:" + connectionId);
@@ -114,12 +175,32 @@ namespace Insight
 
         public void RegisterHandler(short msgType, InsightNetworkMessageDelegate handler)
         {
-            if (messageHandlers.ContainsKey(msgType))
+            if (unregisteredMessageHandlers.ContainsKey(msgType))
             {
                 //if (LogFilter.Debug) { Debug.Log("NetworkConnection.RegisterHandler replacing " + msgType); }
                 Debug.Log("NetworkConnection.RegisterHandler replacing " + msgType);
             }
-            messageHandlers[msgType] = handler;
+            unregisteredMessageHandlers[msgType] = handler;
+        }
+
+        public void RegisterClientHandler(short msgType, InsightNetworkMessageDelegate handler)
+        {
+            if (clientMessageHandlers.ContainsKey(msgType))
+            {
+                //if (LogFilter.Debug) { Debug.Log("NetworkConnection.RegisterHandler replacing " + msgType); }
+                Debug.Log("NetworkConnection.RegisterHandler replacing " + msgType);
+            }
+            clientMessageHandlers[msgType] = handler;
+        }
+
+        public void RegisterServerHandler(short msgType, InsightNetworkMessageDelegate handler)
+        {
+            if (serverMessageHandlers.ContainsKey(msgType))
+            {
+                //if (LogFilter.Debug) { Debug.Log("NetworkConnection.RegisterHandler replacing " + msgType); }
+                Debug.Log("NetworkConnection.RegisterHandler replacing " + msgType);
+            }
+            serverMessageHandlers[msgType] = handler;
         }
 
         public string GetConnectionInfo(int connectionId)
@@ -131,41 +212,44 @@ namespace Insight
 
         public bool AddConnection(InsightNetworkConnection conn)
         {
-            if (!clientConnections.ContainsKey(conn.connectionId))
+            if (!connections.ContainsKey(conn.connectionId))
             {
                 // connection cannot be null here or conn.connectionId
                 // would throw NRE
-                clientConnections[conn.connectionId] = conn;
-                conn.SetHandlers(messageHandlers);
+                connections[conn.connectionId] = conn;
+                conn.SetHandlers(unregisteredMessageHandlers);
                 return true;
             }
             // already a connection with this id
             return false;
         }
 
-        public bool AddServerConnection(InsightNetworkConnection conn)
+        public bool SetClientHandlers(InsightNetworkConnection conn)
         {
-            if (!clientConnections.ContainsKey(conn.connectionId))
-            {
-                // connection cannot be null here or conn.connectionId
-                // would throw NRE
-                serverConnections[conn.connectionId] = conn;
-                conn.SetHandlers(messageHandlers);
-                return true;
-            }
-            // already a connection with this id
-            return false;
+            conn.SetHandlers(clientMessageHandlers);
+            return true;
+        }
+
+        public bool SetServerHandlers(InsightNetworkConnection conn)
+        {
+            conn.SetHandlers(serverMessageHandlers);
+            return true;
         }
 
         public bool RemoveConnection(int connectionId)
         {
-            return clientConnections.Remove(connectionId);
+            return connections.Remove(connectionId);
         }
 
-        public bool RemoveServerConnection(int connectionId)
-        {
-            return serverConnections.Remove(connectionId);
-        }
+        //public bool RemoveClientConnection(int connectionId)
+        //{
+        //    return clientConnections.Remove(connectionId);
+        //}
+
+        //public bool RemoveServerConnection(int connectionId)
+        //{
+        //    return serverConnections.Remove(connectionId);
+        //}
 
         public NetworkConnection FindConnectionByPlayer(string PlayerName)
         {
@@ -186,12 +270,12 @@ namespace Insight
 
         //----------virtual handlers--------------//
 
-        public virtual void OnConnect(Message msg)
+        public virtual void OnConnected(InsightNetworkConnection conn)
         {
 
         }
 
-        public virtual void OnDisconnect(Message msg)
+        public virtual void OnDisconnected(InsightNetworkConnection conn)
         {
 
         }

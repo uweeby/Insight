@@ -272,7 +272,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &909481220
 Transform:
   m_ObjectHideFlags: 0
@@ -297,11 +297,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8382b135107eaf5458d6471f839dc241, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ProcessPath: C:\Dev\Insight\Builds\
-  ProcessName: ZoneServer.exe
+  EditorPath: C:\Dev\Insight\Builds\
+  ProcessPath: .\
+  ZoneProcessName: ZoneServer.exe
+  LoginProcessName: 
   MaxProcesses: 5
+  SpawnerStartingPort: 0
   scenePathsToSpawn:
   - Game01
+  SpawnLoginServer: 0
   writeInterval: 1
   timeoutMultiplier: 3
 --- !u!1 &1990430926

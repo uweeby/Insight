@@ -1,4 +1,5 @@
 ﻿using Insight;
+using UnityEngine;
 
 public class MasterBehaviour : InsightServer
 {
@@ -7,58 +8,42 @@ public class MasterBehaviour : InsightServer
     {        
         StartServer(networkPort);
         RegisterHandlers();
+
+#if !UNITY_EDITOR
+        Application.targetFrameRate = Mathf.RoundToInt(1f / Time.fixedDeltaTime);
+        print("server tick rate set to: " + Application.targetFrameRate + " (1 / Edit->Project Settings->Time->Fixed Time Step)");
+#endif
     }
-	
-	// Update is called once per frame
-	void Update ()
+
+    // Update is called once per frame
+    void Update ()
     {
         HandleNewMessages();
     }
 
-    public override void OnConnect(Telepathy.Message msg)
+    public override void OnConnected(InsightNetworkConnection conn)
     {
-        print("OnConnect");
-        InsightNetworkConnection conn = new InsightNetworkConnection();
-        conn.Initialize(this, GetConnectionInfo(msg.connectionId), serverHostId, msg.connectionId);
-        AddConnection(conn);
+        print("OnConnected");
     }
 
-    public override void OnDisconnect(Telepathy.Message msg)
+    public override void OnDisconnected(InsightNetworkConnection conn)
     {
-        print("OnDisconnect");
-        RemoveConnection(msg.connectionId);
+        print("OnDisconnected");
     }
 
     public override void OnServerStart()
     {
-
+        print("OnServerStart");
     }
 
     public override void OnServerStop()
     {
-
+        print("OnServerStop");
     }
 
     private void RegisterHandlers()
     {
-        RegisterHandler(ClientToMasterTestMsg.MsgId, HandleClientToMasterTestMsg);
-        RegisterHandler(ZoneToMasterTestMsg.MsgId, HandleZoneToMasterTestMsg);
-    }
-
-    private void HandleClientToMasterTestMsg(InsightNetworkMessage netMsg)
-    {
-        ClientToMasterTestMsg message = netMsg.ReadMessage<ClientToMasterTestMsg>();
-
-        print("HandleClientToMasterTestMsg - Source: " + message.Source + " Destination: " + message.Desintation);
-        netMsg.conn.Send(ClientToMasterTestMsg.MsgId, new ClientToMasterTestMsg() { Source = "master:5000", Desintation = "client:5000", Data = "" });
-    }
-
-    private void HandleZoneToMasterTestMsg(InsightNetworkMessage netMsg)
-    {
-        ZoneToMasterTestMsg message = netMsg.ReadMessage<ZoneToMasterTestMsg>();
-
-        print("HandleZoneToMasterTestMsg - Source: " + message.Source + " Destination: " + message.Desintation);
-        netMsg.conn.Send(ZoneToMasterTestMsg.MsgId, new ZoneToMasterTestMsg() { Source = "master:5000", Desintation = "zone:5000", Data = "" });
+        
     }
 
     private void OnApplicationQuit()

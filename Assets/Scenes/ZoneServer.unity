@@ -113,47 +113,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &226667770
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 226667771}
-  - component: {fileID: 226667772}
-  m_Layer: 0
-  m_Name: InsightZone
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &226667771
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 226667770}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &226667772
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 226667770}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1a58a575e3908d4aabc31c174a11f8e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NetworkPort: 5000
 --- !u!1 &626635187
 GameObject:
   m_ObjectHideFlags: 0
@@ -244,6 +203,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1266015069}
   - component: {fileID: 1266015070}
+  - component: {fileID: 1266015072}
   - component: {fileID: 1266015071}
   m_Layer: 0
   m_Name: ZoneNetworkManager
@@ -292,6 +252,8 @@ MonoBehaviour:
   m_MaxConnections: 4
   m_UseWebSockets: 0
   isNetworkActive: 0
+  maxPlayers: 0
+  currentPlayers: 0
 --- !u!114 &1266015071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -314,3 +276,27 @@ MonoBehaviour:
   TopMargin: 20
   RightMargin: 20
   BottomMargin: 20
+--- !u!114 &1266015072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1266015068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1a58a575e3908d4aabc31c174a11f8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clientID: -1
+  connectionID: 0
+  networkAddress: localhost
+  networkPort: 5000
+  logNetworkMessages: 0
+  networkManager: {fileID: 0}
+  container:
+    UniqueID: 
+    ScenePath: 
+    NetworkAddress: 
+    NetworkPort: 0
+    MaxPlayers: 0
+    CurentPlayers: 0

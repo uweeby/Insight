@@ -2,7 +2,7 @@ Insight uses Unity and Mirror to provide a MasterServer that is seperate from th
 
 Insight also provides an optional set of Modules to add features on top of the MasterServer connection.
 
-![Diagram](https://imgur.com/WEktiZp)
+![Diagram](https://i.imgur.com/WEktiZp.png)
 
 Built on Unity 2017.4 but should work with any newer version of Unity.
 

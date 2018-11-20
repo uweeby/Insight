@@ -13,3 +13,5 @@ Current Modules:
 SpawnerModule - Creates ZoneServers on Start and OnDemand (OnDemand not implemented yet)
 ChatModule - Sends messages to players anywhere in the game. (Not fully implemented yet)
 DatabaseModule - Working on support for MySQL and SQLite
+
+License: Follow the included Mirror license. Otherwise Insight has no specific licensing of its own.

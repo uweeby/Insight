@@ -1,7 +1,7 @@
 ﻿using Insight;
 using UnityEngine;
 
-public class MasterServer : InsightServer
+public class MasterInsightServer : InsightServer
 {
     // Use this for initialization
     public override void Start ()

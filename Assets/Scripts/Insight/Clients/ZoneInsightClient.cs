@@ -3,7 +3,7 @@ using Insight;
 using Telepathy;
 
 [RequireComponent(typeof(ZoneNetworkManager))]
-public class ZoneBehaviour : InsightClient
+public class ZoneInsightClient : InsightClient
 {
     public ZoneNetworkManager networkManager;
 
@@ -37,7 +37,7 @@ public class ZoneBehaviour : InsightClient
 	
     private void RegisterHandlers()
     {
-        RegisterHandler(RegisterServerConnectionMsg.MsgId, HandleRegisterServerConnectionMsgReply);
+
     }
 
     public override void OnClientStart()
@@ -65,8 +65,6 @@ public class ZoneBehaviour : InsightClient
             Debug.LogError("Not a spawned Instanced.");
             return;
         }
-
-        //SendMsg(RegisterServerConnectionMsg.MsgId, new RegisterServerConnectionMsg() { UniqueID = container.UniqueID });
     }
 
     private void CacheArgs()
@@ -78,19 +76,5 @@ public class ZoneBehaviour : InsightClient
         container.NetworkPort = networkManager.networkPort;
         container.MaxPlayers = networkManager.maxPlayers;
         container.CurentPlayers = networkManager.currentPlayers;
-    }
-
-    private void HandleRegisterServerConnectionMsgReply(InsightNetworkMessage netMsg)
-    {
-        print("HandleRegisterServerConnectionMsgReply");
-
-        SendMsg(RegisterZoneMsg.MsgId, new RegisterZoneMsg()
-        {
-            UniqueID = container.UniqueID,
-            ScenePath = container.ScenePath,
-            NetworkAddress = container.NetworkAddress,
-            NetworkPort = container.NetworkPort,
-            MaxPlayers = container.MaxPlayers,
-        });
     }
 }

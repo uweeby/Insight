@@ -2,7 +2,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(ClientNetworkManager))]
-public class ClientBehaviour : InsightClient
+public class PlayerInsightClient : InsightClient
 {
     public ClientNetworkManager networkManager;
 

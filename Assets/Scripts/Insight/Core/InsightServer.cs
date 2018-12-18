@@ -1,4 +1,5 @@
 ﻿using Mirror;
+using System.Collections;
 using System.Collections.Generic;
 using Telepathy;
 using UnityEngine;
@@ -7,24 +8,13 @@ namespace Insight
 {
     public class InsightServer : MonoBehaviour
     {
-        public int networkPort;
+        public bool AutoStart;
+        public int networkPort = 5000;
         protected int serverHostId = -1;
 
         Server server;
-
-        //Connection Lists
-        Dictionary<int, InsightNetworkConnection> connections;
-        //Dictionary<int, InsightNetworkConnection> clientConnections;
-        //Dictionary<int, InsightNetworkConnection> serverConnections;
-
-        //Peer Lists
-        public List<PlayerInformation> playerInformation;
-        public List<ZoneInformation> zoneInformation;
-
-        //Handlers
-        Dictionary<short, InsightNetworkMessageDelegate> unregisteredMessageHandlers; //Default Handlers
-        Dictionary<short, InsightNetworkMessageDelegate> clientMessageHandlers; //Applied only to clients after AuthID provided
-        Dictionary<short, InsightNetworkMessageDelegate> serverMessageHandlers; //Applies only to servers after AuthID provided
+        protected Dictionary<int, InsightNetworkConnection> connections;
+        Dictionary<short, InsightNetworkMessageDelegate> messageHandlers; //Default Handlers
 
         protected enum ConnectState
         {
@@ -37,13 +27,11 @@ namespace Insight
 
         public bool isConnected { get { return connectState == ConnectState.Connected; } }
 
-        private void Awake()
+        public virtual void Start()
         {
+            DontDestroyOnLoad(this);
             Application.runInBackground = true;
-        }
 
-        public InsightServer()
-        {
             // use Debug.Log functions for Telepathy so we can see it in the console
             Telepathy.Logger.LogMethod = Debug.Log;
             Telepathy.Logger.LogWarningMethod = Debug.LogWarning;
@@ -53,18 +41,31 @@ namespace Insight
             server = new Server();
 
             connections = new Dictionary<int, InsightNetworkConnection>();
-            //clientConnections = new Dictionary<int, InsightNetworkConnection>();
-            //serverConnections = new Dictionary<int, InsightNetworkConnection>();
 
-            unregisteredMessageHandlers = new Dictionary<short, InsightNetworkMessageDelegate>();
-            clientMessageHandlers = new Dictionary<short, InsightNetworkMessageDelegate>();
-            serverMessageHandlers = new Dictionary<short, InsightNetworkMessageDelegate>();
+            messageHandlers = new Dictionary<short, InsightNetworkMessageDelegate>();
+
+            if(AutoStart)
+            {
+                StartServer();
+            }
+        }
+
+        public virtual void Update()
+        {
+            HandleNewMessages();
         }
 
         public void StartServer(int Port)
         {
             networkPort = Port;
-            server.Start(Port);
+
+            StartServer();
+        }
+
+        public void StartServer()
+        {
+            Debug.Log("Start Insight Server On Port: " + networkPort);
+            server.Start(networkPort);
             serverHostId = 0;
 
             connectState = ConnectState.Connected;
@@ -74,6 +75,8 @@ namespace Insight
 
         public void StopServer()
         {
+            connections.Clear();
+
             // stop the server when you don't need it anymore
             server.Stop();
             serverHostId = -1;
@@ -137,22 +140,10 @@ namespace Insight
             InsightNetworkConnection conn;
             if (connections.TryGetValue(connectionId, out conn))
             {
-                print("unregisteredConnections");
+                //print("");
                 OnData(conn, data);
                 return;
             }
-            //if (clientConnections.TryGetValue(connectionId, out conn))
-            //{
-            //    print("clientConnections");
-            //    OnData(conn, data);
-            //    return;
-            //}
-            //if (serverConnections.TryGetValue(connectionId, out conn))
-            //{
-            //    print("serverConnections");
-            //    OnData(conn, data);
-            //    return;
-            //}
             else
             {
                 Debug.LogError("HandleData Unknown connectionId:" + connectionId);
@@ -171,32 +162,12 @@ namespace Insight
 
         public void RegisterHandler(short msgType, InsightNetworkMessageDelegate handler)
         {
-            if (unregisteredMessageHandlers.ContainsKey(msgType))
+            if (messageHandlers.ContainsKey(msgType))
             {
                 //if (LogFilter.Debug) { Debug.Log("NetworkConnection.RegisterHandler replacing " + msgType); }
                 Debug.Log("NetworkConnection.RegisterHandler replacing " + msgType);
             }
-            unregisteredMessageHandlers[msgType] = handler;
-        }
-
-        public void RegisterClientHandler(short msgType, InsightNetworkMessageDelegate handler)
-        {
-            if (clientMessageHandlers.ContainsKey(msgType))
-            {
-                //if (LogFilter.Debug) { Debug.Log("NetworkConnection.RegisterHandler replacing " + msgType); }
-                Debug.Log("NetworkConnection.RegisterHandler replacing " + msgType);
-            }
-            clientMessageHandlers[msgType] = handler;
-        }
-
-        public void RegisterServerHandler(short msgType, InsightNetworkMessageDelegate handler)
-        {
-            if (serverMessageHandlers.ContainsKey(msgType))
-            {
-                //if (LogFilter.Debug) { Debug.Log("NetworkConnection.RegisterHandler replacing " + msgType); }
-                Debug.Log("NetworkConnection.RegisterHandler replacing " + msgType);
-            }
-            serverMessageHandlers[msgType] = handler;
+            messageHandlers[msgType] = handler;
         }
 
         public string GetConnectionInfo(int connectionId)
@@ -213,23 +184,11 @@ namespace Insight
                 // connection cannot be null here or conn.connectionId
                 // would throw NRE
                 connections[conn.connectionId] = conn;
-                conn.SetHandlers(unregisteredMessageHandlers);
+                conn.SetHandlers(messageHandlers);
                 return true;
             }
             // already a connection with this id
             return false;
-        }
-
-        public bool SetClientHandlers(InsightNetworkConnection conn)
-        {
-            conn.SetHandlers(clientMessageHandlers);
-            return true;
-        }
-
-        public bool SetServerHandlers(InsightNetworkConnection conn)
-        {
-            conn.SetHandlers(serverMessageHandlers);
-            return true;
         }
 
         public bool RemoveConnection(int connectionId)
@@ -237,43 +196,28 @@ namespace Insight
             return connections.Remove(connectionId);
         }
 
-        //public bool RemoveClientConnection(int connectionId)
-        //{
-        //    return clientConnections.Remove(connectionId);
-        //}
-
-        //public bool RemoveServerConnection(int connectionId)
-        //{
-        //    return serverConnections.Remove(connectionId);
-        //}
-
-        public NetworkConnection FindConnectionByPlayer(string PlayerName)
-        {
-            foreach(PlayerInformation player in playerInformation)
-            {
-                if(player.PlayerName.Equals(PlayerName))
-                {
-                    return player.masterNetworkConnection;
-                }
-            }
-            return null;
-        }
-
         private void OnApplicationQuit()
         {
+            StartCoroutine(ShutDown());
+        }
+
+        private IEnumerator ShutDown()
+        {
+            Debug.Log("Stopping Server");
             server.Stop();
+            yield return new WaitForSeconds(1);
         }
 
         //----------virtual handlers--------------//
 
         public virtual void OnConnected(InsightNetworkConnection conn)
         {
-
+            Debug.Log("OnConnected");
         }
 
         public virtual void OnDisconnected(InsightNetworkConnection conn)
         {
-
+            Debug.Log("OnDisconnected");
         }
 
         public virtual void OnServerStart()
@@ -286,18 +230,4 @@ namespace Insight
 
         }
     }
-}
-
-public struct PlayerInformation
-{
-    public string AuthID; //Generated by LoginServer after authentication
-    public NetworkConnection masterNetworkConnection; //Connection from Client to MasterServer. Should not change
-    public string AccountName; //Used to look up account information for Character without asking DB.
-    public string PlayerName; //Name of currently logged in character for account
-}
-
-public struct ZoneInformation
-{
-    public string NetworkAddress;
-    public int NetworkPort;
 }

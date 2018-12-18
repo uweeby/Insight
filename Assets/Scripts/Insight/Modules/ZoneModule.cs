@@ -16,27 +16,9 @@ public class ZoneModule : InsightModule
 
     public override void RegisterHandlers()
     {
-        insightServer.RegisterHandler(RegisterServerConnectionMsg.MsgId, HandleRegisterServerConnectionMsg);
-
-        insightServer.RegisterServerHandler(RegisterZoneMsg.MsgId, HandleRegisterZoneMsg);
-        insightServer.RegisterServerHandler(UnregisterZoneMsg.MsgId, HandleUnregisterZoneMsg);
-
-        insightServer.RegisterServerHandler(GetZonesMsg.MsgId, HandleGetZonesMsg);
-    }
-
-    private void HandleRegisterServerConnectionMsg(InsightNetworkMessage netMsg)
-    {
-        print("HandleRegisterServerConnectionMsg");
-
-        RegisterServerConnectionMsg message = netMsg.ReadMessage<RegisterServerConnectionMsg>();
-
-        print("Received UniqueID: " + message.UniqueID);
-
-        //This needs to verify it should actually be adding the handlers
-
-        insightServer.SetServerHandlers(netMsg.conn);
-
-        netMsg.conn.Send(RegisterServerConnectionMsg.MsgId, new EmptyReply());
+        insightServer.RegisterHandler(RegisterZoneMsg.MsgId, HandleRegisterZoneMsg);
+        insightServer.RegisterHandler(UnregisterZoneMsg.MsgId, HandleUnregisterZoneMsg);
+        insightServer.RegisterHandler(GetZonesMsg.MsgId, HandleGetZonesMsg);
     }
 
     private void HandleRegisterZoneMsg(InsightNetworkMessage netMsg)
@@ -88,27 +70,4 @@ public struct ZoneContainer
     public int NetworkPort;
     public int MaxPlayers; //Distated by the current zone
     public int CurentPlayers;
-}
-
-public class RegisterZoneMsg : MessageBase
-{
-    public static short MsgId = 9090;
-    public string UniqueID;
-    public string ScenePath;
-    public string NetworkAddress;
-    public int NetworkPort;
-    public int MaxPlayers;
-    public int CurentPlayers;
-}
-
-public class UnregisterZoneMsg : MessageBase
-{
-    public static short MsgId = 9091;
-    public string UniqueID;
-}
-
-public class GetZonesMsg : MessageBase
-{
-    public static short MsgId = 9092;
-    public ZoneContainer[] zonesList;
 }

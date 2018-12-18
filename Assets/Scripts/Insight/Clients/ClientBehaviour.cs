@@ -21,7 +21,7 @@ public class ClientBehaviour : InsightClient
     }
 	
 	// Update is called once per frame
-	void Update ()
+	public override void Update ()
     {
         //Msg to Master
         if (Input.GetKeyDown(KeyCode.Alpha1))

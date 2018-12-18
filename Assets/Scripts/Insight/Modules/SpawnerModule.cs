@@ -39,7 +39,7 @@ public class SpawnerModule : InsightModule
 
     public override void RegisterHandlers()
     {
-        insightServer.RegisterServerHandler(ZoneServerSpawnRequest.MsgId, HandleZoneServerSpawnRequest);
+        insightServer.RegisterHandler(ZoneServerSpawnRequest.MsgId, HandleZoneServerSpawnRequest);
     }
 
     private void HandleZoneServerSpawnRequest(InsightNetworkMessage netMsg)

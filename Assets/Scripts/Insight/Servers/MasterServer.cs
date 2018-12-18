@@ -1,11 +1,13 @@
 ﻿using Insight;
 using UnityEngine;
 
-public class MasterBehaviour : InsightServer
+public class MasterServer : InsightServer
 {
     // Use this for initialization
-    void Start ()
+    public override void Start ()
     {        
+        base.Start();
+        
         StartServer(networkPort);
         RegisterHandlers();
 
@@ -16,8 +18,10 @@ public class MasterBehaviour : InsightServer
     }
 
     // Update is called once per frame
-    void Update ()
+    public override void Update ()
     {
+        base.Update();
+
         HandleNewMessages();
     }
 

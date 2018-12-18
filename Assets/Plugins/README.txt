@@ -1,0 +1,1 @@
+This Unity Addon requires Mirror/Telepathy. Please download from the asset store or github.

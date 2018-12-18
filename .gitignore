@@ -12,3 +12,7 @@ Builds
 /UnityPackageManager
 /Packages
 /ProjectSettings
+
+Assets/Plugins/Mirror/
+
+Assets/Plugins/Mirror\.meta

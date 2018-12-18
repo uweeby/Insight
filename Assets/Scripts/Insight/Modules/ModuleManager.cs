@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[RequireComponent(typeof(MasterBehaviour))]
+[RequireComponent(typeof(InsightServer))]
 public class ModuleManager : MonoBehaviour
 {
     InsightServer insightServer;
@@ -18,7 +18,7 @@ public class ModuleManager : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
-        insightServer = GetComponent<MasterBehaviour>();
+        insightServer = GetComponent<InsightServer>();
 
         _modules = new Dictionary<Type, InsightModule>();
         _initializedModules = new HashSet<Type>();

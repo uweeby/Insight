@@ -6,12 +6,6 @@ namespace Insight{
 
     }
 
-    public class RegisterServerConnectionMsg : MessageBase
-    {
-        public static short MsgId = 1000;
-        public string UniqueID;
-    }
-
     //Test msgs for Demo only
     public class ClientToZoneTestMsg : MessageBase
     {

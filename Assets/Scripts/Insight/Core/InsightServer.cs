@@ -5,12 +5,8 @@ using UnityEngine;
 
 namespace Insight
 {
-    [SerializeField]
     public class InsightServer : MonoBehaviour
     {
-        [SerializeField]
-        public LogFilter.FilterLevel logLevel = LogFilter.FilterLevel.Developer;
-
         public int networkPort;
         protected int serverHostId = -1;
 

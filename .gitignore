@@ -16,3 +16,5 @@ Builds
 Assets/Plugins/Mirror/
 
 Assets/Plugins/Mirror\.meta
+
+\.vscode/settings\.json

@@ -1,6 +1,6 @@
-﻿using UnityEngine;
-using Insight;
+﻿using Insight;
 using Telepathy;
+using UnityEngine;
 
 [RequireComponent(typeof(ZoneNetworkManager))]
 public class ZoneInsightClient : InsightClient

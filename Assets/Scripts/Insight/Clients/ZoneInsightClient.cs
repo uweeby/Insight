@@ -71,7 +71,7 @@ public class ZoneInsightClient : InsightClient
     {
         container = new ZoneContainer();
         container.UniqueID = insightArguments.ExtractValue("-UniqueID");
-        container.ScenePath = insightArguments.ExtractValue("-ScenePath");
+        container.SceneName = insightArguments.ExtractValue("-SceneName");
         container.NetworkAddress = networkManager.networkAddress;
         container.NetworkPort = networkManager.networkPort;
         container.MaxPlayers = networkManager.maxPlayers;

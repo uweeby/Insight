@@ -16,7 +16,7 @@ public class InsightArgs
 
         Names = new InsightArgNames();
 
-        ScenePath = IsProvided(Names.ScenePath);
+        SceneName = IsProvided(Names.SceneName);
         MasterPort = ExtractValueInt(Names.MasterPort, 5000);
         MasterIp = ExtractValue(Names.MasterIp);
         NetworkAddress = ExtractValue(Names.NetworkAddress);
@@ -24,7 +24,7 @@ public class InsightArgs
     }
 
     public string UniqueID { get; private set; }
-    public bool ScenePath { get; private set; }
+    public bool SceneName { get; private set; }
     public int MasterPort { get; private set; }
     public string MasterIp { get; private set; }
     public string NetworkAddress { get; private set; }
@@ -55,7 +55,7 @@ public class InsightArgs
     public class InsightArgNames
     {
         public string UniqueID { get { return "-UniqueID"; } }
-        public string ScenePath { get { return "-ScenePath"; } }
+        public string SceneName { get { return "-SceneName"; } }
         public string MasterPort { get { return "-MasterPort"; } }
         public string MasterIp { get { return "-MasterIp"; } }
         public string NetworkAddress { get { return "-NetworkAddress"; } }

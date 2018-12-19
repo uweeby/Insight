@@ -30,7 +30,7 @@ public class ZoneModule : InsightModule
         ZoneList.Add(new ZoneContainer()
         {
             UniqueID = message.UniqueID,
-            ScenePath = message.ScenePath,
+            SceneName = message.SceneName,
             NetworkAddress = message.NetworkAddress,
             NetworkPort = message.NetworkPort,
             MaxPlayers = message.MaxPlayers,
@@ -65,7 +65,7 @@ public class ZoneModule : InsightModule
 public struct ZoneContainer
 {
     public string UniqueID;
-    public string ScenePath;
+    public string SceneName;
     public string NetworkAddress;
     public int NetworkPort;
     public int MaxPlayers; //Distated by the current zone

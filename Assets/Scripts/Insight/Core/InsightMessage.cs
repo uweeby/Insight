@@ -46,7 +46,7 @@ namespace Insight
     {
         public static short MsgId = 9090;
         public string UniqueID;
-        public string ScenePath;
+        public string SceneName;
         public string NetworkAddress;
         public int NetworkPort;
         public int MaxPlayers;

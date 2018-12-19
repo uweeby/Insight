@@ -10,20 +10,31 @@ public class SpawnerModule : InsightModule
 {
     InsightServer insightServer;
 
+    [Header("Paths")]
     public string EditorPath;
     public string ProcessPath;
-    public string ZoneProcessName;
-    public string LoginProcessName;
-    public int MaxProcesses;
-    private int processCount;
 
-    public int SpawnerStartingPort;
-    private int portCounter;
+    [Header("LoginServer")]
+    public string LoginProcessName = "LoginServer.exe";
+    public bool AutoStartLoginServer = true;
+    public int LoginServerPort = 7070;
 
-    // paths to the scenes to spawn
-    public string[] scenePathsToSpawn;
+    [Header("ChatServer")]
+    public string ChatProcessName = "ChatServer.exe";
+    public bool AutoStartChatServer = true;
+    public int ChatServerPort = 7000;
 
-    public bool SpawnLoginServer = true;
+    [Header("ZoneServer")]
+    public string ZoneServerProcessName = "ZoneServer.exe";
+    public bool AutoStartZoneServers = true;
+    public int MaxZoneServerProcesses = 5;
+    private int _zoneServerProcessCount = 0;
+    public int ZoneServerStartingPort = 7777;
+    private int _zoneServerPortCounter = 0;
+
+    public string[] staticScenePaths;
+
+    public List<SpawnedProcesses> processDict = new List<SpawnedProcesses>();
 
     [Header("AliveCheck")]
     [Range(1, 10)] public float writeInterval = 1;
@@ -32,73 +43,101 @@ public class SpawnerModule : InsightModule
 
     public override void Initialize(InsightServer server)
     {
-        portCounter = SpawnerStartingPort;
         insightServer = server;
+
+        //LoginServer
+        SpawnLoginServer();
+
+        //ChatServer
+        SpawnChatServer();
+
+        //ZoneServer
         SpawnStaticZones();
     }
 
     public override void RegisterHandlers()
     {
-        insightServer.RegisterHandler(ZoneServerSpawnRequest.MsgId, HandleZoneServerSpawnRequest);
+
     }
 
-    private void HandleZoneServerSpawnRequest(InsightNetworkMessage netMsg)
+    public ZoneContainer SpawnZone(string SceneName)
     {
-        ZoneServerSpawnRequest message = netMsg.ReadMessage<ZoneServerSpawnRequest>();
-
-        print("HandleZoneServerSpawnRequest - " + message.SceneName);
+        if (MaxZoneServerProcesses <= _zoneServerProcessCount)
+        {
+            print("Error: Over the ZoneServer thread limit---------------------------------");
+            //return new ZoneContainer();
+            return SpawnThread(ZoneServerProcessName, SceneName, _zoneServerPortCounter++);
+        }
+        else
+        {
+            return SpawnThread(ZoneServerProcessName, SceneName, _zoneServerPortCounter++);
+        }
     }
 
-    private void SpawnLogin()
+    private void SpawnLoginServer()
     {
-        if (!SpawnLoginServer)
+        if (!AutoStartLoginServer)
             return;
 
+        print("[LoginServer Start]");
+
         //Login Server does not use Args
-        SpawnZone(LoginProcessName, "");
+        SpawnThread(LoginProcessName, "", LoginServerPort);
     }
 
-    private void SpawnZone(string ProcessName, string SceneName)
+    private void SpawnChatServer()
     {
-        if (processCount >= MaxProcesses)
-        {
-            print("[Zones]: ERROR: Spawner at Max Processes");
-            //return;
-        }
+        if (!AutoStartChatServer)
+            return;
 
-        //Generate AuthID:
-        string _authID = Guid.NewGuid().ToString();
+        print("[ChatServer Start]");
 
-#if UNITY_EDITOR
-        ProcessPath = EditorPath;
-#endif
-        // spawn process, pass scene argument
-        Process p = new Process();
-        p.StartInfo.FileName = ProcessPath + ProcessName;
-        //Args to pass: port, scene, AuthCode, UniqueID...
-        p.StartInfo.Arguments = ArgsString() + 
-            " -ScenePath " + SceneName + 
-            " -UniqueID " + _authID +
-            " -AssignedPort " + (portCounter++) +
-            " -MasterIp " + "localhost" + 
-            " -MasterPort " + insightServer.networkPort;
-        print("[Zones]: spawning: " + p.StartInfo.FileName + "; args=" + p.StartInfo.Arguments);
-        p.Start();
-
-        processCount++;
-
-        //registeredServersList.Add(new RegisteredServers() { AuthID = _authID, ServerType = serverType });
+        //Chat Server does not use Args
+        SpawnThread(ChatProcessName, "", ChatServerPort);
     }
 
     private void SpawnStaticZones()
     {
-        SpawnLogin();
+        if (!AutoStartZoneServers)
+            return;
 
-        print("[Zones]: Spawn Static Zones...");
-        foreach (string scenePath in scenePathsToSpawn)
+        print("[ZoneServer]: Spawning Static Zones...");
+
+        _zoneServerPortCounter = ZoneServerStartingPort;
+
+        foreach (string scenePath in staticScenePaths)
         {
-            SpawnZone(ZoneProcessName, scenePath);
+            SpawnThread(ZoneServerProcessName, scenePath, _zoneServerPortCounter++);
         }
+    }
+
+    private ZoneContainer SpawnThread(string ProcessName, string SceneName, int Port)
+    {
+#if UNITY_EDITOR
+        ProcessPath = EditorPath;
+#endif
+
+        ZoneContainer container = new ZoneContainer();
+        container.SceneName = SceneName;
+        container.UniqueID = Guid.NewGuid().ToString();
+        container.NetworkPort = Port;
+
+        // spawn process, pass scene argument
+        Process p = new Process();
+        p.StartInfo.FileName = ProcessPath + ProcessName;
+        //Args to pass: port, scene, AuthCode, UniqueID...
+        p.StartInfo.Arguments = ArgsString() +
+            " -ScenePath " + SceneName +
+            " -UniqueID " + container.UniqueID +
+            " -AssignedPort " + (Port) +
+            " -MasterIp " + "localhost" +
+            " -MasterPort " + insightServer.networkPort;
+        print("[Zones]: spawning: " + p.StartInfo.FileName + "; args=" + p.StartInfo.Arguments);
+        p.Start();
+
+        processDict.Add(new SpawnedProcesses() { PID = p.Id, ProcessName = ProcessName });
+
+        return container;
     }
 
     private static string ArgsString()
@@ -118,13 +157,16 @@ public class SpawnerModule : InsightModule
             return args != null ? args[0] : "";
         }
     }
+
+    private void OnApplicationQuit()
+    {
+        //Kill all the children processes
+    }
 }
 
-public class ZoneServerSpawnRequest : MessageBase
+[Serializable]
+public struct SpawnedProcesses
 {
-    public static short MsgId = 10001;
-    public string SceneName;
-    public bool IsStatic;
-    public bool IsPublic;
-    public string Password;
+    public int PID;
+    public string ProcessName;
 }

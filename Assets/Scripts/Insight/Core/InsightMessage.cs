@@ -58,4 +58,13 @@ namespace Insight{
         public static short MsgId = 9092;
         public ZoneContainer[] zonesList;
     }
+
+    //Test msg for ChatServer
+    public class ChatMessage : MessageBase
+    {
+        public static short MsgId = 1006;
+        public string Data;
+        public string Origin;
+        public string Target; //If this was a private chat
+    }
 }

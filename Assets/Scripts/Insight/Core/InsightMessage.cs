@@ -1,9 +1,17 @@
 ﻿using Mirror;
 
-namespace Insight{
+namespace Insight
+{
     public class EmptyReply : MessageBase
     {
 
+    }
+
+    public class ErrorMsg : MessageBase
+    {
+        public static short MsgId = -1;
+        public string Text;
+        public bool CauseDisconnect;
     }
 
     //Test msgs for Demo only
@@ -66,5 +74,14 @@ namespace Insight{
         public string Data;
         public string Origin;
         public string Target; //If this was a private chat
+    }
+
+    //Test msg for LoginServer
+    public class LoginMsg : MessageBase
+    {
+        public static short MsgId = 1000;
+        public string AccountName;
+        public string AccountPassword;
+        public string ClientVersion;
     }
 }

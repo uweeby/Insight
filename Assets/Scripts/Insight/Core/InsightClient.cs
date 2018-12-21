@@ -176,22 +176,22 @@ namespace Insight
         //------------Virtual Handlers-------------
         public virtual void OnConnected(Message msg)
         {
-            Debug.Log("OnConnected");
+            if (logNetworkMessages) { Debug.Log("[InsightClient] - Connected to Insight Server"); }
         }
 
         public virtual void OnDisconnected(Message msg)
         {
-            Debug.Log("OnDisconnected");
+            if (logNetworkMessages) { Debug.Log("[InsightClient] - OnDisconnected()"); }
         }
 
         public virtual void OnClientStart()
         {
-            Debug.Log("Connecting to Insight Server: " + networkAddress + ":" + networkPort);
+            if (logNetworkMessages) { Debug.Log("[InsightClient] - Connecting to Insight Server: " + networkAddress + ":" + networkPort); }
         }
 
         public virtual void OnClientStop()
         {
-            Debug.Log("Disconnecting from Insight Server");
+            if (logNetworkMessages) { Debug.Log("[InsightClient] - Disconnecting from Insight Server"); }
         }
     }
 }

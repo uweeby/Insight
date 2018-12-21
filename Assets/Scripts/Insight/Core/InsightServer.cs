@@ -188,22 +188,22 @@ namespace Insight
 
         public virtual void OnConnected(InsightNetworkConnection conn)
         {
-            Debug.Log("OnConnected");
+            if (logNetworkMessages) { Debug.Log("[InsightServer] - Client connected from: " + conn.address); }
         }
 
         public virtual void OnDisconnected(InsightNetworkConnection conn)
         {
-            Debug.Log("OnDisconnected");
+            if (logNetworkMessages) { Debug.Log("[InsightServer] - OnDisconnected()"); }
         }
 
         public virtual void OnServerStart()
         {
-
+            if (logNetworkMessages) { Debug.Log("[InsightServer] - OnServerStart()"); }
         }
 
         public virtual void OnServerStop()
         {
-
+            if (logNetworkMessages) { Debug.Log("[InsightServer] - OnServerStop()"); }
         }
     }
 }

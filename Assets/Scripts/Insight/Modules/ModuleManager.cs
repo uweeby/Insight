@@ -7,7 +7,7 @@ using UnityEngine;
 [RequireComponent(typeof(InsightCommon))]
 public class ModuleManager : MonoBehaviour
 {
-    InsightCommon insightServer;
+    InsightCommon insight; //Reference to the Insight objec that will be used with this module
 
     public bool SearchChildrenForModule;
 
@@ -18,7 +18,7 @@ public class ModuleManager : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
-        insightServer = GetComponent<InsightCommon>();
+        insight = GetComponent<InsightCommon>();
 
         _modules = new Dictionary<Type, InsightModule>();
         _initializedModules = new HashSet<Type>();
@@ -38,7 +38,7 @@ public class ModuleManager : MonoBehaviour
                 AddModule(module);
 
             // Initialize modules
-            InitializeModules(insightServer);
+            InitializeModules(insight);
 
             //Register Handlers
             foreach (var module in modules)
@@ -83,7 +83,7 @@ public class ModuleManager : MonoBehaviour
                 //entry.Value.Server = this;
                 entry.Value.Initialize(server);
                 _initializedModules.Add(entry.Key);
-                Debug.LogWarning("Loaded Module: " + entry.Key.ToString());
+                Debug.LogWarning("[" + gameObject.name + "] Loaded Module: " + entry.Key.ToString());
 
                 // Keep checking optional if something new was initialized
                 checkOptional = true;

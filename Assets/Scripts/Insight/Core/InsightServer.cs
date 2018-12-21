@@ -127,24 +127,13 @@ namespace Insight
             InsightNetworkConnection conn;
             if (connections.TryGetValue(connectionId, out conn))
             {
-                //print("");
-                OnData(conn, data);
+                conn.TransportReceive(data);
                 return;
             }
             else
             {
                 Debug.LogError("HandleData Unknown connectionId:" + connectionId);
             }
-        }
-
-        void OnData(InsightNetworkConnection conn, byte[] data)
-        {
-            conn.TransportReceive(data);
-        }
-
-        public bool Send(int connectionId, byte[] data)
-        {
-            return server.Send(connectionId, data);
         }
 
         public string GetConnectionInfo(int connectionId)
@@ -171,6 +160,16 @@ namespace Insight
         public bool RemoveConnection(int connectionId)
         {
             return connections.Remove(connectionId);
+        }
+
+        public override bool Send(int connectionId, byte[] data)
+        {
+            if (server.Active)
+            {
+                return server.Send(connectionId, data);
+            }
+            Debug.Log("Server.Send: not connected!");
+            return false;
         }
 
         private void OnApplicationQuit()

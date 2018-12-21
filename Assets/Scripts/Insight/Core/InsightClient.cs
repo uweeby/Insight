@@ -8,10 +8,8 @@ namespace Insight
 {
     public class InsightClient : InsightCommon
     {
-        public int clientID = -1;
-        public int connectionID = 0;
-
-        public bool logNetworkMessages;
+        protected int clientID = -1;
+        protected int connectionID = 0;
 
         InsightNetworkConnection insightNetworkConnection;
 
@@ -96,7 +94,7 @@ namespace Insight
             }
         }
 
-        public bool Send(byte[] data)
+        public override bool Send(int connectionId, byte[] data)
         {
             if (client.Connected)
             {

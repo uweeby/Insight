@@ -1,14 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using Mirror;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Insight
 {
-	public class InsightCommon : MonoBehaviour
+
+	public abstract class InsightCommon : MonoBehaviour
 	{
-        public bool AutoStart;
+        public bool AutoStart = true;
+        public bool logNetworkMessages = false;
         public string networkAddress = "localhost";
         public int networkPort = 5000;
-
+        
         protected Dictionary<short, InsightNetworkMessageDelegate> messageHandlers; //Default Handlers
 
 		protected enum ConnectState
@@ -44,5 +47,7 @@ namespace Insight
         {
             messageHandlers.Clear();
         }
+
+        public abstract bool Send(int connectionId, byte[] data);
     }
 }

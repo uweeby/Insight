@@ -171,7 +171,7 @@ public class InsightNetworkConnection : IDisposable
         error = 0;
         if (client != null)
         {
-            client.Send(bytes);
+            client.Send(0, bytes);
             return true;
         }
         else if (server != null)

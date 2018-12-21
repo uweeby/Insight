@@ -1,7 +1,4 @@
 ﻿using Insight;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 public class ClientChatModule : InsightModule
 {
@@ -13,6 +10,16 @@ public class ClientChatModule : InsightModule
     }
 
     public override void RegisterHandlers()
+    {
+        insight.RegisterHandler(InsightChatMessage.MsgId, HandleChatMessage);
+    }
+
+    public void HandleChatMessage(InsightNetworkMessage netMsg)
+    {
+
+    }
+
+    public void SendChatMessage(string Data)
     {
         
     }

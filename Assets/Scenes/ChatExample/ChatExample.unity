@@ -141,7 +141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 522bd96839d1e094c8ea81507da62403, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SearchChildrenForModule: 0
+  SearchChildrenForModule: 1
 --- !u!114 &274071620
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -153,8 +153,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ef24255e3d4a434e87316a7a2e032e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AutoStart: 0
-  logNetworkMessages: 0
+  AutoStart: 1
+  logNetworkMessages: 1
   networkAddress: localhost
   networkPort: 5000
 --- !u!4 &274071621
@@ -182,6 +182,7 @@ GameObject:
   - component: {fileID: 626635190}
   - component: {fileID: 626635189}
   - component: {fileID: 626635188}
+  - component: {fileID: 626635192}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -252,6 +253,28 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &626635192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 626635187}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3e190785e1ded444a02253c8edac2b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Title: Console
+  Show: 1
+  ShowDateTime: 1
+  ShowLatest: 1
+  CollapseDuplicates: 0
+  toggleKey: 27
+  MaxLogEntries: 1000
+  LeftMargin: 20
+  TopMargin: 20
+  RightMargin: 20
+  BottomMargin: 20
 --- !u!1 &972950911
 GameObject:
   m_ObjectHideFlags: 0
@@ -260,6 +283,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 972950912}
+  - component: {fileID: 972950913}
   m_Layer: 0
   m_Name: ClientChatModule
   m_TagString: Untagged
@@ -280,6 +304,17 @@ Transform:
   m_Father: {fileID: 1668111368}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &972950913
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 972950911}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8453ffc53b7982f4b96a6e9456bfcedc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1088249641
 GameObject:
   m_ObjectHideFlags: 0
@@ -348,7 +383,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 522bd96839d1e094c8ea81507da62403, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SearchChildrenForModule: 0
+  SearchChildrenForModule: 1
 --- !u!114 &1668111367
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -360,8 +395,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85d70c884f061d441a50834e9653d870, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AutoStart: 0
-  logNetworkMessages: 0
+  AutoStart: 1
+  logNetworkMessages: 1
   networkAddress: localhost
   networkPort: 5000
 --- !u!4 &1668111368

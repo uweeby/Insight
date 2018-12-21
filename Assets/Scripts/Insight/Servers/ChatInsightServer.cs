@@ -2,8 +2,6 @@
 
 public class ChatInsightServer : InsightServer
 {
-    public bool showDebugMessages;
-
     // Use this for initialization
     public override void Start ()
     {

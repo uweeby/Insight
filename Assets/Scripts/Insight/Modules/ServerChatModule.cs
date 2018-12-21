@@ -2,18 +2,18 @@
 using Mirror;
 using UnityEngine;
 
-public class ChatModule : InsightModule
+public class ServerChatModule : InsightModule
 {
-    InsightCommon insightServer;
+    InsightCommon insight;
 
-    public override void Initialize(InsightCommon server)
+    public override void Initialize(InsightCommon insight)
     {
-        insightServer = server;
+        this.insight = insight;
     }
 
     public override void RegisterHandlers()
     {
-        insightServer.RegisterHandler(InsightChatMessage.MsgId, HandleChatMessage);
+        insight.RegisterHandler(InsightChatMessage.MsgId, HandleChatMessage);
     }
 
     private void HandleChatMessage(InsightNetworkMessage netMsg)

@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[RequireComponent(typeof(InsightServer))]
+[RequireComponent(typeof(InsightCommon))]
 public class ModuleManager : MonoBehaviour
 {
-    InsightServer insightServer;
+    InsightCommon insightServer;
 
     public bool SearchChildrenForModule;
 
@@ -18,7 +18,7 @@ public class ModuleManager : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
-        insightServer = GetComponent<InsightServer>();
+        insightServer = GetComponent<InsightCommon>();
 
         _modules = new Dictionary<Type, InsightModule>();
         _initializedModules = new HashSet<Type>();
@@ -57,7 +57,7 @@ public class ModuleManager : MonoBehaviour
         _modules[module.GetType()] = module;
     }
 
-    public bool InitializeModules(InsightServer server)
+    public bool InitializeModules(InsightCommon server)
     {
         var checkOptional = true;
 

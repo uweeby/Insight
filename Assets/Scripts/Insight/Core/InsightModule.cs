@@ -8,9 +8,9 @@ public interface IServerModule
     IEnumerable<Type> Dependencies { get; }
     IEnumerable<Type> OptionalDependencies { get; }
 
-    InsightServer Server { get; set; }
+    InsightCommon Insight { get; set; }
 
-    void Initialize(InsightServer server);
+    void Initialize(InsightCommon insight);
 }
 
 public class InsightModule : MonoBehaviour, IServerModule
@@ -33,12 +33,12 @@ public class InsightModule : MonoBehaviour, IServerModule
         get { return _optionalDependencies; }
     }
 
-    public InsightServer Server { get; set; }
+    public InsightCommon Insight { get; set; }
 
     /// <summary>
     ///     Called by master server, when module should be started
     /// </summary>
-    public virtual void Initialize(InsightServer server)
+    public virtual void Initialize(InsightCommon server)
     {
         
     }

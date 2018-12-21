@@ -6,26 +6,13 @@ using UnityEngine;
 
 namespace Insight
 {
-    public class InsightServer : MonoBehaviour
+    public class InsightServer : InsightCommon
     {
-        public bool AutoStart;
-        public int networkPort = 5000;
         protected int serverHostId = -1;
 
-        Server server;
-        protected Dictionary<int, InsightNetworkConnection> connections;
-        Dictionary<short, InsightNetworkMessageDelegate> messageHandlers; //Default Handlers
+        Server server; //Telepathy Server
 
-        protected enum ConnectState
-        {
-            None,
-            Connecting,
-            Connected,
-            Disconnected,
-        }
-        protected ConnectState connectState = ConnectState.None;
-
-        public bool isConnected { get { return connectState == ConnectState.Connected; } }
+		protected Dictionary<int, InsightNetworkConnection> connections;
 
         public virtual void Start()
         {
@@ -158,16 +145,6 @@ namespace Insight
         public bool Send(int connectionId, byte[] data)
         {
             return server.Send(connectionId, data);
-        }
-
-        public void RegisterHandler(short msgType, InsightNetworkMessageDelegate handler)
-        {
-            if (messageHandlers.ContainsKey(msgType))
-            {
-                //if (LogFilter.Debug) { Debug.Log("NetworkConnection.RegisterHandler replacing " + msgType); }
-                Debug.Log("NetworkConnection.RegisterHandler replacing " + msgType);
-            }
-            messageHandlers[msgType] = handler;
         }
 
         public string GetConnectionInfo(int connectionId)

@@ -5,11 +5,11 @@ using System.Collections.Generic;
 
 public class ZoneModule : InsightModule
 {
-    InsightServer insightServer;
+    InsightCommon insightServer;
 
     public List<ZoneContainer> ZoneList = new List<ZoneContainer>();
 
-    public override void Initialize(InsightServer server)
+    public override void Initialize(InsightCommon server)
     {
         insightServer = server;
     }

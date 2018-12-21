@@ -6,32 +6,16 @@ using UnityEngine;
 
 namespace Insight
 {
-    public class InsightClient : MonoBehaviour
+    public class InsightClient : InsightCommon
     {
-        public bool AutoStart;
         public int clientID = -1;
         public int connectionID = 0;
 
-        public string networkAddress = "localhost";
-        public int networkPort = 5000;
         public bool logNetworkMessages;
 
         InsightNetworkConnection insightNetworkConnection;
 
-        Client client = new Client();
-
-        Dictionary<short, InsightNetworkMessageDelegate> messageHandlers;
-
-        protected enum ConnectState
-        {
-            None,
-            Connecting,
-            Connected,
-            Disconnected,
-        }
-        protected ConnectState connectState = ConnectState.None;
-
-        public bool isConnected { get { return connectState == ConnectState.Connected; } }
+        Client client; //Telepathy Client
 
         public virtual void Start()
         {
@@ -42,6 +26,8 @@ namespace Insight
             Telepathy.Logger.LogMethod = Debug.Log;
             Telepathy.Logger.LogWarningMethod = Debug.LogWarning;
             Telepathy.Logger.LogErrorMethod = Debug.LogError;
+
+            client = new Client();
 
             messageHandlers = new Dictionary<short, InsightNetworkMessageDelegate>();
 
@@ -182,29 +168,6 @@ namespace Insight
             {
                 Debug.LogError("HandleBytes UnpackMessage failed for: " + BitConverter.ToString(buffer));
             }
-        }
-
-        public void RegisterHandler(short msgType, InsightNetworkMessageDelegate handler)
-        {
-            if (messageHandlers.ContainsKey(msgType))
-            {
-                //if (LogFilter.Debug) { Debug.Log("NetworkConnection.RegisterHandler replacing " + msgType); }
-                Debug.Log("NetworkConnection.RegisterHandler replacing " + msgType);
-            }
-            messageHandlers[msgType] = handler;
-        }
-
-        public void UnRegisterHandler(short msgType, InsightNetworkMessageDelegate handler)
-        {
-            if (messageHandlers.ContainsKey(msgType))
-            {
-                messageHandlers[msgType] -= handler;
-            }
-        }
-
-        public void ClearHandlers()
-        {
-            messageHandlers.Clear();
         }
 
         private void OnApplicationQuit()

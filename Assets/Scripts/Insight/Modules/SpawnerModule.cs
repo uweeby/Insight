@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class SpawnerModule : InsightModule
 {
-    InsightServer insightServer;
+    InsightCommon insightServer;
 
     [Header("Paths")]
     public string EditorPath;
@@ -41,7 +41,7 @@ public class SpawnerModule : InsightModule
     [Range(2, 10)] public float timeoutMultiplier = 3;
     public float timeoutInterval { get { return writeInterval * timeoutMultiplier; } }
 
-    public override void Initialize(InsightServer server)
+    public override void Initialize(InsightCommon server)
     {
         insightServer = server;
 

@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class ChatModule : InsightModule
 {
-    InsightServer insightServer;
+    InsightCommon insightServer;
 
-    public override void Initialize(InsightServer server)
+    public override void Initialize(InsightCommon server)
     {
         insightServer = server;
     }

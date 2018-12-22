@@ -77,7 +77,7 @@ namespace Insight
             {
                 if(!isConnected && (_reconnectTimer < Time.time))
                 {
-                    Debug.Log("[InsightClient] - Trying to reconnect...");
+                    if (logNetworkMessages) { Debug.Log("[InsightClient] - Trying to reconnect..."); }
                     _reconnectTimer = Time.time + 5; //Wait 5 seconds before trying to connect again
                     StartInsight();
                 }

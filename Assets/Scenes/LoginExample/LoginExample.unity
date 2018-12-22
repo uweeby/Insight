@@ -122,6 +122,7 @@ GameObject:
   m_Component:
   - component: {fileID: 274071621}
   - component: {fileID: 274071620}
+  - component: {fileID: 274071619}
   m_Layer: 0
   m_Name: InsightServer
   m_TagString: Untagged
@@ -129,6 +130,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &274071619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 274071618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 522bd96839d1e094c8ea81507da62403, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SearchChildrenForModule: 1
 --- !u!114 &274071620
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -299,7 +312,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 972950911}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8453ffc53b7982f4b96a6e9456bfcedc, type: 3}
+  m_Script: {fileID: 11500000, guid: 52177ee09860c8448a212612763e4406, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1088249641
@@ -339,7 +352,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1088249641}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d104c6a33d48f54a963b3f9ff6df16b, type: 3}
+  m_Script: {fileID: 11500000, guid: 3ecd18586a6de01439a817b99a266185, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1668111365
@@ -351,6 +364,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1668111368}
   - component: {fileID: 1668111367}
+  - component: {fileID: 1668111366}
   m_Layer: 0
   m_Name: InsightClient
   m_TagString: Untagged
@@ -358,6 +372,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1668111366
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1668111365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 522bd96839d1e094c8ea81507da62403, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SearchChildrenForModule: 1
 --- !u!114 &1668111367
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -373,6 +399,7 @@ MonoBehaviour:
   logNetworkMessages: 1
   networkAddress: localhost
   networkPort: 5000
+  AutoReconnect: 1
 --- !u!4 &1668111368
 Transform:
   m_ObjectHideFlags: 0

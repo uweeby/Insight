@@ -9,7 +9,7 @@ public class ModuleManager : MonoBehaviour
 {
     InsightCommon insight; //Reference to the Insight objec that will be used with this module
 
-    public bool SearchChildrenForModule;
+    public bool SearchChildrenForModule = true;
 
     private Dictionary<Type, InsightModule> _modules;
     private HashSet<Type> _initializedModules;

@@ -10,14 +10,15 @@ You can run both the Client and Server from the same exe but the scope of this p
 # To Build:  
 Download this project and open in Unity.  
 Download Mirror from one of the two locations listed above.  
-Build one of the example scenes via the Tools menu.
+Run the example scenes in editor.  
+Note: The Spawner example requires the use of the build menu (Under Tools at the top) to have a seperate running Standalone to spawn.  
 
 # Examples:  
-ChatModule - Sends messages to players anywhere in the game.
-LoginModule - Simple user/pass verification
-SpawnerModule - Creates ZoneServers on Start and OnDemand (OnDemand not implemented yet)  
-ZoneModule - Manage the Zones spawned by SpawnerModule (not implemented yet) 
-DatabaseModule - Working on support for MySQL and SQLite (not implemented yet) 
+ChatModule - Sends messages to players anywhere in the game.  
+LoginModule - Simple user/pass verification  
+BasicSpawner - Creates GameServer with incrementing port numbers  
+ComplexSpawner - Create and register GameServer with GameManagerModule (not implemented yet)  
+Database - Working on support for MySQL and SQLite (not implemented yet)  
 
 # License:  
 Follow the included Mirror license. Otherwise Insight has no specific licensing of its own and can be used/copied anyway you see fit.

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Insight;
-using Mirror;
 using UnityEngine;
 
 public class SpawnerModule : InsightModule

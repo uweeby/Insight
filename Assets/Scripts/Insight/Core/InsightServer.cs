@@ -33,7 +33,7 @@ namespace Insight
 
             if(AutoStart)
             {
-                StartServer();
+                StartInsight();
             }
         }
 
@@ -42,25 +42,25 @@ namespace Insight
             HandleNewMessages();
         }
 
-        public void StartServer(int Port)
+        public void StartInsight(int Port)
         {
             networkPort = Port;
 
-            StartServer();
+            StartInsight();
         }
 
-        public void StartServer()
+        public override void StartInsight()
         {
-            if (logNetworkMessages) { Debug.Log("Start Insight Server On Port: " + networkPort); }
+            if (logNetworkMessages) { Debug.Log("[InsightServer] - Start On Port: " + networkPort); }
             server.Start(networkPort);
             serverHostId = 0;
 
             connectState = ConnectState.Connected;
 
-            OnServerStart();
+            OnStartInsight();
         }
 
-        public void StopServer()
+        public override void StopInsight()
         {
             connections.Clear();
 
@@ -70,7 +70,7 @@ namespace Insight
 
             connectState = ConnectState.Disconnected;
 
-            OnServerStop();
+            OnStopInsight();
         }
 
         // grab all new messages. do this in your Update loop.
@@ -214,14 +214,14 @@ namespace Insight
             if (logNetworkMessages) { Debug.Log("[InsightServer] - OnDisconnected()"); }
         }
 
-        public virtual void OnServerStart()
+        public virtual void OnStartInsight()
         {
-            if (logNetworkMessages) { Debug.Log("[InsightServer] - OnServerStart()"); }
+            if (logNetworkMessages) { Debug.Log("[InsightServer] - OnStartInsight()"); }
         }
 
-        public virtual void OnServerStop()
+        public virtual void OnStopInsight()
         {
-            if (logNetworkMessages) { Debug.Log("[InsightServer] - OnServerStop()"); }
+            if (logNetworkMessages) { Debug.Log("[InsightServer] - OnStopInsight()"); }
         }
     }
 }

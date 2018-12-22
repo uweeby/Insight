@@ -16,10 +16,15 @@ public class ModuleManager : MonoBehaviour
 
     private bool _initializeComplete;
     // Use this for initialization
-    void Start ()
+
+    void Awake()
     {
         insight = GetComponent<InsightCommon>();
+        insight.AutoStart = false; //Wait until modules are loaded to AutoStart
+    }
 
+    void Start ()
+    {
         _modules = new Dictionary<Type, InsightModule>();
         _initializedModules = new HashSet<Type>();
     }
@@ -44,6 +49,8 @@ public class ModuleManager : MonoBehaviour
             foreach (var module in modules)
                 module.RegisterHandlers();
 
+            //Now that modules are loaded StartInsight
+            insight.StartInsight();
         }
     }
 
@@ -55,6 +62,15 @@ public class ModuleManager : MonoBehaviour
         }
 
         _modules[module.GetType()] = module;
+    }
+
+    public bool RemoveModule(InsightModule module)
+    {
+        if (_modules.ContainsKey(module.GetType()))
+        {
+            return _modules.Remove(module.GetType());
+        }
+        return false;
     }
 
     public bool InitializeModules(InsightCommon server)

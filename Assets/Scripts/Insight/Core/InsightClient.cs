@@ -33,7 +33,7 @@ namespace Insight
 
             if (AutoStart)
             {
-                StartClient();
+                StartInsight();
             }
         }
         public virtual void Update()
@@ -43,28 +43,27 @@ namespace Insight
             HandleNewMessages();
         }
 
-        public void StartClient(string Address, int Port)
+        public void StartInsight(string Address, int Port)
         {
             networkAddress = Address;
             networkPort = Port;
 
-            StartClient();
+            StartInsight();
         }
 
-        public void StartClient()
+        public override void StartInsight()
         {
             client.Connect(networkAddress, networkPort);
             clientID = 0;
             insightNetworkConnection = new InsightNetworkConnection();
             insightNetworkConnection.Initialize(this, networkAddress, clientID, connectionID);
-            OnClientStart();
+            OnStartInsight();
         }
 
-        public void StopClient()
+        public override void StopInsight()
         {
             client.Disconnect();
-
-            OnClientStop();
+            OnStopInsight();
         }
 
         public bool IsConnecting()
@@ -80,7 +79,7 @@ namespace Insight
                 {
                     Debug.Log("[InsightClient] - Trying to reconnect...");
                     _reconnectTimer = Time.time + 5; //Wait 5 seconds before trying to connect again
-                    StartClient();
+                    StartInsight();
                 }
             }
         }
@@ -200,7 +199,7 @@ namespace Insight
         private void OnApplicationQuit()
         {
             if (logNetworkMessages) { Debug.Log("[InsightClient] Stopping Client"); }
-            StopClient();
+            StopInsight();
         }
 
         //------------Virtual Handlers-------------
@@ -214,12 +213,12 @@ namespace Insight
             if (logNetworkMessages) { Debug.Log("[InsightClient] - OnDisconnected()"); }
         }
 
-        public virtual void OnClientStart()
+        public virtual void OnStartInsight()
         {
             if (logNetworkMessages) { Debug.Log("[InsightClient] - Connecting to Insight Server: " + networkAddress + ":" + networkPort); }
         }
 
-        public virtual void OnClientStop()
+        public virtual void OnStopInsight()
         {
             if (logNetworkMessages) { Debug.Log("[InsightClient] - Disconnecting from Insight Server"); }
         }

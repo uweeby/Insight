@@ -48,6 +48,10 @@ namespace Insight
             messageHandlers.Clear();
         }
 
+        public abstract void StartInsight();
+
+        public abstract void StopInsight();
+
         public abstract bool Send(int connectionId, byte[] data);
 
         public abstract bool SendMsg(int connectionId, short msgType, MessageBase msg);

@@ -13,8 +13,9 @@ namespace Insight
         protected int connectionID = 0;
 
         InsightNetworkConnection insightNetworkConnection;
-
         Client client; //Telepathy Client
+
+        private float _reconnectTimer;
 
         public virtual void Start()
         {
@@ -75,7 +76,12 @@ namespace Insight
         {
             if (AutoReconnect)
             {
-                //Put reconnect code here
+                if(!isConnected && (_reconnectTimer < Time.time))
+                {
+                    Debug.Log("[InsightClient] - Trying to reconnect...");
+                    _reconnectTimer = Time.time + 5; //Wait 5 seconds before trying to connect again
+                    StartClient();
+                }
             }
         }
 
@@ -105,6 +111,11 @@ namespace Insight
             }
         }
 
+        public override bool SendMsgToAll(short msgType, MessageBase msg)
+        {
+            return SendMsg(0, msgType, msg);
+        }
+
         public override bool Send(int connectionId, byte[] data)
         {
             if (client.Connected)
@@ -125,20 +136,15 @@ namespace Insight
             return SendBytes(0, message);
         }
 
-        public override bool SendMsgToAll(short msgType, MessageBase msg)
+        public bool SendMsg(short msgType, MessageBase msg)
         {
-            return SendMsg(0, msgType, msg); //Client cannot send to all
+            NetworkWriter writer = new NetworkWriter();
+            msg.Serialize(writer);
+
+            // pack message and send
+            byte[] message = Protocol.PackMessage((ushort)msgType, writer.ToArray());
+            return SendBytes(0, message);
         }
-
-        //public bool SendMsg(short msgType, MessageBase msg)
-        //{
-        //    NetworkWriter writer = new NetworkWriter();
-        //    msg.Serialize(writer);
-
-        //    // pack message and send
-        //    byte[] message = Protocol.PackMessage((ushort)msgType, writer.ToArray());
-        //    return SendBytes(0, message);
-        //}
 
         private bool SendBytes(int connectionId, byte[] bytes)
         {
@@ -167,7 +173,6 @@ namespace Insight
             byte[] content;
             if (Protocol.UnpackMessage(buffer, out msgType, out content))
             {
-                //if (logNetworkMessages) { Debug.Log("ConnectionRecv con:" + connectionId + " msgType:" + msgType + " content:" + BitConverter.ToString(content)); }
                 if (logNetworkMessages) { Debug.Log(" msgType:" + msgType + " content:" + BitConverter.ToString(content)); }
 
                 InsightNetworkMessageDelegate msgDelegate;
@@ -177,10 +182,8 @@ namespace Insight
                     InsightNetworkMessage msg = new InsightNetworkMessage();
                     msg.msgType = (short)msgType;
                     msg.reader = new NetworkReader(content);
-                    //msg.conn = this;
 
                     msgDelegate(msg);
-                    //lastMessageTime = Time.time;
                 }
                 else
                 {
@@ -196,6 +199,7 @@ namespace Insight
 
         private void OnApplicationQuit()
         {
+            if (logNetworkMessages) { Debug.Log("[InsightClient] Stopping Client"); }
             StopClient();
         }
 

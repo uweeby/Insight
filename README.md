@@ -12,11 +12,12 @@ Download this project and open in Unity.
 Download Mirror from one of the two locations listed above.  
 Build one of the example scenes via the Tools menu.
 
-# Current Modules:  
+# Examples:  
+ChatModule - Sends messages to players anywhere in the game.
+LoginModule - Simple user/pass verification
 SpawnerModule - Creates ZoneServers on Start and OnDemand (OnDemand not implemented yet)  
-ChatModule - Sends messages to players anywhere in the game. (Not fully implemented yet)  
-DatabaseModule - Working on support for MySQL and SQLite  
-ZoneModule - Manage the Zones spawned by SpawnerModule  
+ZoneModule - Manage the Zones spawned by SpawnerModule (not implemented yet) 
+DatabaseModule - Working on support for MySQL and SQLite (not implemented yet) 
 
 # License:  
 Follow the included Mirror license. Otherwise Insight has no specific licensing of its own and can be used/copied anyway you see fit.

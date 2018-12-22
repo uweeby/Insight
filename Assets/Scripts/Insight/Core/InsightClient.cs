@@ -8,6 +8,7 @@ namespace Insight
 {
     public class InsightClient : InsightCommon
     {
+        public bool AutoReconnect = true;
         protected int clientID = -1;
         protected int connectionID = 0;
 
@@ -36,6 +37,8 @@ namespace Insight
         }
         public virtual void Update()
         {
+            CheckConnection();
+
             HandleNewMessages();
         }
 
@@ -66,6 +69,14 @@ namespace Insight
         public bool IsConnecting()
         {
             return client.Connecting;
+        }
+
+        private void CheckConnection()
+        {
+            if (AutoReconnect)
+            {
+                //Put reconnect code here
+            }
         }
 
         public void HandleNewMessages()
@@ -104,7 +115,7 @@ namespace Insight
             return false;
         }
 
-        public bool SendMsg(short msgType, MessageBase msg)
+        public override bool SendMsg(int connectionId, short msgType, MessageBase msg)
         {
             NetworkWriter writer = new NetworkWriter();
             msg.Serialize(writer);
@@ -113,6 +124,21 @@ namespace Insight
             byte[] message = Protocol.PackMessage((ushort)msgType, writer.ToArray());
             return SendBytes(0, message);
         }
+
+        public override bool SendMsgToAll(short msgType, MessageBase msg)
+        {
+            return SendMsg(0, msgType, msg); //Client cannot send to all
+        }
+
+        //public bool SendMsg(short msgType, MessageBase msg)
+        //{
+        //    NetworkWriter writer = new NetworkWriter();
+        //    msg.Serialize(writer);
+
+        //    // pack message and send
+        //    byte[] message = Protocol.PackMessage((ushort)msgType, writer.ToArray());
+        //    return SendBytes(0, message);
+        //}
 
         private bool SendBytes(int connectionId, byte[] bytes)
         {

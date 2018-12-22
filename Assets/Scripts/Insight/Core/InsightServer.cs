@@ -172,6 +172,30 @@ namespace Insight
             return false;
         }
 
+        public override bool SendMsg(int connectionId, short msgType, MessageBase msg)
+        {
+            if (server.Active)
+            {
+                return connections[connectionId].Send(msgType, msg);
+            }
+            Debug.Log("Server.Send: not connected!");
+            return false;
+        }
+
+        public override bool SendMsgToAll(short msgType, MessageBase msg)
+        {
+            if (server.Active)
+            {
+                foreach(KeyValuePair<int, InsightNetworkConnection> conn in connections)
+                {
+                    conn.Value.Send(msgType, msg);
+                }
+                return true;
+            }
+            Debug.Log("Server.Send: not connected!");
+            return false;
+        }
+
         private void OnApplicationQuit()
         {
             StartCoroutine(ShutDown());

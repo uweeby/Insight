@@ -53,7 +53,7 @@ public class BasicSpawnerModule : InsightModule
     {
         if (StaticProcessCount > 0)
         {
-            UnityEngine.Debug.Log("[ZoneServer]: Spawning Static Zones...");
+            UnityEngine.Debug.Log("[BasicSpawnerModule]: Spawning Static Zones...");
             for(int i = 0; i < StaticProcessCount; i++)
             {
                 SpawnThread(StartingPort + _portUsageCounter);
@@ -77,20 +77,20 @@ public class BasicSpawnerModule : InsightModule
 
             if(p.Start())
             {
-                print("[Zones]: spawning: " + p.StartInfo.FileName + "; args=" + p.StartInfo.Arguments);
+                print("[BasicSpawnerModule]: spawning: " + p.StartInfo.FileName + "; args=" + p.StartInfo.Arguments);
                 spawnedProcessList.Add(new SpawnedProcesses() { PID = p.Id, ProcessName = ProcessName });
                 _processUsageCounter++; //Increment current port after sucessful spawn.
                 return true;
             }
             else
             {
-                UnityEngine.Debug.LogError("[ZoneModule] - Process Createion Failed");
+                UnityEngine.Debug.LogError("[BasicSpawnerModule] - Process Createion Failed");
                 return false;
             }
         }
         else
         {
-            UnityEngine.Debug.LogError("[ZoneModule] - Maximum Process Count Reached");
+            UnityEngine.Debug.LogError("[BasicSpawnerModule] - Maximum Process Count Reached");
             return false;
         }
     }

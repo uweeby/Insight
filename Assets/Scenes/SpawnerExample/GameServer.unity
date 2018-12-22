@@ -124,7 +124,7 @@ GameObject:
   - component: {fileID: 274071620}
   - component: {fileID: 274071619}
   m_Layer: 0
-  m_Name: InsightServer
+  m_Name: InsightClient
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -150,13 +150,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 274071618}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ef24255e3d4a434e87316a7a2e032e8, type: 3}
+  m_Script: {fileID: 11500000, guid: 85d70c884f061d441a50834e9653d870, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   AutoStart: 1
   logNetworkMessages: 1
   networkAddress: localhost
   networkPort: 5000
+  AutoReconnect: 1
 --- !u!4 &274071621
 Transform:
   m_ObjectHideFlags: 0
@@ -166,8 +167,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1088249642}
+  m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -275,59 +275,3 @@ MonoBehaviour:
   TopMargin: 20
   RightMargin: 20
   BottomMargin: 20
---- !u!1 &1088249641
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 1088249642}
-  - component: {fileID: 1088249643}
-  m_Layer: 0
-  m_Name: ServerSpawnerModule
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1088249642
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1088249641}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 274071621}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1088249643
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1088249641}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8382b135107eaf5458d6471f839dc241, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  EditorPath: 
-  ProcessPath: 
-  LoginProcessName: LoginServer.exe
-  AutoStartLoginServer: 1
-  LoginServerPort: 7070
-  ChatProcessName: ChatServer.exe
-  AutoStartChatServer: 1
-  ChatServerPort: 7000
-  ZoneServerProcessName: ZoneServer.exe
-  AutoStartZoneServers: 1
-  MaxZoneServerProcesses: 5
-  ZoneServerStartingPort: 7777
-  staticScenePaths: []
-  processDict: []
-  writeInterval: 1
-  timeoutMultiplier: 3

@@ -51,7 +51,7 @@ namespace Insight
 
         public void StartServer()
         {
-            Debug.Log("Start Insight Server On Port: " + networkPort);
+            if (logNetworkMessages) { Debug.Log("Start Insight Server On Port: " + networkPort); }
             server.Start(networkPort);
             serverHostId = 0;
 
@@ -198,14 +198,8 @@ namespace Insight
 
         private void OnApplicationQuit()
         {
-            StartCoroutine(ShutDown());
-        }
-
-        private IEnumerator ShutDown()
-        {
-            Debug.Log("Stopping Server");
+            if (logNetworkMessages) { Debug.Log("[InsightServer] Stopping Server"); }
             server.Stop();
-            yield return new WaitForSeconds(1);
         }
 
         //----------virtual handlers--------------//

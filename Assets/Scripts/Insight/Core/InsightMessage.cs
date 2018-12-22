@@ -7,6 +7,12 @@ namespace Insight
 
     }
 
+    public class StatusMsg : MessageBase
+    {
+        public static short MsgId = -2;
+        public string Text;
+    }
+
     public class ErrorMsg : MessageBase
     {
         public static short MsgId = -1;

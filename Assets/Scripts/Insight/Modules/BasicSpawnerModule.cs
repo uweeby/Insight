@@ -8,6 +8,7 @@ using UnityEngine;
 public class BasicSpawnerModule : InsightModule
 {
     InsightCommon insight;
+    ModuleManager manager;
 
     [Header("Paths")]
     public string EditorPath;
@@ -32,9 +33,10 @@ public class BasicSpawnerModule : InsightModule
     // [Range(2, 10)] public float timeoutMultiplier = 3;
     // public float timeoutInterval { get { return writeInterval * timeoutMultiplier; } }
 
-    public override void Initialize(InsightCommon insight)
+    public override void Initialize(InsightCommon insight, ModuleManager manager)
     {
         this.insight = insight;
+        this.manager = manager;
 
         SpawnStaticThreads();
     }

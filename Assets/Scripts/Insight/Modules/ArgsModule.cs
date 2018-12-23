@@ -1,17 +1,17 @@
 ﻿using Insight;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ArgsModule : InsightModule
 {
     InsightCommon insight;
+    ModuleManager manager;
 
     private InsightArgs insightArguments = new InsightArgs();
 
-    public override void Initialize(InsightCommon insight)
+    public override void Initialize(InsightCommon insight, ModuleManager manager)
     {
         this.insight = insight;
+        this.manager = manager;
 
         RegisterHandlers();
 

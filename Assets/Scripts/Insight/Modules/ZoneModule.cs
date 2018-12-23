@@ -6,12 +6,14 @@ using System.Collections.Generic;
 public class ZoneModule : InsightModule
 {
     InsightCommon insightServer;
+    ModuleManager manager;
 
     public List<ZoneContainer> ZoneList = new List<ZoneContainer>();
 
-    public override void Initialize(InsightCommon server)
+    public override void Initialize(InsightCommon server, ModuleManager manager)
     {
         insightServer = server;
+        this.manager = manager;
     }
 
     public override void RegisterHandlers()

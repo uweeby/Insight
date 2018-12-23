@@ -4,13 +4,15 @@ using UnityEngine;
 public class ClientChatModule : InsightModule
 {
     InsightCommon insight;
+    ModuleManager manager;
 
     //Used in Example Scene:
     public ChatGUI chatGuiComp;
 
-    public override void Initialize(InsightCommon insight)
+    public override void Initialize(InsightCommon insight, ModuleManager manager)
     {
         this.insight = insight;
+        this.manager = manager;
 
         RegisterHandlers();
     }

@@ -20,37 +20,37 @@ namespace Insight
         public bool CauseDisconnect;
     }
 
-    //Test msgs for Demo only
-    public class ClientToZoneTestMsg : MessageBase
-    {
-        public static short MsgId = 1000;
-        public string Source;
-        public string Desintation;
-        public string Data;
-    }
+    ////Test msgs for Demo only
+    //public class ClientToZoneTestMsg : MessageBase
+    //{
+    //    public static short MsgId = 1000;
+    //    public string Source;
+    //    public string Desintation;
+    //    public string Data;
+    //}
 
-    //Test msgs for Demo only
-    public class ClientToMasterTestMsg : MessageBase
-    {
-        public static short MsgId = 1001;
-        public string Source;
-        public string Desintation;
-        public string Data;
-    }
+    ////Test msgs for Demo only
+    //public class ClientToMasterTestMsg : MessageBase
+    //{
+    //    public static short MsgId = 1001;
+    //    public string Source;
+    //    public string Desintation;
+    //    public string Data;
+    //}
 
-    //Test msgs for Demo only
-    public class ZoneToMasterTestMsg : MessageBase
-    {
-        public static short MsgId = 1002;
-        public string Source;
-        public string Desintation;
-        public string Data;
-    }
+    ////Test msgs for Demo only
+    //public class ZoneToMasterTestMsg : MessageBase
+    //{
+    //    public static short MsgId = 1002;
+    //    public string Source;
+    //    public string Desintation;
+    //    public string Data;
+    //}
 
     //Test msg for ZoneModule
     public class RegisterZoneMsg : MessageBase
     {
-        public static short MsgId = 9090;
+        public static short MsgId = 1003;
         public string UniqueID;
         public string SceneName;
         public string NetworkAddress;
@@ -62,14 +62,14 @@ namespace Insight
     //Test msg for ZoneModule
     public class UnregisterZoneMsg : MessageBase
     {
-        public static short MsgId = 9091;
+        public static short MsgId = 1004;
         public string UniqueID;
     }
 
     //Test msg for ZoneModule
     public class GetZonesMsg : MessageBase
     {
-        public static short MsgId = 9092;
+        public static short MsgId = 1005;
         public ZoneContainer[] zonesList;
     }
 
@@ -85,9 +85,23 @@ namespace Insight
     //Test msg for LoginServer
     public class LoginMsg : MessageBase
     {
-        public static short MsgId = 1000;
+        public static short MsgId = 1007;
         public string AccountName;
         public string AccountPassword;
         public string ClientVersion;
+    }
+
+    //Test msg for LoadTest
+    public class ServerLoadTestMsg : MessageBase
+    {
+        public static short MsgId = 1008;
+        public char[] Payload;
+    }
+
+    //Test msg for LoadTest
+    public class ClientLoadTestMsg : MessageBase
+    {
+        public static short MsgId = 1009;
+        public char[] Payload;
     }
 }

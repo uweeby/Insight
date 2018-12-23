@@ -1,92 +1,97 @@
-﻿using Insight;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IServerModule
+namespace Insight
 {
-    IEnumerable<Type> Dependencies { get; }
-    IEnumerable<Type> OptionalDependencies { get; }
-
-    InsightCommon Insight { get; set; }
-
-    void Initialize(InsightCommon insight);
-}
-
-public class InsightModule : MonoBehaviour, IServerModule
-{
-    private static Dictionary<Type, GameObject> _instances;
-
-    private readonly List<Type> _dependencies = new List<Type>();
-    private readonly List<Type> _optionalDependencies = new List<Type>();
-
-    /// <summary>
-    ///     Returns a list of module types this module depends on
-    /// </summary>
-    public IEnumerable<Type> Dependencies
+    public interface IServerModule
     {
-        get { return _dependencies; }
+        IEnumerable<Type> Dependencies { get; }
+        IEnumerable<Type> OptionalDependencies { get; }
+
+        InsightCommon Insight { get; set; }
+        ModuleManager ModuleManager { get; set; }
+
+        void Initialize(InsightCommon insight, ModuleManager manager);
     }
 
-    public IEnumerable<Type> OptionalDependencies
+    public class InsightModule : MonoBehaviour, IServerModule
     {
-        get { return _optionalDependencies; }
-    }
+        private static Dictionary<Type, GameObject> _instances;
 
-    public InsightCommon Insight { get; set; }
+        private readonly List<Type> _dependencies = new List<Type>();
+        private readonly List<Type> _optionalDependencies = new List<Type>();
 
-    /// <summary>
-    ///     Called by master server, when module should be started
-    /// </summary>
-    public virtual void Initialize(InsightCommon server)
-    {
-        
-    }
-
-    public virtual void RegisterHandlers()
-    {
-
-    }
-
-    /// <summary>
-    ///     Adds a dependency to list. Should be called in Awake or Start methods of
-    ///     module
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public void AddDependency<T>()
-    {
-        _dependencies.Add(typeof(T));
-    }
-
-    public void AddOptionalDependency<T>()
-    {
-        _optionalDependencies.Add(typeof(T));
-    }
-
-    /// <summary>
-    /// Returns true, if module should be destroyed
-    /// </summary>
-    /// <returns></returns>
-    protected bool DestroyIfExists()
-    {
-        if (_instances == null)
-            _instances = new Dictionary<Type, GameObject>();
-
-        if (_instances.ContainsKey(GetType()))
+        /// <summary>
+        ///     Returns a list of module types this module depends on
+        /// </summary>
+        public IEnumerable<Type> Dependencies
         {
-            if (_instances[GetType()] != null)
-            {
-                // Module hasn't been destroyed
-                Destroy(gameObject);
-                return true;
-            }
-
-            // Remove an old module, which has been destroyed previously
-            // (probably automatically when changing a scene)
-            _instances.Remove(GetType());
+            get { return _dependencies; }
         }
 
-        _instances.Add(GetType(), gameObject);
-        return false;
+        public IEnumerable<Type> OptionalDependencies
+        {
+            get { return _optionalDependencies; }
+        }
+
+        public InsightCommon Insight { get; set; }
+
+        public ModuleManager ModuleManager { get; set; }
+
+        /// <summary>
+        ///     Called by master server, when module should be started
+        /// </summary>
+        public virtual void Initialize(InsightCommon server, ModuleManager manager)
+        {
+
+        }
+
+        public virtual void RegisterHandlers()
+        {
+
+        }
+
+        /// <summary>
+        ///     Adds a dependency to list. Should be called in Awake or Start methods of
+        ///     module
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        public void AddDependency<T>()
+        {
+            _dependencies.Add(typeof(T));
+        }
+
+        public void AddOptionalDependency<T>()
+        {
+            _optionalDependencies.Add(typeof(T));
+        }
+
+        /// <summary>
+        /// Returns true, if module should be destroyed
+        /// </summary>
+        /// <returns></returns>
+        protected bool DestroyIfExists()
+        {
+            if (_instances == null)
+                _instances = new Dictionary<Type, GameObject>();
+
+            if (_instances.ContainsKey(GetType()))
+            {
+                if (_instances[GetType()] != null)
+                {
+                    // Module hasn't been destroyed
+                    Destroy(gameObject);
+                    return true;
+                }
+
+                // Remove an old module, which has been destroyed previously
+                // (probably automatically when changing a scene)
+                _instances.Remove(GetType());
+            }
+
+            _instances.Add(GetType(), gameObject);
+            return false;
+        }
     }
 }

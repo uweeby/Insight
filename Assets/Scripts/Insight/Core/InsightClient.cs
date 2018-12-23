@@ -51,6 +51,13 @@ namespace Insight
             StartInsight();
         }
 
+        public void StartInsight(int Port)
+        {
+            networkPort = Port;
+
+            StartInsight();
+        }
+
         public override void StartInsight()
         {
             client.Connect(networkAddress, networkPort);

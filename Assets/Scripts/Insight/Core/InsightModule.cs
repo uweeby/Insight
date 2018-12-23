@@ -9,13 +9,13 @@ namespace Insight
         IEnumerable<Type> Dependencies { get; }
         IEnumerable<Type> OptionalDependencies { get; }
 
-        InsightCommon Insight { get; set; }
-        ModuleManager ModuleManager { get; set; }
+        //InsightCommon Insight { get; set; }
+        //ModuleManager ModuleManager { get; set; }
 
         void Initialize(InsightCommon insight, ModuleManager manager);
     }
 
-    public class InsightModule : MonoBehaviour, IServerModule
+    public abstract class InsightModule : MonoBehaviour, IServerModule
     {
         private static Dictionary<Type, GameObject> _instances;
 
@@ -35,9 +35,9 @@ namespace Insight
             get { return _optionalDependencies; }
         }
 
-        public InsightCommon Insight { get; set; }
+        //public abstract InsightCommon Insight { get; set; }
 
-        public ModuleManager ModuleManager { get; set; }
+        //public abstract ModuleManager ModuleManager { get; set; }
 
         /// <summary>
         ///     Called by master server, when module should be started

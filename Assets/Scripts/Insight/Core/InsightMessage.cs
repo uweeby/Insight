@@ -104,4 +104,13 @@ namespace Insight
         public static short MsgId = 1009;
         public char[] Payload;
     }
+
+    //Test msg for LoadTest
+    public class ServerHealthMsg : MessageBase
+    {
+        public static short MsgId = 1010;
+        public float CPULoadPercent;
+        public float RAMLoadPercent;
+        public float NETLoadPercent;
+    }
 }

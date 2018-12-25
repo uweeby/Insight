@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class LoadTestClientController : MonoBehaviour
+public class LoadTestClientGUI : MonoBehaviour
 {
 	public GameObject InsightClientPrefab;
 	

@@ -89,14 +89,19 @@ namespace Insight
             m_MessageHandlers.Remove(msgType);
         }
 
+
         public virtual bool Send(short msgType, MessageBase msg)
         {
             NetworkWriter writer = new NetworkWriter();
+
+            writer.Write((ushort)msgType);
+            writer.Write((uint)0);
+
             msg.Serialize(writer);
 
             // pack message and send
-            byte[] message = Protocol.PackMessage((ushort)msgType, writer.ToArray());
-            return SendBytes(message);
+            //byte[] message = Protocol.PackMessage((ushort)msgType, writer.ToArray());
+            return SendBytes(writer.ToArray());
         }
 
         // protected because no one except NetworkConnection should ever send bytes directly to the client, as they
@@ -132,34 +137,34 @@ namespace Insight
         protected void HandleBytes(byte[] buffer)
         {
             // unpack message
-            ushort msgType;
-            byte[] content;
-            if (Protocol.UnpackMessage(buffer, out msgType, out content))
+            var reader = new NetworkReader(buffer);
+
+            short msgType = reader.ReadInt16();
+            int callbackId = reader.ReadInt32();
+
+            if (logNetworkMessages) { Debug.Log("ConnectionRecv con:" + connectionId + " msgType:" + msgType + " content:" + BitConverter.ToString(buffer)); }
+
+            InsightNetworkMessageDelegate msgDelegate;
+            if (m_MessageHandlers.TryGetValue(msgType, out msgDelegate))
             {
-                if (logNetworkMessages) { Debug.Log("ConnectionRecv con:" + connectionId + " msgType:" + msgType + " content:" + BitConverter.ToString(content)); }
+                // create message here instead of caching it. so we can add it to queue more easily.
+                InsightNetworkMessage msg = new InsightNetworkMessage(this, callbackId);
+                msg.msgType = msgType;
+                msg.reader = reader;
 
-                InsightNetworkMessageDelegate msgDelegate;
-                if (m_MessageHandlers.TryGetValue((short)msgType, out msgDelegate))
-                {
-                    // create message here instead of caching it. so we can add it to queue more easily.
-                    InsightNetworkMessage msg = new InsightNetworkMessage();
-                    msg.msgType = (short)msgType;
-                    msg.reader = new NetworkReader(content);
-                    msg.conn = this;
-
-                    msgDelegate(msg);
-                    lastMessageTime = Time.time;
-                }
-                else
-                {
-                    //NOTE: this throws away the rest of the buffer. Need moar error codes
-                    Debug.LogError("Unknown message ID " + msgType + " connId:" + connectionId);
-                }
+                msgDelegate(msg);
+                lastMessageTime = Time.time;
             }
             else
             {
-                Debug.LogError("HandleBytes UnpackMessage failed for: " + BitConverter.ToString(buffer));
+                //NOTE: this throws away the rest of the buffer. Need moar error codes
+                Debug.LogError("Unknown message ID " + msgType + " connId:" + connectionId);
             }
+            //}
+            //else
+            //{
+            //    Debug.LogError("HandleBytes UnpackMessage failed for: " + BitConverter.ToString(buffer));
+            //}
         }
 
         public virtual void TransportReceive(byte[] bytes)
@@ -172,7 +177,7 @@ namespace Insight
             error = 0;
             if (client != null)
             {
-                client.Send(0, bytes);
+                client.Send(bytes);
                 return true;
             }
             else if (server != null)
@@ -187,8 +192,25 @@ namespace Insight
     public class InsightNetworkMessage
     {
         public short msgType;
-        public InsightNetworkConnection conn;
+        protected InsightNetworkConnection conn;
         public NetworkReader reader;
+        public int callbackId { get; protected set; }
+
+        public InsightNetworkMessage()
+        {
+
+        }
+
+        public InsightNetworkMessage(InsightNetworkConnection conn)
+        {
+            this.conn = conn;
+        }
+
+        public InsightNetworkMessage(InsightNetworkConnection conn, int callbackId)
+        {
+            this.callbackId = callbackId;
+            this.conn = conn;
+        }
 
         public TMsg ReadMessage<TMsg>() where TMsg : MessageBase, new()
         {
@@ -201,6 +223,19 @@ namespace Insight
         {
             msg.Deserialize(reader);
         }
+
+        public byte Reply(short msgId, MessageBase msg)
+        {
+            var writer = new NetworkWriter();
+            writer.Write(msgId);
+            writer.Write(callbackId);
+            msg.Serialize(writer);
+
+            byte error;
+            conn.TransportSend(writer.ToArray(), out error);
+            return error;
+        }
+
     }
 
     // Handles network messages on client and server

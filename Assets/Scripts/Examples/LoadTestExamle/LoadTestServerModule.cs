@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class LoadTestServerModule : InsightModule
 {
-    InsightCommon insight;
+    InsightServer server;
     ModuleManager manager;
 
     [Header("Broadcast From Server")]
@@ -15,9 +15,9 @@ public class LoadTestServerModule : InsightModule
 
     private char[] dataArray;
 
-    public override void Initialize(InsightCommon insight, ModuleManager manager)
+    public override void Initialize(InsightServer server, ModuleManager manager)
     {
-        this.insight = insight;
+        this.server = server;
         this.manager = manager;
 
         RegisterHandlers();
@@ -29,13 +29,13 @@ public class LoadTestServerModule : InsightModule
 
     public override void RegisterHandlers()
     {
-        insight.RegisterHandler(ClientLoadTestMsg.MsgId, HandleClientLoadTestMsg);
+        server.RegisterHandler(ClientLoadTestMsg.MsgId, HandleClientLoadTestMsg);
     }
 
     private void SendServerData()
     {
         
-        insight.SendMsgToAll(ServerLoadTestMsg.MsgId, new ServerLoadTestMsg() { Payload = dataArray });
+        server.SendMsgToAll(ServerLoadTestMsg.MsgId, new ServerLoadTestMsg() { Payload = dataArray });
     }
 
     private void FillDataArray()

@@ -3,12 +3,12 @@ using UnityEngine;
 
 public class ServerChatModule : InsightModule
 {
-    InsightCommon insight;
+    InsightServer server;
     ModuleManager manager;
 
-    public override void Initialize(InsightCommon insight, ModuleManager manager)
+    public override void Initialize(InsightServer server, ModuleManager manager)
     {
-        this.insight = insight;
+        this.server = server;
         this.manager = manager;
 
         RegisterHandlers();
@@ -16,15 +16,15 @@ public class ServerChatModule : InsightModule
 
     public override void RegisterHandlers()
     {
-        insight.RegisterHandler(ChatMessage.MsgId, HandleChatMessage);
+        server.RegisterHandler(ChatMessage.MsgId, HandleChatMessage);
     }
 
     private void HandleChatMessage(InsightNetworkMessage netMsg)
     {
-        if(insight.logNetworkMessages) { Debug.Log("[InsightServer] - HandleChatMessage()"); }
+        if(server.logNetworkMessages) { Debug.Log("[InsightServer] - HandleChatMessage()"); }
 
         ChatMessage message = netMsg.ReadMessage<ChatMessage>();
 
-        insight.SendMsgToAll(ChatMessage.MsgId, message); //Broadcast back to all other clients
+        server.SendMsgToAll(ChatMessage.MsgId, message); //Broadcast back to all other clients
     }
 }

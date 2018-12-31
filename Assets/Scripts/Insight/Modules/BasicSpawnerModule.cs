@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class BasicSpawnerModule : InsightModule
 {
-    InsightCommon insight;
+    InsightClient insight;
     ModuleManager manager;
 
     [Header("Paths")]
@@ -33,7 +33,7 @@ public class BasicSpawnerModule : InsightModule
     // [Range(2, 10)] public float timeoutMultiplier = 3;
     // public float timeoutInterval { get { return writeInterval * timeoutMultiplier; } }
 
-    public override void Initialize(InsightCommon insight, ModuleManager manager)
+    public override void Initialize(InsightClient insight, ModuleManager manager)
     {
         this.insight = insight;
         this.manager = manager;

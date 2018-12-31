@@ -52,10 +52,10 @@ namespace Insight
 
         public abstract void StopInsight();
 
-        public abstract bool Send(int connectionId, byte[] data);
+        //public abstract bool Send(int connectionId, byte[] data);
 
-        public abstract bool SendMsg(int connectionId, short msgType, MessageBase msg);
+        //public abstract bool SendMsg(int connectionId, short msgType, MessageBase msg);
 
-        public abstract bool SendMsgToAll(short msgType, MessageBase msg);
+        //public abstract bool SendMsgToAll(short msgType, MessageBase msg);
     }
 }

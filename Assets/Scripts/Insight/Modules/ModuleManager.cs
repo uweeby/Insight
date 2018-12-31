@@ -8,7 +8,8 @@ namespace Insight
     [RequireComponent(typeof(InsightCommon))]
     public class ModuleManager : MonoBehaviour
     {
-        InsightCommon insight; //Reference to the Insight objec that will be used with this module
+        InsightClient client; //Reference to the Insight objec that will be used with this module
+        InsightServer server;
 
         public bool SearchChildrenForModule = true;
 
@@ -20,8 +21,10 @@ namespace Insight
 
         void Awake()
         {
-            insight = GetComponent<InsightCommon>();
-            insight.AutoStart = false; //Wait until modules are loaded to AutoStart
+            client = GetComponent<InsightClient>();
+            server = GetComponent<InsightServer>();
+
+            if(client) client.AutoStart = false; //Wait until modules are loaded to AutoStart
         }
 
         void Start()
@@ -44,14 +47,16 @@ namespace Insight
                     AddModule(module);
 
                 // Initialize modules
-                InitializeModules(insight);
+                InitializeModules(client, server);
+
 
                 //Register Handlers
                 foreach (var module in modules)
                     module.RegisterHandlers();
 
                 //Now that modules are loaded StartInsight
-                insight.StartInsight();
+                if (server) server.StartInsight();
+                if (client) client.StartInsight();
             }
         }
 
@@ -74,7 +79,7 @@ namespace Insight
             return false;
         }
 
-        public bool InitializeModules(InsightCommon server)
+        public bool InitializeModules(InsightClient client, InsightServer server)
         {
             var checkOptional = true;
 
@@ -98,7 +103,9 @@ namespace Insight
 
                     // If we got here, we can initialize our module
                     //entry.Value.Server = this;
-                    entry.Value.Initialize(server, this);
+                    if (client) entry.Value.Initialize(client, this);
+                    if (server) entry.Value.Initialize(server, this);
+
                     _initializedModules.Add(entry.Key);
                     Debug.LogWarning("[" + gameObject.name + "] Loaded Module: " + entry.Key.ToString());
 

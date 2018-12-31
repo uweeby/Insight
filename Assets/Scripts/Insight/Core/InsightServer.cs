@@ -162,7 +162,7 @@ namespace Insight
             return connections.Remove(connectionId);
         }
 
-        public override bool Send(int connectionId, byte[] data)
+        public bool Send(int connectionId, byte[] data)
         {
             if (server.Active)
             {
@@ -172,7 +172,7 @@ namespace Insight
             return false;
         }
 
-        public override bool SendMsg(int connectionId, short msgType, MessageBase msg)
+        public bool SendMsg(int connectionId, short msgType, MessageBase msg)
         {
             if (server.Active)
             {
@@ -182,7 +182,7 @@ namespace Insight
             return false;
         }
 
-        public override bool SendMsgToAll(short msgType, MessageBase msg)
+        public bool SendMsgToAll(short msgType, MessageBase msg)
         {
             if (server.Active)
             {

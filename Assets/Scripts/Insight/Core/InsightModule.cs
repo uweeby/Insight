@@ -12,7 +12,8 @@ namespace Insight
         //InsightCommon Insight { get; set; }
         //ModuleManager ModuleManager { get; set; }
 
-        void Initialize(InsightCommon insight, ModuleManager manager);
+        void Initialize(InsightServer server, ModuleManager manager);
+        void Initialize(InsightClient client, ModuleManager manager);
     }
 
     public abstract class InsightModule : MonoBehaviour, IServerModule
@@ -42,9 +43,13 @@ namespace Insight
         /// <summary>
         ///     Called by master server, when module should be started
         /// </summary>
-        public virtual void Initialize(InsightCommon server, ModuleManager manager)
+        public virtual void Initialize(InsightServer server, ModuleManager manager)
         {
-
+            throw new NotImplementedException();
+        }
+        public virtual void Initialize(InsightClient client, ModuleManager manager)
+        {
+            throw new NotImplementedException();
         }
 
         public virtual void RegisterHandlers()

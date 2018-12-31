@@ -3,12 +3,12 @@ using UnityEngine;
 
 public class ServerLoginModule : InsightModule
 {
-    InsightCommon insight;
+    InsightServer server;
     ModuleManager manager;
 
-    public override void Initialize(InsightCommon insight, ModuleManager manager)
+    public override void Initialize(InsightServer server, ModuleManager manager)
     {
-        this.insight = insight;
+        this.server = server;
         this.manager = manager;
 
         RegisterHandlers();
@@ -16,26 +16,26 @@ public class ServerLoginModule : InsightModule
 
     public override void RegisterHandlers()
     {
-        insight.RegisterHandler(LoginMsg.MsgId, HandleLoginMsg);
+        server.RegisterHandler(LoginMsg.MsgId, HandleLoginMsg);
     }
 
     private void HandleLoginMsg(InsightNetworkMessage netMsg)
     {
-        if (insight.logNetworkMessages) { Debug.Log("[InsightServer] - HandleLoginMsg()"); }
+        if (server.logNetworkMessages) { Debug.Log("[InsightServer] - HandleLoginMsg()"); }
 
         LoginMsg message = netMsg.ReadMessage<LoginMsg>();
 
-        if (insight.logNetworkMessages) { Debug.Log("[InsightServer] - Login Received: " + message.AccountName + " / " + message.AccountPassword); }
+        if (server.logNetworkMessages) { Debug.Log("[InsightServer] - Login Received: " + message.AccountName + " / " + message.AccountPassword); }
 
         //Add code to verify the user/pass are correct
         //Yes the passwords are in plain text for this demo!
         if (message.AccountName.Equals("root") && message.AccountPassword.Equals("password"))
         {
-            netMsg.conn.Send(StatusMsg.MsgId, new StatusMsg() { Text = "Login Sucessful!" });
+            netMsg.Reply(StatusMsg.MsgId, new StatusMsg() { Text = "Login Sucessful!" });
         }
         else
         {
-            netMsg.conn.Send(StatusMsg.MsgId, new StatusMsg() { Text = "Login Failed!" });
+            netMsg.Reply(StatusMsg.MsgId, new StatusMsg() { Text = "Login Failed!" });
         }
     }
 }

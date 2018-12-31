@@ -13,8 +13,8 @@ Builds
 /Packages
 /ProjectSettings
 
-Assets/Plugins/Mirror/
+Assets/Mirror/
 
-Assets/Plugins/Mirror\.meta
+Assets/Mirror\.meta
 
 \.vscode/settings\.json

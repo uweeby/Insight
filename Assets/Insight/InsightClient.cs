@@ -128,9 +128,9 @@ namespace Insight
             }
         }
 
-        public void Send(byte[] buffer)
+        public void Send(byte[] data)
         {
-            client.Send(buffer);
+            client.Send(data);
         }
 
         public void Send(short msgType, MessageBase msg)

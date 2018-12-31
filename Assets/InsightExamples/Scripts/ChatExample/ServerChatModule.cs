@@ -25,6 +25,6 @@ public class ServerChatModule : InsightModule
 
         ChatMessage message = netMsg.ReadMessage<ChatMessage>();
 
-        server.SendMsgToAll(ChatMessage.MsgId, message); //Broadcast back to all other clients
+        server.SendToAll(ChatMessage.MsgId, message); //Broadcast back to all other clients
     }
 }

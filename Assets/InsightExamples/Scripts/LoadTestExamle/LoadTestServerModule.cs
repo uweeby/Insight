@@ -35,7 +35,7 @@ public class LoadTestServerModule : InsightModule
     private void SendServerData()
     {
         
-        server.SendMsgToAll(ServerLoadTestMsg.MsgId, new ServerLoadTestMsg() { Payload = dataArray });
+        server.SendToAll(ServerLoadTestMsg.MsgId, new ServerLoadTestMsg() { Payload = dataArray });
     }
 
     private void FillDataArray()

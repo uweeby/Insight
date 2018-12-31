@@ -89,6 +89,10 @@ namespace Insight
             m_MessageHandlers.Remove(msgType);
         }
 
+        public virtual bool Send(byte[] bytes)
+        {
+            return SendBytes(bytes);
+        }
 
         public virtual bool Send(short msgType, MessageBase msg)
         {
@@ -172,7 +176,7 @@ namespace Insight
             HandleBytes(bytes);
         }
 
-        public virtual bool TransportSend(byte[] bytes, out byte error)
+        protected virtual bool TransportSend(byte[] bytes, out byte error)
         {
             error = 0;
             if (client != null)
@@ -182,7 +186,7 @@ namespace Insight
             }
             else if (server != null)
             {
-                server.Send(connectionId, bytes);
+                server.SendToClient(connectionId, bytes);
                 return true;
             }
             return false;
@@ -224,16 +228,14 @@ namespace Insight
             msg.Deserialize(reader);
         }
 
-        public byte Reply(short msgId, MessageBase msg)
+        public void Reply(short msgId, MessageBase msg)
         {
             var writer = new NetworkWriter();
             writer.Write(msgId);
             writer.Write(callbackId);
             msg.Serialize(writer);
 
-            byte error;
-            conn.TransportSend(writer.ToArray(), out error);
-            return error;
+            conn.Send(writer.ToArray());
         }
 
     }

@@ -58,6 +58,7 @@ namespace Insight
         public void Disconnect()
         {
             isReady = false;
+        }
 
         internal void SetHandlers(Dictionary<short, InsightNetworkMessageDelegate> handlers)
         {

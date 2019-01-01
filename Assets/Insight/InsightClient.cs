@@ -6,11 +6,7 @@ using UnityEngine;
 
 namespace Insight
 {
-    public enum CallbackStatus
-    {
-        Ok,
-        Error
-    }
+
 
     public class InsightClient : InsightCommon
     {
@@ -23,11 +19,7 @@ namespace Insight
 
         private float _reconnectTimer;
 
-        protected int callbackIdIndex = 0; // 0 is a _special_ id - it represents _no callback_. 
-        protected Dictionary<int, CallbackHandler> callbacks = new Dictionary<int, CallbackHandler>();
-
-        public delegate void CallbackHandler(CallbackStatus status, NetworkReader reader);
-
+       
         public virtual void Start()
         {
             DontDestroyOnLoad(gameObject);
@@ -52,6 +44,8 @@ namespace Insight
             CheckConnection();
 
             HandleNewMessages();
+
+            CheckCallbackTimeouts();
         }
 
         public void StartInsight(string Address, int Port)
@@ -153,7 +147,7 @@ namespace Insight
             if (callback != null)
             {
                 callbackId = ++callbackIdIndex; // pre-increment to ensure that id 0 is never used.
-                callbacks.Add(callbackId, callback);
+                callbacks.Add(callbackId, new CallbackData() { callback = callback, timeout = Time.realtimeSinceStartup + TIMEOUTDELAY });
             }
 
             writer.Write(callbackId);
@@ -180,7 +174,7 @@ namespace Insight
 
             if (callbacks.ContainsKey(callbackId))
             {
-                callbacks[callbackId].Invoke(CallbackStatus.Ok, reader);
+                callbacks[callbackId].callback.Invoke(CallbackStatus.Ok, reader);
                 callbacks.Remove(callbackId);
             }
             else if (messageHandlers.TryGetValue(msgType, out msgDelegate))
@@ -205,6 +199,8 @@ namespace Insight
             StopInsight();
         }
 
+       
+
         //------------Virtual Handlers-------------
         public virtual void OnConnected(Message msg)
         {
@@ -225,5 +221,11 @@ namespace Insight
         {
             if (logNetworkMessages) { Debug.Log("[InsightClient] - Disconnecting from Insight Server"); }
         }
+    }
+
+    public struct CallbackData
+    {
+        public InsightClient.CallbackHandler callback;
+        public float timeout; 
     }
 }

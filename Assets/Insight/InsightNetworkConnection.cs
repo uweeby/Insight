@@ -58,6 +58,7 @@ namespace Insight
         public void Disconnect()
         {
             isReady = false;
+        }
 
         internal void SetHandlers(Dictionary<short, InsightNetworkMessageDelegate> handlers)
         {
@@ -83,19 +84,19 @@ namespace Insight
             return SendBytes(bytes);
         }
 
-        public virtual bool Send(short msgType, MessageBase msg)
-        {
-            NetworkWriter writer = new NetworkWriter();
+        //public virtual bool Send(short msgType, MessageBase msg)
+        //{
+        //    NetworkWriter writer = new NetworkWriter();
 
-            writer.Write((ushort)msgType);
-            writer.Write((uint)0);
+        //    writer.Write((ushort)msgType);
+        //    writer.Write((uint)0);
 
-            msg.Serialize(writer);
+        //    msg.Serialize(writer);
 
-            // pack message and send
-            //byte[] message = Protocol.PackMessage((ushort)msgType, writer.ToArray());
-            return SendBytes(writer.ToArray());
-        }
+        //    // pack message and send
+        //    //byte[] message = Protocol.PackMessage((ushort)msgType, writer.ToArray());
+        //    return SendBytes(writer.ToArray());
+        //}
 
         // protected because no one except NetworkConnection should ever send bytes directly to the client, as they
         // would be detected as some kind of message. send messages instead.
@@ -183,6 +184,7 @@ namespace Insight
         protected InsightNetworkConnection conn;
         public NetworkReader reader;
         public int callbackId { get; protected set; }
+        public int connectionId { get { return conn.connectionId; } }
 
         public InsightNetworkMessage()
         {

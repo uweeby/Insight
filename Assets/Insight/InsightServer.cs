@@ -39,6 +39,7 @@ namespace Insight
         public virtual void Update()
         {
             HandleNewMessages();
+            CheckCallbackTimeouts();
         }
 
         public void StartInsight(int Port)
@@ -98,6 +99,8 @@ namespace Insight
 
         void HandleConnect(Message msg)
         {
+            Debug.Log("connectionID: " + msg.connectionId, this);
+
             // get ip address from connection
             string address = GetConnectionInfo(msg.connectionId);
 
@@ -124,7 +127,17 @@ namespace Insight
         void HandleData(int connectionId, byte[] data, byte error)
         {
             InsightNetworkConnection conn;
-            if (connections.TryGetValue(connectionId, out conn))
+
+            NetworkReader reader = new NetworkReader(data);
+            var msgType = reader.ReadInt16();
+            var callbackId = reader.ReadInt32();
+
+            if (callbacks.ContainsKey(callbackId))
+            {
+                callbacks[callbackId].callback.Invoke(CallbackStatus.Ok, reader);
+                callbacks.Remove(callbackId);
+            }
+            else if (connections.TryGetValue(connectionId, out conn))
             {
                 conn.TransportReceive(data);
                 return;
@@ -161,15 +174,33 @@ namespace Insight
             return connections.Remove(connectionId);
         }
 
-
-        public bool SendToClient(int connectionId, short msgType, MessageBase msg)
+        public bool SendToClient(int connectionId, short msgType, MessageBase msg, CallbackHandler callback)
         {
-            if (server.Active)
+            if(server.Active)
             {
-                return connections[connectionId].Send(msgType, msg);
+                NetworkWriter writer = new NetworkWriter();
+                writer.Write(msgType);
+
+                int callbackId = 0;
+                if (callback != null)
+                {
+                    callbackId = ++callbackIdIndex; // pre-increment to ensure that id 0 is never used.
+                    callbacks.Add(callbackId, new CallbackData() { callback = callback, timeout = Time.realtimeSinceStartup + TIMEOUTDELAY });
+                }
+
+                writer.Write(callbackId);
+
+                msg.Serialize(writer);
+
+                return connections[connectionId].Send(writer.ToArray());
             }
             Debug.Log("Server.Send: not connected!", this);
             return false;
+        }
+
+        public bool SendToClient(int connectionId, short msgType, MessageBase msg)
+        {
+            return SendToClient(connectionId, msgType, msg, null);
         }
 
         public bool SendToClient(int connectionId, byte[] data)
@@ -188,7 +219,8 @@ namespace Insight
             {
                 foreach(KeyValuePair<int, InsightNetworkConnection> conn in connections)
                 {
-                    conn.Value.Send(msgType, msg);
+                    SendToClient(conn.Key, msgType, msg);
+                    //conn.Value.Send(msgType, msg);
                 }
                 return true;
             }

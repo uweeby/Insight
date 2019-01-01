@@ -1,12 +1,8 @@
-﻿using Mirror;
+using Mirror;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-/*
-* wire protocol is a list of :   size   |  msgType     | payload
-*                               (short)  (variable)   (buffer)
-*/
 namespace Insight
 {
     public class InsightNetworkConnection : IDisposable
@@ -164,11 +160,6 @@ namespace Insight
                 //NOTE: this throws away the rest of the buffer. Need moar error codes
                 Debug.LogError("Unknown message ID " + msgType + " connId:" + connectionId);
             }
-            //}
-            //else
-            //{
-            //    Debug.LogError("HandleBytes UnpackMessage failed for: " + BitConverter.ToString(buffer));
-            //}
         }
 
         public virtual void TransportReceive(byte[] bytes)

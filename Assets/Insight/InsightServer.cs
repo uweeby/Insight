@@ -1,5 +1,4 @@
 ﻿using Mirror;
-using System.Collections;
 using System.Collections.Generic;
 using Telepathy;
 using UnityEngine;
@@ -182,16 +181,6 @@ namespace Insight
             Debug.Log("Server.Send: not connected!", this);
             return false;
         }
-
-        //public bool SendMsg(int connectionId, short msgType, MessageBase msg)
-        //{
-        //    if (server.Active)
-        //    {
-        //        return connections[connectionId].Send(msgType, msg);
-        //    }
-        //    Debug.Log("Server.Send: not connected!");
-        //    return false;
-        //}
 
         public bool SendToAll(short msgType, MessageBase msg)
         {

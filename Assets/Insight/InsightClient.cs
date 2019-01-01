@@ -1,4 +1,4 @@
-﻿using Mirror;
+using Mirror;
 using System;
 using System.Collections.Generic;
 using Telepathy;
@@ -6,6 +6,12 @@ using UnityEngine;
 
 namespace Insight
 {
+    public enum CallbackStatus
+    {
+        Ok,
+        Error
+    }
+
     public class InsightClient : InsightCommon
     {
         public bool AutoReconnect = true;
@@ -16,6 +22,11 @@ namespace Insight
         Client client; //Telepathy Client
 
         private float _reconnectTimer;
+
+        protected int callbackIdIndex = 0; // 0 is a _special_ id - it represents _no callback_. 
+        protected Dictionary<int, CallbackHandler> callbacks = new Dictionary<int, CallbackHandler>();
+
+        public delegate void CallbackHandler(CallbackStatus status, NetworkReader reader);
 
         public virtual void Start()
         {
@@ -82,7 +93,7 @@ namespace Insight
         {
             if (AutoReconnect)
             {
-                if(!isConnected && (_reconnectTimer < Time.time))
+                if (!isConnected && (_reconnectTimer < Time.time))
                 {
                     if (logNetworkMessages) { Debug.Log("[InsightClient] - Trying to reconnect..."); }
                     _reconnectTimer = Time.time + 5; //Wait 5 seconds before trying to connect again
@@ -117,89 +128,74 @@ namespace Insight
             }
         }
 
-        public override bool SendMsgToAll(short msgType, MessageBase msg)
+        public void Send(byte[] data)
         {
-            return SendMsg(0, msgType, msg);
+            client.Send(data);
         }
 
-        public override bool Send(int connectionId, byte[] data)
+        public void Send(short msgType, MessageBase msg)
         {
-            if (client.Connected)
+            Send(msgType, msg, null);
+        }
+
+        public void Send(short msgType, MessageBase msg, CallbackHandler callback)
+        {
+            if (!client.Connected)
             {
-                return SendBytes(connectionID, data);
+                Debug.LogError("[InsightClient] - Client not connected!");
+                return;
             }
-            Debug.Log("Client.Send: not connected!");
-            return false;
-        }
 
-        public override bool SendMsg(int connectionId, short msgType, MessageBase msg)
-        {
             NetworkWriter writer = new NetworkWriter();
-            msg.Serialize(writer);
+            writer.Write(msgType);
 
-            // pack message and send
-            byte[] message = Protocol.PackMessage((ushort)msgType, writer.ToArray());
-            return SendBytes(0, message);
-        }
-
-        public bool SendMsg(short msgType, MessageBase msg)
-        {
-            NetworkWriter writer = new NetworkWriter();
-            msg.Serialize(writer);
-
-            // pack message and send
-            byte[] message = Protocol.PackMessage((ushort)msgType, writer.ToArray());
-            return SendBytes(0, message);
-        }
-
-        private bool SendBytes(int connectionId, byte[] bytes)
-        {
-            if (logNetworkMessages) { Debug.Log("ConnectionSend con:" + connectionId + " bytes:" + BitConverter.ToString(bytes)); }
-
-            if (bytes.Length > int.MaxValue)
+            int callbackId = 0;
+            if (callback != null)
             {
-                Debug.LogError("NetworkConnection:SendBytes cannot send packet larger than " + int.MaxValue + " bytes");
-                return false;
+                callbackId = ++callbackIdIndex; // pre-increment to ensure that id 0 is never used.
+                callbacks.Add(callbackId, callback);
             }
 
-            if (bytes.Length == 0)
-            {
-                // zero length packets getting into the packet queues are bad.
-                Debug.LogError("NetworkConnection:SendBytes cannot send zero bytes");
-                return false;
-            }
+            writer.Write(callbackId);
 
-            return client.Send(bytes);
+            msg.Serialize(writer);
+            client.Send(writer.ToArray());
+        }
+
+        void HandleCallbackHandler(CallbackStatus status, NetworkReader reader)
+        {
         }
 
         protected void HandleBytes(byte[] buffer)
         {
             // unpack message
-            ushort msgType;
-            byte[] content;
-            if (Protocol.UnpackMessage(buffer, out msgType, out content))
+            //ushort msgType;
+
+            InsightNetworkMessageDelegate msgDelegate;
+            NetworkReader reader = new NetworkReader(buffer);
+            var msgType = reader.ReadInt16();
+            var callbackId = reader.ReadInt32();
+
+            if (logNetworkMessages) Debug.Log(" msgType:" + msgType + " content:" + BitConverter.ToString(buffer));
+
+            if (callbacks.ContainsKey(callbackId))
             {
-                if (logNetworkMessages) { Debug.Log(" msgType:" + msgType + " content:" + BitConverter.ToString(content)); }
-
-                InsightNetworkMessageDelegate msgDelegate;
-                if (messageHandlers.TryGetValue((short)msgType, out msgDelegate))
-                {
-                    // create message here instead of caching it. so we can add it to queue more easily.
-                    InsightNetworkMessage msg = new InsightNetworkMessage();
-                    msg.msgType = (short)msgType;
-                    msg.reader = new NetworkReader(content);
-
-                    msgDelegate(msg);
-                }
-                else
-                {
-                    //NOTE: this throws away the rest of the buffer. Need moar error codes
-                    Debug.LogError("Unknown message ID " + msgType);// + " connId:" + connectionId);
-                }
+                callbacks[callbackId].Invoke(CallbackStatus.Ok, reader);
+                callbacks.Remove(callbackId);
+            }
+            else if (messageHandlers.TryGetValue(msgType, out msgDelegate))
+            {
+                // create message here instead of caching it. so we can add it to queue more easily.
+                InsightNetworkMessage msg = new InsightNetworkMessage(insightNetworkConnection, callbackId);
+                msg.msgType = msgType;
+                msg.reader = reader;
+                
+                msgDelegate(msg);
             }
             else
             {
-                Debug.LogError("HandleBytes UnpackMessage failed for: " + BitConverter.ToString(buffer));
+                //NOTE: this throws away the rest of the buffer. Need moar error codes
+                Debug.LogError("Unknown message ID " + msgType);// + " connId:" + connectionId);
             }
         }
 

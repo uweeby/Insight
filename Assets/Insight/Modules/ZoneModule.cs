@@ -10,7 +10,7 @@ public class ZoneModule : InsightModule
 
     public List<ZoneContainer> ZoneList = new List<ZoneContainer>();
 
-    public override void Initialize(InsightCommon server, ModuleManager manager)
+    public override void Initialize(InsightClient server, ModuleManager manager)
     {
         insightServer = server;
         this.manager = manager;
@@ -59,7 +59,7 @@ public class ZoneModule : InsightModule
     {
         //Request from Server for a list of all active Zones
 
-        netMsg.conn.Send(GetZonesMsg.MsgId, new GetZonesMsg() { zonesList = ZoneList.ToArray() });
+        netMsg.Reply(GetZonesMsg.MsgId, new GetZonesMsg() { zonesList = ZoneList.ToArray() });
     }
 }
 

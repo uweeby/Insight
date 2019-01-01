@@ -3,12 +3,12 @@ using UnityEngine;
 
 public class LoadTestClientModule : InsightModule
 {
-    InsightCommon insight;
+    InsightServer server;
     ModuleManager manager;
 
-    public override void Initialize(InsightCommon insight, ModuleManager manager)
+    public override void Initialize(InsightServer server, ModuleManager manager)
     {
-        this.insight = insight;
+        this.server = server;
         this.manager = manager;
 
         RegisterHandlers();
@@ -16,8 +16,8 @@ public class LoadTestClientModule : InsightModule
 
     public override void RegisterHandlers()
     {
-        insight.RegisterHandler(ClientLoadTestMsg.MsgId, HandleClientLoadTestMsg);
-        insight.RegisterHandler(ServerLoadTestMsg.MsgId, HandleServerLoadTestMsg);
+        server.RegisterHandler(ClientLoadTestMsg.MsgId, HandleClientLoadTestMsg);
+        server.RegisterHandler(ServerLoadTestMsg.MsgId, HandleServerLoadTestMsg);
 
     }
 

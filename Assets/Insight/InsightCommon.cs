@@ -1,10 +1,8 @@
-﻿using Mirror;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Insight
 {
-
 	public abstract class InsightCommon : MonoBehaviour
 	{
         public bool AutoStart = true;
@@ -29,7 +27,6 @@ namespace Insight
         {
             if (messageHandlers.ContainsKey(msgType))
             {
-                //if (LogFilter.Debug) { Debug.Log("NetworkConnection.RegisterHandler replacing " + msgType); }
                 Debug.Log("NetworkConnection.RegisterHandler replacing " + msgType);
             }
             messageHandlers[msgType] = handler;
@@ -51,11 +48,5 @@ namespace Insight
         public abstract void StartInsight();
 
         public abstract void StopInsight();
-
-        public abstract bool Send(int connectionId, byte[] data);
-
-        public abstract bool SendMsg(int connectionId, short msgType, MessageBase msg);
-
-        public abstract bool SendMsgToAll(short msgType, MessageBase msg);
     }
 }

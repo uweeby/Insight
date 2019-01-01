@@ -7,7 +7,7 @@ public class HealthModule : InsightModule
 
     public float SendRateInSeconds = 60;
 
-    public override void Initialize(InsightCommon insight, ModuleManager manager)
+    public override void Initialize(InsightClient insight, ModuleManager manager)
     {
         this.insight = (InsightClient)insight;
         this.manager = manager;
@@ -24,6 +24,6 @@ public class HealthModule : InsightModule
 
     private void SendHealth()
     {
-        insight.SendMsg(ServerHealthMsg.MsgId, new ServerHealthMsg() { CPULoadPercent = 0.5f, RAMLoadPercent = 0.4f, NETLoadPercent = 0.3f }); //Test values
+        insight.Send(ServerHealthMsg.MsgId, new ServerHealthMsg() { CPULoadPercent = 0.5f, RAMLoadPercent = 0.4f, NETLoadPercent = 0.3f }); //Test values
     }
 }

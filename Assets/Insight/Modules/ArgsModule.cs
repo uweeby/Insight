@@ -3,12 +3,12 @@ using UnityEngine;
 
 public class ArgsModule : InsightModule
 {
-    InsightCommon insight;
+    InsightClient insight;
     ModuleManager manager;
 
     private InsightArgs insightArguments = new InsightArgs();
 
-    public override void Initialize(InsightCommon insight, ModuleManager manager)
+    public override void Initialize(InsightClient insight, ModuleManager manager)
     {
         this.insight = insight;
         this.manager = manager;

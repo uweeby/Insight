@@ -59,13 +59,6 @@ namespace Insight
         {
             isReady = false;
 
-            // remove observers. original HLAPI has hostId check for that too.
-            if (hostId != -1)
-            {
-                //RemoveObservers();
-            }
-        }
-
         internal void SetHandlers(Dictionary<short, InsightNetworkMessageDelegate> handlers)
         {
             m_MessageHandlers = handlers;

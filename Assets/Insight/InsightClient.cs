@@ -166,62 +166,6 @@ namespace Insight
         {
         }
 
-
-        //public override bool SendMsgToAll(short msgType, MessageBase msg)
-        //{
-        //    return SendMsg(0, msgType, msg);
-        //}
-
-        //public override bool Send(int connectionId, byte[] data)
-        //{
-        //    if (client.Connected)
-        //    {
-        //        return SendBytes(connectionID, data);
-        //    }
-        //    Debug.Log("Client.Send: not connected!");
-        //    return false;
-        //}
-
-        //public override bool SendMsg(int connectionId, short msgType, MessageBase msg)
-        //{
-        //    NetworkWriter writer = new NetworkWriter();
-        //    msg.Serialize(writer);
-
-        //    // pack message and send
-        //    byte[] message = Protocol.PackMessage((ushort)msgType, writer.ToArray());
-        //    return SendBytes(0, message);
-        //}
-
-        //public bool SendMsg(short msgType, MessageBase msg)
-        //{
-        //    NetworkWriter writer = new NetworkWriter();
-        //    msg.Serialize(writer);
-
-        //    // pack message and send
-        //    byte[] message = Protocol.PackMessage((ushort)msgType, writer.ToArray());
-        //    return SendBytes(0, message);
-        //}
-
-        //private bool SendBytes(int connectionId, byte[] bytes)
-        //{
-        //    if (logNetworkMessages) { Debug.Log("ConnectionSend con:" + connectionId + " bytes:" + BitConverter.ToString(bytes)); }
-
-        //    if (bytes.Length > int.MaxValue)
-        //    {
-        //        Debug.LogError("NetworkConnection:SendBytes cannot send packet larger than " + int.MaxValue + " bytes");
-        //        return false;
-        //    }
-
-        //    if (bytes.Length == 0)
-        //    {
-        //        // zero length packets getting into the packet queues are bad.
-        //        Debug.LogError("NetworkConnection:SendBytes cannot send zero bytes");
-        //        return false;
-        //    }
-
-        //    return client.Send(bytes);
-        //}
-
         protected void HandleBytes(byte[] buffer)
         {
             // unpack message

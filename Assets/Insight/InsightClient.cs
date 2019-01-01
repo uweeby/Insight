@@ -1,4 +1,4 @@
-﻿using Mirror;
+using Mirror;
 using System;
 using System.Collections.Generic;
 using Telepathy;
@@ -140,7 +140,13 @@ namespace Insight
 
         public void Send(short msgType, MessageBase msg, CallbackHandler callback)
         {
-            var writer = new NetworkWriter();
+            if (!client.Connected)
+            {
+                Debug.LogError("[InsightClient] - Client not connected!");
+                return;
+            }
+
+            NetworkWriter writer = new NetworkWriter();
             writer.Write(msgType);
 
             int callbackId = 0;

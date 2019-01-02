@@ -17,15 +17,11 @@ public class BasicSpawnerModule : InsightModule
     [Header("Standalone")]
     public string ProcessName;
 
-    [Header("Ports")]
-    public int StartingPort = 7000;
-    private int _portUsageCounter = 0;
-
     [Header("Threads")]
     public int MaximumProcesses = 5;
     private int _processUsageCounter;
 
-    public List<SpawnedProcesses> spawnedProcessList = new List<SpawnedProcesses>();
+    //public List<SpawnedProcesses> spawnedProcessList = new List<SpawnedProcesses>();
 
     public override void Initialize(InsightClient insight, ModuleManager manager)
     {
@@ -62,7 +58,6 @@ public class BasicSpawnerModule : InsightModule
             if(p.Start())
             {
                 print("[BasicSpawnerModule]: spawning: " + p.StartInfo.FileName + "; args=" + p.StartInfo.Arguments);
-                spawnedProcessList.Add(new SpawnedProcesses() { PID = p.Id, ProcessName = ProcessName });
                 _processUsageCounter++; //Increment current port after sucessful spawn.
                 return true;
             }
@@ -84,16 +79,4 @@ public class BasicSpawnerModule : InsightModule
         String[] args = System.Environment.GetCommandLineArgs();
         return args != null ? String.Join(" ", args.Skip(1).ToArray()) : "";
     }
-
-    private void OnApplicationQuit()
-    {
-        //Kill all the children processes
-    }
-}
-
-[Serializable]
-public struct SpawnedProcesses
-{
-    public int PID;
-    public string ProcessName;
 }

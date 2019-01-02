@@ -4,7 +4,6 @@ using UnityEngine;
 public class ClientChatModule : InsightModule
 {
     InsightClient client;
-    ModuleManager manager;
 
     //Used in Example Scene:
     public ChatGUI chatGuiComp;
@@ -12,7 +11,6 @@ public class ClientChatModule : InsightModule
     public override void Initialize(InsightClient client, ModuleManager manager)
     {
         this.client = client;
-        this.manager = manager;
 
         RegisterHandlers();
     }

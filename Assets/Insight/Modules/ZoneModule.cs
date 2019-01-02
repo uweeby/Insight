@@ -1,19 +1,16 @@
 ﻿using Insight;
-using Mirror;
 using System;
 using System.Collections.Generic;
 
 public class ZoneModule : InsightModule
 {
     InsightCommon insightServer;
-    ModuleManager manager;
 
     public List<ZoneContainer> ZoneList = new List<ZoneContainer>();
 
     public override void Initialize(InsightClient server, ModuleManager manager)
     {
         insightServer = server;
-        this.manager = manager;
     }
 
     public override void RegisterHandlers()
@@ -58,7 +55,6 @@ public class ZoneModule : InsightModule
     private void HandleGetZonesMsg(InsightNetworkMessage netMsg)
     {
         //Request from Server for a list of all active Zones
-
         netMsg.Reply(GetZonesMsg.MsgId, new GetZonesMsg() { zonesList = ZoneList.ToArray() });
     }
 }

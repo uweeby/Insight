@@ -4,12 +4,10 @@ using UnityEngine;
 public class ServerChatModule : InsightModule
 {
     InsightServer server;
-    ModuleManager manager;
 
     public override void Initialize(InsightServer server, ModuleManager manager)
     {
         this.server = server;
-        this.manager = manager;
 
         RegisterHandlers();
     }

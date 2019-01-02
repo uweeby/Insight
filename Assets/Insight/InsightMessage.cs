@@ -86,4 +86,14 @@ namespace Insight
         public float RAMLoadPercent;
         public float NETLoadPercent;
     }
+
+    //Test msg for SpawnerExample
+    public class SpawnDataMessage : MessageBase
+    {
+        public static short MsgId = 7003;
+        public string GameName; //or SceneName
+        public string UniqueID;
+        public string NetworkAddress;
+        public int NetworkPort;
+    }
 }

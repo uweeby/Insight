@@ -4,14 +4,12 @@ using UnityEngine;
 public class ClientLoginModule : InsightModule
 {
     InsightClient client;
-    ModuleManager manager;
 
     public LoginGUI loginGuiComp;
 
     public override void Initialize(InsightClient client, ModuleManager manager)
     {
         this.client = client;
-        this.manager = manager;
 
         RegisterHandlers();
     }

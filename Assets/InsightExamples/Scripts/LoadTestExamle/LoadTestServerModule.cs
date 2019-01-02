@@ -7,7 +7,6 @@ using UnityEngine;
 public class LoadTestServerModule : InsightModule
 {
     InsightServer server;
-    ModuleManager manager;
 
     [Header("Broadcast From Server")]
     public float PacketDelay = 0.1f;
@@ -18,7 +17,6 @@ public class LoadTestServerModule : InsightModule
     public override void Initialize(InsightServer server, ModuleManager manager)
     {
         this.server = server;
-        this.manager = manager;
 
         RegisterHandlers();
 

@@ -7,9 +7,6 @@ using UnityEngine;
 
 public class BasicSpawnerModule : InsightModule
 {
-    InsightClient insight;
-    ModuleManager manager;
-
     [Header("Paths")]
     public string EditorPath;
     public string ProcessPath;
@@ -25,9 +22,6 @@ public class BasicSpawnerModule : InsightModule
 
     public override void Initialize(InsightClient insight, ModuleManager manager)
     {
-        this.insight = insight;
-        this.manager = manager;
-
         RegisterHandlers();
     }
 

@@ -3,14 +3,12 @@
 public class HealthModule : InsightModule
 {
     InsightClient insight;
-    ModuleManager manager;
 
     public float SendRateInSeconds = 60;
 
     public override void Initialize(InsightClient insight, ModuleManager manager)
     {
-        this.insight = (InsightClient)insight;
-        this.manager = manager;
+        this.insight = insight;
 
         RegisterHandlers();
 

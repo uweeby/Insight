@@ -21,7 +21,7 @@ namespace Insight
         Client client; //Telepathy Client
 
         private float _reconnectTimer;
-
+        const float RECONNECTDELAY = 5f;
        
         public virtual void Start()
         {
@@ -73,6 +73,7 @@ namespace Insight
             insightNetworkConnection = new InsightNetworkConnection();
             insightNetworkConnection.Initialize(this, networkAddress, clientID, connectionID);
             OnStartInsight();
+            _reconnectTimer = Time.realtimeSinceStartup + RECONNECTDELAY;
         }
 
         public override void StopInsight()
@@ -93,7 +94,7 @@ namespace Insight
                 if (!isConnected && (_reconnectTimer < Time.time))
                 {
                     if (logNetworkMessages) { Debug.Log("[InsightClient] - Trying to reconnect..."); }
-                    _reconnectTimer = Time.time + 5; //Wait 5 seconds before trying to connect again
+                    _reconnectTimer = Time.realtimeSinceStartup + RECONNECTDELAY; //Wait 5 seconds before trying to connect again
                     StartInsight();
                 }
             }

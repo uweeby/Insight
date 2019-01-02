@@ -72,7 +72,7 @@ namespace Insight
             insightNetworkConnection = new InsightNetworkConnection();
             insightNetworkConnection.Initialize(this, networkAddress, clientID, connectionID);
             OnStartInsight();
-            _reconnectTimer = Time.realtimeSinceStartup + RECONNECTDELAY;
+            _reconnectTimer = Time.realtimeSinceStartup + ReconnectDelayInSeconds;
         }
 
         public override void StopInsight()
@@ -93,7 +93,7 @@ namespace Insight
                 if (!isConnected && (_reconnectTimer < Time.time))
                 {
                     if (logNetworkMessages) { Debug.Log("[InsightClient] - Trying to reconnect..."); }
-                    _reconnectTimer = Time.realtimeSinceStartup + RECONNECTDELAY; //Wait 5 seconds before trying to connect again
+                    _reconnectTimer = Time.realtimeSinceStartup + ReconnectDelayInSeconds;
                     StartInsight();
                 }
             }

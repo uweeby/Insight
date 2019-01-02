@@ -1,4 +1,4 @@
-﻿using Mirror;
+using Mirror;
 
 namespace Insight
 {
@@ -19,33 +19,6 @@ namespace Insight
         public string Text;
         public bool CauseDisconnect;
     }
-
-    ////Test msgs for Demo only
-    //public class ClientToZoneTestMsg : MessageBase
-    //{
-    //    public static short MsgId = 1000;
-    //    public string Source;
-    //    public string Desintation;
-    //    public string Data;
-    //}
-
-    ////Test msgs for Demo only
-    //public class ClientToMasterTestMsg : MessageBase
-    //{
-    //    public static short MsgId = 1001;
-    //    public string Source;
-    //    public string Desintation;
-    //    public string Data;
-    //}
-
-    ////Test msgs for Demo only
-    //public class ZoneToMasterTestMsg : MessageBase
-    //{
-    //    public static short MsgId = 1002;
-    //    public string Source;
-    //    public string Desintation;
-    //    public string Data;
-    //}
 
     //Test msg for ZoneModule
     public class RegisterZoneMsg : MessageBase

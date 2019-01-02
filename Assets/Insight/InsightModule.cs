@@ -50,6 +50,9 @@ namespace Insight
         public virtual void Initialize(InsightClient client, ModuleManager manager)
         {
             if(client.logNetworkMessages) { Debug.LogWarning("[Module Manager] Initialize InsightClient not found for module"); }
+        }
+        public virtual void Initialize(InsightCommon insight, ModuleManager manager)
+        {
             throw new NotImplementedException();
         }
 

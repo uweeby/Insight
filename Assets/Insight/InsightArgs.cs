@@ -19,7 +19,7 @@ public class InsightArgs
         SceneName = IsProvided(Names.SceneName);
         MasterPort = ExtractValueInt(Names.MasterPort, 5000);
         MasterIp = ExtractValue(Names.MasterIp);
-        NetworkAddress = ExtractValue(Names.NetworkAddress);
+        //NetworkAddress = ExtractValue(Names.NetworkAddress);
         NetworkPort = ExtractValueInt(Names.NetworkPort);
     }
 
@@ -58,7 +58,7 @@ public class InsightArgs
         public string SceneName { get { return "-SceneName"; } }
         public string MasterPort { get { return "-MasterPort"; } }
         public string MasterIp { get { return "-MasterIp"; } }
-        public string NetworkAddress { get { return "-NetworkAddress"; } }
+        //public string NetworkAddress { get { return "-NetworkAddress"; } } //The server would never get to decide its own IP
         public string NetworkPort { get { return "-NetworkPort"; } }
     }
 }

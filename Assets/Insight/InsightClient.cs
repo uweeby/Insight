@@ -174,8 +174,6 @@ namespace Insight
             var msgType = reader.ReadInt16();
             var callbackId = reader.ReadInt32();
 
-            if (logNetworkMessages) Debug.Log(" msgType:" + msgType + " content:" + BitConverter.ToString(buffer));
-
             if (callbacks.ContainsKey(callbackId))
             {
                 callbacks[callbackId].callback.Invoke(CallbackStatus.Ok, reader);
@@ -202,8 +200,6 @@ namespace Insight
             if (logNetworkMessages) { Debug.Log("[InsightClient] Stopping Client"); }
             StopInsight();
         }
-
-       
 
         //------------Virtual Handlers-------------
         public virtual void OnConnected(Message msg)

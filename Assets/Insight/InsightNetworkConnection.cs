@@ -84,26 +84,10 @@ namespace Insight
             return SendBytes(bytes);
         }
 
-        //public virtual bool Send(short msgType, MessageBase msg)
-        //{
-        //    NetworkWriter writer = new NetworkWriter();
-
-        //    writer.Write((ushort)msgType);
-        //    writer.Write((uint)0);
-
-        //    msg.Serialize(writer);
-
-        //    // pack message and send
-        //    //byte[] message = Protocol.PackMessage((ushort)msgType, writer.ToArray());
-        //    return SendBytes(writer.ToArray());
-        //}
-
         // protected because no one except NetworkConnection should ever send bytes directly to the client, as they
         // would be detected as some kind of message. send messages instead.
         protected virtual bool SendBytes(byte[] bytes)
         {
-            if (logNetworkMessages) { Debug.Log("ConnectionSend con:" + connectionId + " bytes:" + BitConverter.ToString(bytes)); }
-
             if (bytes.Length > int.MaxValue)
             {
                 Debug.LogError("NetworkConnection:SendBytes cannot send packet larger than " + int.MaxValue + " bytes");
@@ -135,8 +119,6 @@ namespace Insight
 
             short msgType = reader.ReadInt16();
             int callbackId = reader.ReadInt32();
-
-            if (logNetworkMessages) { Debug.Log("ConnectionRecv con:" + connectionId + " msgType:" + msgType + " content:" + BitConverter.ToString(buffer)); }
 
             InsightNetworkMessageDelegate msgDelegate;
             if (m_MessageHandlers.TryGetValue(msgType, out msgDelegate))
@@ -228,7 +210,6 @@ namespace Insight
 
             conn.Send(writer.ToArray());
         }
-
     }
 
     // Handles network messages on client and server

@@ -3,17 +3,16 @@ using System;
 using System.Collections.Generic;
 using Telepathy;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Insight
 {
-    public enum CallbackStatus
-    {
-        Ok,
-        Error
-    }
+
 
     public class InsightClient : InsightCommon
     {
+        public UnityEvent OnConnectedEvent;
+
         public bool AutoReconnect = true;
         protected int clientID = -1;
         protected int connectionID = 0;
@@ -22,12 +21,8 @@ namespace Insight
         Client client; //Telepathy Client
 
         private float _reconnectTimer;
-
-        protected int callbackIdIndex = 0; // 0 is a _special_ id - it represents _no callback_. 
-        protected Dictionary<int, CallbackHandler> callbacks = new Dictionary<int, CallbackHandler>();
-
-        public delegate void CallbackHandler(CallbackStatus status, NetworkReader reader);
-
+        const float RECONNECTDELAY = 5f;
+       
         public virtual void Start()
         {
             DontDestroyOnLoad(gameObject);
@@ -52,6 +47,8 @@ namespace Insight
             CheckConnection();
 
             HandleNewMessages();
+
+            CheckCallbackTimeouts();
         }
 
         public void StartInsight(string Address, int Port)
@@ -76,6 +73,7 @@ namespace Insight
             insightNetworkConnection = new InsightNetworkConnection();
             insightNetworkConnection.Initialize(this, networkAddress, clientID, connectionID);
             OnStartInsight();
+            _reconnectTimer = Time.realtimeSinceStartup + RECONNECTDELAY;
         }
 
         public override void StopInsight()
@@ -96,7 +94,7 @@ namespace Insight
                 if (!isConnected && (_reconnectTimer < Time.time))
                 {
                     if (logNetworkMessages) { Debug.Log("[InsightClient] - Trying to reconnect..."); }
-                    _reconnectTimer = Time.time + 5; //Wait 5 seconds before trying to connect again
+                    _reconnectTimer = Time.realtimeSinceStartup + RECONNECTDELAY; //Wait 5 seconds before trying to connect again
                     StartInsight();
                 }
             }
@@ -116,6 +114,7 @@ namespace Insight
                     case Telepathy.EventType.Connected:
                         connectState = ConnectState.Connected;
                         OnConnected(msg);
+                        OnConnectedEvent.Invoke();
                         break;
                     case Telepathy.EventType.Data:
                         HandleBytes(msg.data);
@@ -153,7 +152,7 @@ namespace Insight
             if (callback != null)
             {
                 callbackId = ++callbackIdIndex; // pre-increment to ensure that id 0 is never used.
-                callbacks.Add(callbackId, callback);
+                callbacks.Add(callbackId, new CallbackData() { callback = callback, timeout = Time.realtimeSinceStartup + TIMEOUTDELAY });
             }
 
             writer.Write(callbackId);
@@ -180,7 +179,7 @@ namespace Insight
 
             if (callbacks.ContainsKey(callbackId))
             {
-                callbacks[callbackId].Invoke(CallbackStatus.Ok, reader);
+                callbacks[callbackId].callback.Invoke(CallbackStatus.Ok, reader);
                 callbacks.Remove(callbackId);
             }
             else if (messageHandlers.TryGetValue(msgType, out msgDelegate))
@@ -205,6 +204,8 @@ namespace Insight
             StopInsight();
         }
 
+       
+
         //------------Virtual Handlers-------------
         public virtual void OnConnected(Message msg)
         {
@@ -225,5 +226,11 @@ namespace Insight
         {
             if (logNetworkMessages) { Debug.Log("[InsightClient] - Disconnecting from Insight Server"); }
         }
+    }
+
+    public struct CallbackData
+    {
+        public InsightClient.CallbackHandler callback;
+        public float timeout; 
     }
 }

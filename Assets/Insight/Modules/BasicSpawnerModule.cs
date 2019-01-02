@@ -20,7 +20,7 @@ public class BasicSpawnerModule : InsightModule
 
     //public List<SpawnedProcesses> spawnedProcessList = new List<SpawnedProcesses>();
 
-    public override void Initialize(InsightClient insight, ModuleManager manager)
+    public override void Initialize(InsightCommon insight, ModuleManager manager)
     {
         RegisterHandlers();
     }

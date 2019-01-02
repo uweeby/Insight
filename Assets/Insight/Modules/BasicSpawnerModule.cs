@@ -1,4 +1,4 @@
-using Insight;
+﻿using Insight;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -37,6 +37,8 @@ public class BasicSpawnerModule : InsightModule
     {
         this.insight = insight;
         this.manager = manager;
+
+        RegisterHandlers();
 
         SpawnStaticThreads();
     }

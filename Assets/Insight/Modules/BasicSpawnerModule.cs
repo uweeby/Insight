@@ -1,4 +1,4 @@
-using Insight;
+﻿using Insight;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -33,8 +33,6 @@ public class BasicSpawnerModule : InsightModule
         this.manager = manager;
 
         RegisterHandlers();
-
-        SpawnStaticThreads();
     }
 
     public override void RegisterHandlers()

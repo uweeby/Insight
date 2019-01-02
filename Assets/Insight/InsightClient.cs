@@ -9,6 +9,7 @@ namespace Insight
 {
     public class InsightClient : InsightCommon
     {
+        [HideInInspector]
         public UnityEvent OnConnectedEvent;
 
         public bool AutoReconnect = true;

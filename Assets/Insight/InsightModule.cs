@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -45,10 +45,11 @@ namespace Insight
         /// </summary>
         public virtual void Initialize(InsightServer server, ModuleManager manager)
         {
-            throw new NotImplementedException();
+            if (server.logNetworkMessages) { Debug.LogWarning("[Module Manager] Initialize InsightServer not found for module"); }
         }
         public virtual void Initialize(InsightClient client, ModuleManager manager)
         {
+            if(client.logNetworkMessages) { Debug.LogWarning("[Module Manager] Initialize InsightClient not found for module"); }
             throw new NotImplementedException();
         }
 

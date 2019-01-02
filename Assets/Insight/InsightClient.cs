@@ -20,7 +20,7 @@ namespace Insight
         Client client; //Telepathy Client
 
         private float _reconnectTimer;
-        const float RECONNECTDELAY = 5f;
+        const float ReconnectDelayInSeconds = 5f;
        
         public virtual void Start()
         {

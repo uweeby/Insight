@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Telepathy;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Insight
 {
@@ -10,6 +11,8 @@ namespace Insight
 
     public class InsightClient : InsightCommon
     {
+        public UnityEvent OnConnectedEvent;
+
         public bool AutoReconnect = true;
         protected int clientID = -1;
         protected int connectionID = 0;
@@ -110,6 +113,7 @@ namespace Insight
                     case Telepathy.EventType.Connected:
                         connectState = ConnectState.Connected;
                         OnConnected(msg);
+                        OnConnectedEvent.Invoke();
                         break;
                     case Telepathy.EventType.Data:
                         HandleBytes(msg.data);

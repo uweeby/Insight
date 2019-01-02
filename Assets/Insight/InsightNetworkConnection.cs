@@ -214,6 +214,11 @@ namespace Insight
             msg.Deserialize(reader);
         }
 
+        public void Reply()
+        {
+            Reply(this.msgType, new EmptyReply());
+        }
+
         public void Reply(short msgId, MessageBase msg)
         {
             var writer = new NetworkWriter();

@@ -39,8 +39,7 @@ namespace Insight
             {
                 _initializeComplete = true;
 
-                var modules = SearchChildrenForModule ? GetComponentsInChildren<InsightModule>() :
-                FindObjectsOfType<InsightModule>();
+                var modules = SearchChildrenForModule ? GetComponentsInChildren<InsightModule>() : FindObjectsOfType<InsightModule>();
 
                 // Add modules
                 foreach (var module in modules)

@@ -1,4 +1,4 @@
-﻿using Insight;
+using Insight;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -23,7 +23,6 @@ public class BasicSpawnerModule : InsightModule
 
     [Header("Threads")]
     public int MaximumProcesses = 5;
-    public int StaticProcessCount; //Number of processes to spawn on Start
     private int _processUsageCounter;
 
     public List<SpawnedProcesses> spawnedProcessList = new List<SpawnedProcesses>();
@@ -46,18 +45,6 @@ public class BasicSpawnerModule : InsightModule
     public bool RequestSpawn(int port)
     {
         return SpawnThread(port);
-    }
-
-    private void SpawnStaticThreads()
-    {
-        if (StaticProcessCount > 0)
-        {
-            UnityEngine.Debug.Log("[BasicSpawnerModule]: Spawning Static Zones...");
-            for(int i = 0; i < StaticProcessCount; i++)
-            {
-                SpawnThread(StartingPort + _portUsageCounter);
-            }
-        }
     }
 
     private bool SpawnThread(int port)

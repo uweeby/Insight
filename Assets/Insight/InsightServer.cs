@@ -185,7 +185,7 @@ namespace Insight
                 if (callback != null)
                 {
                     callbackId = ++callbackIdIndex; // pre-increment to ensure that id 0 is never used.
-                    callbacks.Add(callbackId, new CallbackData() { callback = callback, timeout = Time.realtimeSinceStartup + TIMEOUTDELAY });
+                    callbacks.Add(callbackId, new CallbackData() { callback = callback, timeout = Time.realtimeSinceStartup + CallbackTimeoutInSeconds });
                 }
 
                 writer.Write(callbackId);

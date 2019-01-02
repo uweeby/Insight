@@ -34,7 +34,7 @@ namespace Insight
 
         public delegate void CallbackHandler(CallbackStatus status, NetworkReader reader);
 
-        public float TIMEOUTDELAY = 30f; // all callbacks have a 30 second time out. 
+        public float CallbackTimeoutInSeconds = 30f; // all callbacks have a 30 second time out. 
 
         public bool isConnected { get { return connectState == ConnectState.Connected; } }
 

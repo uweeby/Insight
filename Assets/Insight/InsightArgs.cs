@@ -1,67 +1,45 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Insight
 {
-    public class InsightArgs
+    public static class InsightArgs
     {
-        private readonly string[] _args;
+        public static Dictionary<string, string> dictionary = new Dictionary<string, string>();
 
-        public InsightArgNames Names;
-
-        public InsightArgs()
+        static InsightArgs()
         {
-            _args = System.Environment.GetCommandLineArgs();
+            BuildDictionaryFromArgs();
 
-            // Android fix
-            if (_args == null)
-                _args = new string[0];
-
-            Names = new InsightArgNames();
-
-            SceneName = IsProvided(Names.SceneName);
-            MasterPort = ExtractValueInt(Names.MasterPort, 5000);
-            MasterIp = ExtractValue(Names.MasterIp);
-            //NetworkAddress = ExtractValue(Names.NetworkAddress);
-            NetworkPort = ExtractValueInt(Names.NetworkPort);
+            foreach (KeyValuePair<string, string> kvp in dictionary)
+            {
+                Debug.Log("key:" + kvp.Key + " value:" + kvp.Value);
+            }
         }
 
-        public string UniqueID { get; private set; }
-        public bool SceneName { get; private set; }
-        public int MasterPort { get; private set; }
-        public string MasterIp { get; private set; }
-        public string NetworkAddress { get; private set; }
-        public int NetworkPort { get; private set; }
-
-        #region Helper methods
-        public string ExtractValue(string argName, string defaultValue = null)
+        public static void BuildDictionaryFromArgs()
         {
-            if (!_args.Contains(argName))
-                return defaultValue;
-
-            var index = _args.ToList().FindIndex(0, a => a.Equals(argName));
-            return _args[index + 1];
+            string[] args = System.Environment.GetCommandLineArgs();
+            for (int i = 0; i < args.Length; i++)
+            {
+                if (args[i].StartsWith("-")) //Argument Names start with a dash. Example: -NetworkAddress
+                {
+                    if (!args[i + 1].StartsWith("-")) //Check to make sure the next line does NOT start with a dash meaning this argument has a key and a value
+                    {
+                        dictionary.Add(args[i], args[i + 1]); //Add the key from this line and the value we peeked from the next line
+                        i++; //skip the next line since we know it was a value used in the dictionary.Add above
+                    }
+                    else //The argument is just a key with no value
+                    {
+                        dictionary.Add(args[i], string.Empty);
+                    }
+                }
+            }
         }
 
-        public int ExtractValueInt(string argName, int defaultValue = -1)
+        public static string GetStringFromDictionary()
         {
-            var number = ExtractValue(argName, defaultValue.ToString());
-            return System.Convert.ToInt32(number);
+            return null;
         }
-
-        public bool IsProvided(string argName)
-        {
-            return _args.Contains(argName);
-        }
-        #endregion
-    }
-
-    public class InsightArgNames
-    {
-        public string UniqueID { get { return "-UniqueID"; } }
-        public string SceneName { get { return "-SceneName"; } }
-        public string MasterPort { get { return "-MasterPort"; } }
-        public string MasterIp { get { return "-MasterIp"; } }
-        //public string NetworkAddress { get { return "-NetworkAddress"; } } //The server would never get to decide its own IP
-        public string NetworkPort { get { return "-NetworkPort"; } }
     }
 }

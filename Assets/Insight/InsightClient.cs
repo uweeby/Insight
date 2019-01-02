@@ -19,8 +19,8 @@ namespace Insight
         InsightNetworkConnection insightNetworkConnection;
         Client client; //Telepathy Client
 
+        public float ReconnectDelayInSeconds = 5f;
         private float _reconnectTimer;
-        const float ReconnectDelayInSeconds = 5f;
        
         public virtual void Start()
         {

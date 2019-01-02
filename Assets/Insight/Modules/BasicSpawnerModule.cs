@@ -1,8 +1,8 @@
-﻿using System;
+using Insight;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Insight;
 using UnityEngine;
 
 public class BasicSpawnerModule : InsightModule

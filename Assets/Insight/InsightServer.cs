@@ -133,22 +133,24 @@ namespace Insight
             NetworkReader reader = new NetworkReader(data);
             var msgType = reader.ReadInt16();
             var callbackId = reader.ReadInt32();
+            InsightNetworkConnection insightNetworkConnection;
+            if(!connections.TryGetValue(connectionId, out insightNetworkConnection))
+            {
+                Debug.LogError("HandleData: Unknown connectionId: " + connectionId, this);
+                return;
+            }
 
             if (callbacks.ContainsKey(callbackId))
             {
-                callbacks[callbackId].callback.Invoke(CallbackStatus.Ok, reader);
+                var msg = new InsightNetworkMessage(insightNetworkConnection, callbackId) { msgType = msgType, reader = reader };
+                callbacks[callbackId].callback.Invoke(CallbackStatus.Ok, msg);
                 callbacks.Remove(callbackId);
 
                 CheckForFinishedCallback(callbackId);
             }
-            else if (connections.TryGetValue(connectionId, out conn))
+            else 
             {
-                conn.TransportReceive(data);
-                return;
-            }
-            else
-            {
-                Debug.LogError("HandleData Unknown connectionId:" + connectionId);
+                insightNetworkConnection.TransportReceive(data);
             }
         }
 

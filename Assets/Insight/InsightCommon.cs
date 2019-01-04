@@ -32,7 +32,7 @@ namespace Insight
         protected int callbackIdIndex = 0; // 0 is a _special_ id - it represents _no callback_. 
         protected Dictionary<int, CallbackData> callbacks = new Dictionary<int, CallbackData>();
 
-        public delegate void CallbackHandler(CallbackStatus status, NetworkReader reader);
+        public delegate void CallbackHandler(CallbackStatus status, InsightNetworkMessage netMsg);
         public delegate void SendToAllFinishedCallbackHandler(CallbackStatus status);
 
         public const float CALLBACKTIMEOUT = 30f; // all callbacks have a 30 second time out. 

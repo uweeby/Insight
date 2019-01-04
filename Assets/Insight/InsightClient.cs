@@ -173,20 +173,16 @@ namespace Insight
             NetworkReader reader = new NetworkReader(buffer);
             var msgType = reader.ReadInt16();
             var callbackId = reader.ReadInt32();
+            var msg = new InsightNetworkMessage(insightNetworkConnection, callbackId) { msgType = msgType, reader = reader };
 
             if (callbacks.ContainsKey(callbackId))
             {
-                callbacks[callbackId].callback.Invoke(CallbackStatus.Ok, reader);
+                callbacks[callbackId].callback.Invoke(CallbackStatus.Ok, msg);
                 callbacks.Remove(callbackId);
             }
             else if (messageHandlers.TryGetValue(msgType, out msgDelegate))
             {
-                // create message here instead of caching it. so we can add it to queue more easily.
-                InsightNetworkMessage msg = new InsightNetworkMessage(insightNetworkConnection, callbackId);
-                msg.msgType = msgType;
-                msg.reader = reader;
-                
-                msgDelegate(msg);
+               msgDelegate(msg);
             }
             else
             {

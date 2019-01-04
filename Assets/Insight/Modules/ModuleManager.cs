@@ -17,14 +17,25 @@ namespace Insight
         private HashSet<Type> _initializedModules;
 
         private bool _initializeComplete;
-        // Use this for initialization
+        private bool _cachedClientAutoStartValue;
+        private bool _cachedServerAutoStartValue;
 
         void Awake()
         {
             client = GetComponent<InsightClient>();
             server = GetComponent<InsightServer>();
 
-            if(client) client.AutoStart = false; //Wait until modules are loaded to AutoStart
+            if(client)
+            {
+                _cachedClientAutoStartValue = client.AutoStart;
+                client.AutoStart = false; //Wait until modules are loaded to AutoStart
+            }
+
+            if (server)
+            {
+                _cachedServerAutoStartValue = server.AutoStart;
+                server.AutoStart = false; //Wait until modules are loaded to AutoStart
+            }
         }
 
         void Start()
@@ -53,9 +64,18 @@ namespace Insight
                 foreach (var module in modules)
                     module.RegisterHandlers();
 
-                //Now that modules are loaded StartInsight
-                if (server) server.StartInsight();
-                if (client) client.StartInsight();
+                //Now that modules are loaded check for original AutoStart value
+                if(_cachedServerAutoStartValue)
+                {
+                    server.AutoStart = _cachedServerAutoStartValue;
+                    server.StartInsight();
+                }
+
+                if (_cachedClientAutoStartValue)
+                {
+                    client.AutoStart = _cachedClientAutoStartValue;
+                    client.StartInsight();
+                }
             }
         }
 

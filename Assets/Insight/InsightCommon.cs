@@ -32,9 +32,10 @@ namespace Insight
         protected int callbackIdIndex = 0; // 0 is a _special_ id - it represents _no callback_. 
         protected Dictionary<int, CallbackData> callbacks = new Dictionary<int, CallbackData>();
 
-        public delegate void CallbackHandler(CallbackStatus status, NetworkReader reader);
+        public delegate void CallbackHandler(CallbackStatus status, InsightNetworkMessage netMsg);
+        public delegate void SendToAllFinishedCallbackHandler(CallbackStatus status);
 
-        public float TIMEOUTDELAY = 30f; // all callbacks have a 30 second time out. 
+        public const float CALLBACKTIMEOUT = 30f; // all callbacks have a 30 second time out. 
 
         public bool isConnected { get { return connectState == ConnectState.Connected; } }
 
@@ -77,5 +78,20 @@ namespace Insight
 
         public abstract void StopInsight();
 
+   
+        public struct CallbackData
+        {
+            public InsightClient.CallbackHandler callback;
+            public float timeout;
+        }
+
+        [System.Serializable]
+        public class SendToAllFinishedCallbackData
+        {
+            public InsightClient.SendToAllFinishedCallbackHandler callback;
+            public HashSet<int> requiredCallbackIds;
+            public int callbacks;
+            public float timeout;
+        }
     }
 }

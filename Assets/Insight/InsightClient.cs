@@ -7,10 +7,9 @@ using UnityEngine.Events;
 
 namespace Insight
 {
-
-
     public class InsightClient : InsightCommon
     {
+        [HideInInspector]
         public UnityEvent OnConnectedEvent;
 
         public bool AutoReconnect = true;
@@ -20,8 +19,8 @@ namespace Insight
         InsightNetworkConnection insightNetworkConnection;
         Client client; //Telepathy Client
 
+        public float ReconnectDelayInSeconds = 5f;
         private float _reconnectTimer;
-        const float RECONNECTDELAY = 5f;
        
         public virtual void Start()
         {
@@ -73,7 +72,7 @@ namespace Insight
             insightNetworkConnection = new InsightNetworkConnection();
             insightNetworkConnection.Initialize(this, networkAddress, clientID, connectionID);
             OnStartInsight();
-            _reconnectTimer = Time.realtimeSinceStartup + RECONNECTDELAY;
+            _reconnectTimer = Time.realtimeSinceStartup + ReconnectDelayInSeconds;
         }
 
         public override void StopInsight()
@@ -94,7 +93,7 @@ namespace Insight
                 if (!isConnected && (_reconnectTimer < Time.time))
                 {
                     if (logNetworkMessages) { Debug.Log("[InsightClient] - Trying to reconnect..."); }
-                    _reconnectTimer = Time.realtimeSinceStartup + RECONNECTDELAY; //Wait 5 seconds before trying to connect again
+                    _reconnectTimer = Time.realtimeSinceStartup + ReconnectDelayInSeconds;
                     StartInsight();
                 }
             }
@@ -152,7 +151,7 @@ namespace Insight
             if (callback != null)
             {
                 callbackId = ++callbackIdIndex; // pre-increment to ensure that id 0 is never used.
-                callbacks.Add(callbackId, new CallbackData() { callback = callback, timeout = Time.realtimeSinceStartup + TIMEOUTDELAY });
+                callbacks.Add(callbackId, new CallbackData() { callback = callback, timeout = Time.realtimeSinceStartup + CALLBACKTIMEOUT });
             }
 
             writer.Write(callbackId);
@@ -174,22 +173,16 @@ namespace Insight
             NetworkReader reader = new NetworkReader(buffer);
             var msgType = reader.ReadInt16();
             var callbackId = reader.ReadInt32();
-
-            if (logNetworkMessages) Debug.Log(" msgType:" + msgType + " content:" + BitConverter.ToString(buffer));
+            var msg = new InsightNetworkMessage(insightNetworkConnection, callbackId) { msgType = msgType, reader = reader };
 
             if (callbacks.ContainsKey(callbackId))
             {
-                callbacks[callbackId].callback.Invoke(CallbackStatus.Ok, reader);
+                callbacks[callbackId].callback.Invoke(CallbackStatus.Ok, msg);
                 callbacks.Remove(callbackId);
             }
             else if (messageHandlers.TryGetValue(msgType, out msgDelegate))
             {
-                // create message here instead of caching it. so we can add it to queue more easily.
-                InsightNetworkMessage msg = new InsightNetworkMessage(insightNetworkConnection, callbackId);
-                msg.msgType = msgType;
-                msg.reader = reader;
-                
-                msgDelegate(msg);
+               msgDelegate(msg);
             }
             else
             {
@@ -198,13 +191,12 @@ namespace Insight
             }
         }
 
+
         private void OnApplicationQuit()
         {
             if (logNetworkMessages) { Debug.Log("[InsightClient] Stopping Client"); }
             StopInsight();
         }
-
-       
 
         //------------Virtual Handlers-------------
         public virtual void OnConnected(Message msg)
@@ -228,9 +220,5 @@ namespace Insight
         }
     }
 
-    public struct CallbackData
-    {
-        public InsightClient.CallbackHandler callback;
-        public float timeout; 
-    }
+  
 }

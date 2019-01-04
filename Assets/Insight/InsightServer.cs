@@ -11,7 +11,9 @@ namespace Insight
 
         Server server; //Telepathy Server
 
-		protected Dictionary<int, InsightNetworkConnection> connections;
+        protected Dictionary<int, InsightNetworkConnection> connections;
+
+        protected List<SendToAllFinishedCallbackData> sendToAllFinishedCallbacks = new List<SendToAllFinishedCallbackData>();
 
         public virtual void Start()
         {
@@ -30,7 +32,7 @@ namespace Insight
 
             messageHandlers = new Dictionary<short, InsightNetworkMessageDelegate>();
 
-            if(AutoStart)
+            if (AutoStart)
             {
                 StartInsight();
             }
@@ -136,6 +138,8 @@ namespace Insight
             {
                 callbacks[callbackId].callback.Invoke(CallbackStatus.Ok, reader);
                 callbacks.Remove(callbackId);
+
+                CheckForFinishedCallback(callbackId);
             }
             else if (connections.TryGetValue(connectionId, out conn))
             {
@@ -176,7 +180,7 @@ namespace Insight
 
         public bool SendToClient(int connectionId, short msgType, MessageBase msg, CallbackHandler callback)
         {
-            if(server.Active)
+            if (server.Active)
             {
                 NetworkWriter writer = new NetworkWriter();
                 writer.Write(msgType);
@@ -185,7 +189,7 @@ namespace Insight
                 if (callback != null)
                 {
                     callbackId = ++callbackIdIndex; // pre-increment to ensure that id 0 is never used.
-                    callbacks.Add(callbackId, new CallbackData() { callback = callback, timeout = Time.realtimeSinceStartup + CallbackTimeoutInSeconds });
+                    callbacks.Add(callbackId, new CallbackData() { callback = callback, timeout = Time.realtimeSinceStartup + CALLBACKTIMEOUT });
                 }
 
                 writer.Write(callbackId);
@@ -213,14 +217,25 @@ namespace Insight
             return false;
         }
 
-        public bool SendToAll(short msgType, MessageBase msg)
+        public bool SendToAll(short msgType, MessageBase msg, CallbackHandler callback, SendToAllFinishedCallbackHandler finishedCallback)
         {
             if (server.Active)
             {
-                foreach(KeyValuePair<int, InsightNetworkConnection> conn in connections)
+                SendToAllFinishedCallbackData finishedCallbackData = new SendToAllFinishedCallbackData() { requiredCallbackIds = new HashSet<int>() };
+
+                foreach (KeyValuePair<int, InsightNetworkConnection> conn in connections)
                 {
-                    SendToClient(conn.Key, msgType, msg);
-                    //conn.Value.Send(msgType, msg);
+                    SendToClient(conn.Key, msgType, msg, callback);
+                    finishedCallbackData.requiredCallbackIds.Add(callbackIdIndex);
+                }
+
+                // you can't have _just_ the finishedCallback, although you _can_ have just
+                // "normal" callback. 
+                if (finishedCallback != null && callback != null)
+                {
+                    finishedCallbackData.callback = finishedCallback;
+                    finishedCallbackData.timeout = Time.realtimeSinceStartup + CALLBACKTIMEOUT;
+                    sendToAllFinishedCallbacks.Add(finishedCallbackData);
                 }
                 return true;
             }
@@ -228,9 +243,19 @@ namespace Insight
             return false;
         }
 
+        public bool SendToAll(short msgType, MessageBase msg, CallbackHandler callback)
+        {
+            return SendToAll(msgType, msg, callback, null);
+        }
+
+        public bool SendToAll(short msgType, MessageBase msg)
+        {
+            return SendToAll(msgType, msg, null, null);
+        }
+
         public bool SendToAll(byte[] bytes)
         {
-            if(server.Active)
+            if (server.Active)
             {
                 foreach (var conn in connections)
                 {
@@ -246,6 +271,34 @@ namespace Insight
         {
             if (logNetworkMessages) { Debug.Log("[InsightServer] Stopping Server"); }
             server.Stop();
+        }
+
+        private void CheckForFinishedCallback(int callbackId)
+        {
+            foreach (var item in sendToAllFinishedCallbacks)
+            {
+                if (item.requiredCallbackIds.Contains(callbackId)) item.callbacks++;
+                if (item.callbacks >= item.requiredCallbackIds.Count)
+                {
+                    item.callback.Invoke(CallbackStatus.Ok);
+                    sendToAllFinishedCallbacks.Remove(item);
+                    return;
+                }
+            }
+        }
+
+        protected override void CheckCallbackTimeouts()
+        {
+            base.CheckCallbackTimeouts();
+            foreach (var item in sendToAllFinishedCallbacks)
+            {
+                if (item.timeout < Time.realtimeSinceStartup)
+                {
+                    item.callback.Invoke(CallbackStatus.Timeout);
+                    sendToAllFinishedCallbacks.Remove(item);
+                    return;
+                }
+            }
         }
 
         //----------virtual handlers--------------//

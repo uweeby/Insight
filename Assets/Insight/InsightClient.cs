@@ -151,7 +151,7 @@ namespace Insight
             if (callback != null)
             {
                 callbackId = ++callbackIdIndex; // pre-increment to ensure that id 0 is never used.
-                callbacks.Add(callbackId, new CallbackData() { callback = callback, timeout = Time.realtimeSinceStartup + CallbackTimeoutInSeconds });
+                callbacks.Add(callbackId, new CallbackData() { callback = callback, timeout = Time.realtimeSinceStartup + CALLBACKTIMEOUT });
             }
 
             writer.Write(callbackId);
@@ -195,6 +195,7 @@ namespace Insight
             }
         }
 
+
         private void OnApplicationQuit()
         {
             if (logNetworkMessages) { Debug.Log("[InsightClient] Stopping Client"); }
@@ -223,9 +224,5 @@ namespace Insight
         }
     }
 
-    public struct CallbackData
-    {
-        public InsightClient.CallbackHandler callback;
-        public float timeout; 
-    }
+  
 }

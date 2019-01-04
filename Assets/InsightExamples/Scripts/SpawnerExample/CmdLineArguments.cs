@@ -3,16 +3,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IncomingCmdlineArgs {
-
-    public Dictionary<string, List<string>> commandLineArguments = new Dictionary<string, List<string>>(System.StringComparer.OrdinalIgnoreCase);
+// I'm assuming here that all command line argument are going to be in the general 
+// format of:
+// '-commandA paramA1 paramA2 -commandB paramB1 -commandC -commandD'
+//
+// We strip the prefix from all commands, and make them all case-insensitive for the
+// TryGetCommand method.
+public class CmdLineArguments 
+{
+    private Dictionary<string, List<string>> commands = new Dictionary<string, List<string>>(System.StringComparer.OrdinalIgnoreCase);
 
     public bool initialized { get; protected set; }
 
-    public IncomingCmdlineArgs(params string[] prefixes)
+    public CmdLineArguments(params string[] prefixes)
     {
         // sort longest prefix first, so we don't get issues with '-' being found in '--' prefix. 
         prefixes = prefixes.OrderByDescending((arg) => arg.Length).ToArray();
+
 
         var args = System.Environment.GetCommandLineArgs().ToList();
 
@@ -32,14 +39,14 @@ public class IncomingCmdlineArgs {
                 {
                     // is a command. 
                     currentCommand = token.Substring(prefix.Length);
-                    commandLineArguments[currentCommand] = new List<string>();
+                    commands[currentCommand] = new List<string>();
                     index++;
                     continue;
                 }
             }
 
             // if we get here, the token is _not_ a command, but a pram to the `currentCommand` item. 
-            commandLineArguments[currentCommand].Add(token);
+            commands[currentCommand].Add(token);
             index++;
         }
 
@@ -47,7 +54,7 @@ public class IncomingCmdlineArgs {
     }
 
 
-    public bool TryGetArgument(string command, out List<string> arguments)
+    public bool TryGetCommand(string command, out List<string> arguments)
     {
         if(!initialized)
         {
@@ -55,9 +62,9 @@ public class IncomingCmdlineArgs {
         }
 
         arguments = new List<string>();
-        if (!commandLineArguments.ContainsKey(command)) return false;
+        if (!commands.ContainsKey(command)) return false;
 
-        arguments.AddRange(commandLineArguments[command]);
+        arguments.AddRange(commands[command]);
         return true;
     }
 

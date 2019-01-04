@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Insight;
-using UnityEngine;
 
 public class SpawnRequestModule : InsightModule
 {
@@ -27,6 +27,6 @@ public class SpawnRequestModule : InsightModule
         //This links to the BasicSpawnModule
 
         //Reply to ack the request
-        netMsg.Reply(SpawnDataMessage.MsgId, message);
+        netMsg.Reply(SpawnDataMessage.MsgId, new SpawnDataMessage() { GameName = message.GameName, NetworkAddress = "test.com", NetworkPort = 420, UniqueID = Guid.NewGuid().ToString() });
     }
 }

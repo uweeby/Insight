@@ -1,7 +1,4 @@
 ﻿using Insight;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ClientSpawnRequest : InsightModule
@@ -31,12 +28,12 @@ public class ClientSpawnRequest : InsightModule
             if (status == CallbackStatus.Ok)
             {
                 // excellent, we are registered! 
-                Debug.Log("Registered for key '" + ExampleGameName + "'", this);
+                Debug.Log("Callback: spawn request sucessful for game: '" + ExampleGameName + "'", this);
             }
             else
             {
                 // bummer, we should try to re-register or throw an error or something. 
-                Debug.LogError("Unable to register spawner key '" + ExampleGameName + "'.", this);
+                Debug.LogError("Callback: failed to spawn game: '" + ExampleGameName + "'.", this);
                 return;
             }
         });

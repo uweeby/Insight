@@ -3,17 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IncomingCmdlineArgs : MonoBehaviour {
-
-    public List<string> argumentPrefixes;
+public class IncomingCmdlineArgs {
 
     public Dictionary<string, List<string>> commandLineArguments = new Dictionary<string, List<string>>(System.StringComparer.OrdinalIgnoreCase);
 
-	// Use this for initialization
-	void Start () {
+    public bool initialized { get; protected set; }
 
+    public IncomingCmdlineArgs(params string[] prefixes)
+    {
         // sort longest prefix first, so we don't get issues with '-' being found in '--' prefix. 
-        argumentPrefixes = argumentPrefixes.OrderByDescending((arg) => arg.Length).ToList();
+        prefixes = prefixes.OrderByDescending((arg) => arg.Length).ToArray();
 
         var args = System.Environment.GetCommandLineArgs().ToList();
 
@@ -25,9 +24,9 @@ public class IncomingCmdlineArgs : MonoBehaviour {
         {
             token = args[index];
 
-            Debug.Log("Checking token '" + token + "'", this);
+            Debug.Log("Checking token '" + token + "'");
 
-            foreach (var prefix in argumentPrefixes)
+            foreach (var prefix in prefixes)
             {
                 if (token.Contains(prefix))
                 {
@@ -43,11 +42,18 @@ public class IncomingCmdlineArgs : MonoBehaviour {
             commandLineArguments[currentCommand].Add(token);
             index++;
         }
+
+        initialized = true;
     }
 
 
     public bool TryGetArgument(string command, out List<string> arguments)
     {
+        if(!initialized)
+        {
+            throw new System.InvalidOperationException("Object has not been Initialized.");
+        }
+
         arguments = new List<string>();
         if (!commandLineArguments.ContainsKey(command)) return false;
 

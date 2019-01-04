@@ -14,13 +14,12 @@ Run the example scenes in editor.
 Note: The Spawner example requires the use of the build menu (Under Tools at the top) to have a seperate running Standalone to spawn.  
 
 # Examples:  
-ChatModule - Sends messages to players anywhere in the game.  
-LoginModule - Simple user/pass verification  
-BasicSpawner - Creates GameServer with incrementing port numbers  
+1. SimpleConnection - Shows an InsightServer autostart and a InsightClient autoconnect.
+2. ChatModule - Sends messages to players anywhere in the game.  
+3. LoginModule - Simple user/pass verification  
+4. BasicSpawner - Creates GameServer with incrementing port numbers  
+
 ComplexSpawner - Create and register GameServer with GameManagerModule (not implemented yet)  
 Database - Working on support for MySQL and SQLite (not implemented yet)  
 Health - Report CPU/MEM/Etc stats. Primarily used for load balancing (not implemented yet)  
 LoadBalancer - Track available spawners and their host health. (not implemented yet)  
-
-# License:  
-Insight has no specific licensing of its own and can be used/copied anyway you see fit.

@@ -9,6 +9,11 @@ public class SpawnRequestModule : InsightModule
 
     Dictionary<string, List<int>> registeredSpawners = new Dictionary<string, List<int>>();
 
+    private void Awake()
+    {
+        AddDependency<BasicSpawnerModule>();
+    }
+
     public override void Initialize(InsightServer insight, ModuleManager manager)
     {
         server = insight;

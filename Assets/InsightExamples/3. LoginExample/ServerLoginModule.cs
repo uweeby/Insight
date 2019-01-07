@@ -26,8 +26,9 @@ public class ServerLoginModule : InsightModule
         if (server.logNetworkMessages) { Debug.Log("[InsightServer] - Login Received: " + message.AccountName + " / " + message.AccountPassword); }
 
         //Add code to verify the user/pass are correct
-        //Yes the passwords are in plain text for this demo!
-        if (message.AccountName.Equals("root") && message.AccountPassword.Equals("password"))
+
+        //We expect the SHA256 for 'password'. Its not salted with anything currently
+        if (message.AccountName.Equals("root") && message.AccountPassword.Equals("5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"))
         {
             netMsg.Reply(StatusMsg.MsgId, new StatusMsg() { Text = "Login Sucessful!" });
         }

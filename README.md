@@ -19,7 +19,9 @@ Note: The Spawner example requires the use of the build menu (Under Tools at the
 3. LoginModule - Simple user/pass verification  
 4. BasicSpawner - Creates GameServer with incrementing port numbers  
 
+# Planned Examples or WIP:  
 ComplexSpawner - Create and register GameServer with GameManagerModule (not implemented yet)  
 Database - Working on support for MySQL and SQLite (not implemented yet)  
 Health - Report CPU/MEM/Etc stats. Primarily used for load balancing (not implemented yet)  
 LoadBalancer - Track available spawners and their host health. (not implemented yet)  
+AdminConsole - Simple server management from MasterServer  

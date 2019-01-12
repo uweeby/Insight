@@ -56,11 +56,6 @@ namespace Insight
             throw new NotImplementedException();
         }
 
-        public virtual void RegisterHandlers()
-        {
-
-        }
-
         /// <summary>
         ///     Adds a dependency to list. Should be called in Awake or Start methods of
         ///     module

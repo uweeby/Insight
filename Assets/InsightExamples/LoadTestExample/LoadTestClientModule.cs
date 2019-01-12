@@ -12,7 +12,7 @@ public class LoadTestClientModule : InsightModule
         RegisterHandlers();
     }
 
-    public override void RegisterHandlers()
+    void RegisterHandlers()
     {
         server.RegisterHandler(ClientLoadTestMsg.MsgId, HandleClientLoadTestMsg);
         server.RegisterHandler(ServerLoadTestMsg.MsgId, HandleServerLoadTestMsg);

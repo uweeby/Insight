@@ -10,15 +10,9 @@ public class HealthModule : InsightModule
     {
         this.insight = insight;
 
-        RegisterHandlers();
-
         InvokeRepeating("SendServerData", SendRateInSeconds, SendRateInSeconds);
     }
 
-    public override void RegisterHandlers()
-    {
-
-    }
 
     private void SendHealth()
     {

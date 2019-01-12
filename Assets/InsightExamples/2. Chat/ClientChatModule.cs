@@ -15,7 +15,7 @@ public class ClientChatModule : InsightModule
         RegisterHandlers();
     }
 
-    public override void RegisterHandlers()
+    void RegisterHandlers()
     {
         client.RegisterHandler(ChatMessage.MsgId, HandleChatMessage);
     }

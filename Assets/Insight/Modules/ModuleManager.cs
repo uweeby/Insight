@@ -59,11 +59,6 @@ namespace Insight
                 // Initialize modules
                 InitializeModules(client, server);
 
-
-                //Register Handlers
-                foreach (var module in modules)
-                    module.RegisterHandlers();
-
                 //Now that modules are loaded check for original AutoStart value
                 if(_cachedServerAutoStartValue)
                 {

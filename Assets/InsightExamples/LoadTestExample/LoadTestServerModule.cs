@@ -25,7 +25,7 @@ public class LoadTestServerModule : InsightModule
         InvokeRepeating("SendServerData", 1f, 0.1f);
     }
 
-    public override void RegisterHandlers()
+    void RegisterHandlers()
     {
         server.RegisterHandler(ClientLoadTestMsg.MsgId, HandleClientLoadTestMsg);
     }

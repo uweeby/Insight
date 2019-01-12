@@ -22,13 +22,8 @@ public class BasicSpawnerModule : InsightModule
 
     public override void Initialize(InsightCommon insight, ModuleManager manager)
     {
-        RegisterHandlers();
     }
 
-    public override void RegisterHandlers()
-    {
-
-    }
 
     public bool RequestSpawn(int port)
     {

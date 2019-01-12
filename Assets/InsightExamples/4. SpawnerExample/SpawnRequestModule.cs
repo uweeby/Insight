@@ -18,9 +18,10 @@ public class SpawnRequestModule : InsightModule
     {
         server = insight;
         this.manager = manager;
+        RegisterHandlers();
     }
 
-    public override void RegisterHandlers()
+    void RegisterHandlers()
     {
         server.RegisterHandler(SpawnDataMessage.MsgId, SpawnDataMessageHandler);
     }

@@ -12,7 +12,7 @@ public class ServerChatModule : InsightModule
         RegisterHandlers();
     }
 
-    public override void RegisterHandlers()
+    void RegisterHandlers()
     {
         server.RegisterHandler(ChatMessage.MsgId, HandleChatMessage);
     }

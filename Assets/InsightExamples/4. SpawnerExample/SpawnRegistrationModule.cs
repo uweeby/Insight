@@ -20,54 +20,55 @@ public class SpawnRegistrationModule : InsightModule
     public override void Initialize(InsightServer server, ModuleManager manager)
     {
         this.server = server;
+        RegisterServerHandlers();
     }
     public override void Initialize(InsightClient client, ModuleManager manager)
     {
         this.client = client;
+        RegisterClientHandlers();
         this.client.OnConnectedEvent.AddListener(OnClientConnectedEventHandler);
     }
 
-    public override void RegisterHandlers()
+    void RegisterServerHandlers()
     {
-        if(server)
+        // handle calls from SPAWNED processes. 
+        server.RegisterHandler(SpawnedProcessRegistrationMessage.MsgId, OnRegisterMessageHandler);
+        // also needs to listen for the SPAWNER SERVERS messages about closes/exited/stopped processes
+        // and remove them from its list of registered servers, if it exists on the list. 
+        // that message should include the GUID of the process, which was given to/created by teh spawning module.
+    
+    }
+
+    void RegisterClientHandlers()
+    { 
+        // need to connect to a specific _spawn registration server_
+        cmdline = new CmdLineArguments(prefixes);
+
+        List<string> arguments;
+
+        string serverIP = "";
+        int serverPort = 0;
+
+        if(cmdline.TryGetCommand("registrationip", out arguments))
         {
-            // handle calls from SPAWNED processes. 
-            server.RegisterHandler(SpawnedProcessRegistrationMessage.MsgId, OnRegisterMessageHandler);
-            // also needs to listen for the SPAWNER SERVERS messages about closes/exited/stopped processes
-            // and remove them from its list of registered servers, if it exists on the list. 
-            // that message should include the GUID of the process, which was given to/created by teh spawning module.
-        }
-        if(client)
-        {
-            // need to connect to a specific _spawn registration server_
-            cmdline = new CmdLineArguments(prefixes);
+            if (arguments.Count == 1) serverIP = arguments[0];
+            else Debug.LogError("incorrect # of arguments for cmdline item 'registrationip'.", this);
 
-            List<string> arguments;
-
-            string serverIP = "";
-            int serverPort = 0;
-
-            if(cmdline.TryGetCommand("registrationip", out arguments))
+            if (cmdline.TryGetCommand("registractionport", out arguments))
             {
-                if (arguments.Count == 1) serverIP = arguments[0];
-                else Debug.LogError("incorrect # of arguments for cmdline item 'registrationip'.", this);
-
-                if (cmdline.TryGetCommand("registractionport", out arguments))
+                if (arguments.Count == 1)
                 {
-                    if (arguments.Count == 1)
-                    {
-                        serverPort = int.Parse(arguments[0]);
-                        client.networkPort = serverPort;
-                        client.networkAddress = serverIP;
-                    }
-                    else Debug.LogError("incorrect # of arguments for cmdline item 'registrationport'.", this);
+                    serverPort = int.Parse(arguments[0]);
+                    client.networkPort = serverPort;
+                    client.networkAddress = serverIP;
                 }
-                else Debug.LogWarning("Unable to find registraction port cmdline args.", this);
+                else Debug.LogError("incorrect # of arguments for cmdline item 'registrationport'.", this);
             }
-            else
-            {
-                Debug.LogWarning("Unable to find registration ip cmdline args", this);
-            }
+            else Debug.LogWarning("Unable to find registraction port cmdline args.", this);
+        }
+        else
+        {
+            Debug.LogWarning("Unable to find registration ip cmdline args", this);
         }
     }
 

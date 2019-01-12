@@ -10,9 +10,11 @@ public class ClientSpawnRequest : InsightModule
         this.client = client;
 
         client.OnConnectedEvent.AddListener(ClientOnConnectedEventHandler);
+
+        RegisterHandlers();
     }
 
-    public override void RegisterHandlers()
+    void RegisterHandlers()
     {
         client.RegisterHandler(SpawnDataMessage.MsgId, SpawnDataMessageHandler);
     }

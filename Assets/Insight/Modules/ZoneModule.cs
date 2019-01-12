@@ -11,9 +11,10 @@ public class ZoneModule : InsightModule
     public override void Initialize(InsightClient server, ModuleManager manager)
     {
         insightServer = server;
+        RegisterHandlers();
     }
 
-    public override void RegisterHandlers()
+    void RegisterHandlers()
     {
         insightServer.RegisterHandler(RegisterZoneMsg.MsgId, HandleRegisterZoneMsg);
         insightServer.RegisterHandler(UnregisterZoneMsg.MsgId, HandleUnregisterZoneMsg);

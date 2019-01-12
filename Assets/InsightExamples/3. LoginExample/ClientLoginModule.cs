@@ -18,7 +18,7 @@ public class ClientLoginModule : InsightModule
         RegisterHandlers();
     }
 
-    public override void RegisterHandlers()
+    void RegisterHandlers()
     {
         client.RegisterHandler(StatusMsg.MsgId, HandleStatusMsg);
     }

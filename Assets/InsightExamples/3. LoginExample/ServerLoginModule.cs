@@ -12,7 +12,7 @@ public class ServerLoginModule : InsightModule
         RegisterHandlers();
     }
 
-    public override void RegisterHandlers()
+    void RegisterHandlers()
     {
         server.RegisterHandler(LoginMsg.MsgId, HandleLoginMsg);
     }

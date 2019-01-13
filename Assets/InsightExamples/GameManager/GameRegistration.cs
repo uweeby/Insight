@@ -17,6 +17,8 @@ public class GameRegistration : InsightModule
         client.OnConnectedEvent.AddListener(ClientOnConnectedEventHandler);
 
         RegisterHandlers();
+
+        networkManager = NetworkManager.singleton;
     }
 
     void RegisterHandlers()
@@ -26,7 +28,7 @@ public class GameRegistration : InsightModule
     private void ClientOnConnectedEventHandler()
     {
         //Gather Params
-
+        
         //Apply necessary changes to NetworkManager
 
         //Start NetworkManager
@@ -35,6 +37,6 @@ public class GameRegistration : InsightModule
 
     private void SendGameRegistrationToGameManager()
     {
-        client.Send(RegisterGame.MsgId, new RegisterGame() { UniqueID = "TEST"});
+        //client.Send(RegisterGame.MsgId, new RegisterGame() { UniqueID = ""});
     }
 }

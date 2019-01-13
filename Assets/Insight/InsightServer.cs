@@ -128,7 +128,7 @@ namespace Insight
 
         void HandleData(int connectionId, byte[] data, byte error)
         {
-            InsightNetworkConnection conn;
+            //InsightNetworkConnection conn;
 
             NetworkReader reader = new NetworkReader(data);
             var msgType = reader.ReadInt16();

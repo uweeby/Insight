@@ -1,12 +1,14 @@
 ﻿using Insight;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
 
 public class BasicSpawnerModule : InsightModule
 {
+    InsightServer server;
+    InsightClient client;
+
     [Header("Paths")]
     public string EditorPath;
     public string ProcessPath;
@@ -17,11 +19,63 @@ public class BasicSpawnerModule : InsightModule
     [Header("Threads")]
     public int MaximumProcesses = 5;
     private int _processUsageCounter;
+    private bool registrationComplete;
 
     //public List<SpawnedProcesses> spawnedProcessList = new List<SpawnedProcesses>();
 
-    public override void Initialize(InsightCommon insight, ModuleManager manager)
+    public override void Initialize(InsightServer server, ModuleManager manager)
     {
+        this.server = server;
+        RegisterHandlers();
+    }
+
+    public override void Initialize(InsightClient client, ModuleManager manager)
+    {
+        this.client = client;
+        RegisterHandlers();
+    }
+
+    void Update()
+    {
+        if (client && !registrationComplete) //Needs to be registered to MasterServer
+        {
+            if (client.isConnected)
+            {
+                UnityEngine.Debug.LogWarning("[Basic Spawner Module] - Registering to Master");
+                client.Send(RegisterSpawner.MsgId, new RegisterSpawner() { UniqueID = "" });
+                registrationComplete = true;
+            }
+        }
+    }
+
+    void RegisterHandlers()
+    {
+        if (client)
+        {
+            client.RegisterHandler(SpawnRequest.MsgId, HandleSpawnRequest);
+        }
+        if (server)
+        {
+            server.RegisterHandler(SpawnRequest.MsgId, HandleSpawnRequest);
+        }
+    }
+
+    private void HandleSpawnRequest(InsightNetworkMessage netMsg)
+    {
+        SpawnRequest message = netMsg.ReadMessage<SpawnRequest>();
+
+        if (message.NetworkPort != 0)
+        {
+            SpawnThread(message.NetworkPort);
+        }
+        else
+        {
+            UnityEngine.Debug.LogWarning("[Basic Spawner Module] - Port not provided with HandleSpawnRequest. Using default 7777");
+            SpawnThread(7777);
+        }
+
+        //Reply to ack the request
+        netMsg.Reply(SpawnRequest.MsgId, new SpawnRequest() { GameName = message.GameName, NetworkAddress = "test.com", NetworkPort = 420, UniqueID = Guid.NewGuid().ToString() });
     }
 
 

@@ -5,9 +5,8 @@ using Insight;
 public class SpawnRequestModule : InsightModule
 {
     InsightServer server;
-    ModuleManager manager;
 
-    Dictionary<string, List<int>> registeredSpawners = new Dictionary<string, List<int>>();
+    //Dictionary<string, List<int>> registeredSpawners = new Dictionary<string, List<int>>();
 
     private void Awake()
     {
@@ -17,7 +16,6 @@ public class SpawnRequestModule : InsightModule
     public override void Initialize(InsightServer insight, ModuleManager manager)
     {
         server = insight;
-        this.manager = manager;
         RegisterHandlers();
     }
 

@@ -25,7 +25,7 @@ public class MasterSpawner : InsightModule
         RegisterSpawner message = netMsg.ReadMessage<RegisterSpawner>();
 
         //Add the new child spawner to the list of spawners
-        registeredSpawners.Add(new SpawnerContainer() { uniqueId = message.UniqueID, connectionId = netMsg.conn.connectionId });
+        registeredSpawners.Add(new SpawnerContainer() { uniqueId = message.UniqueID, connectionId = netMsg.connectionId });
 
         if (server.logNetworkMessages) { Debug.Log("HandleRegisterSpawner - Count: " + registeredSpawners.Count); }
     }

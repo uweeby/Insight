@@ -163,7 +163,7 @@ namespace Insight
     public class InsightNetworkMessage
     {
         public short msgType;
-        public InsightNetworkConnection conn;
+        InsightNetworkConnection conn;
         public NetworkReader reader;
         public int callbackId { get; protected set; }
         public int connectionId { get { return conn.connectionId; } }

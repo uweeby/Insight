@@ -11,7 +11,7 @@ public class DemoBuildScript
     /// Have in mind that if you change it, it might take "a while" 
     /// for the editor to pick up changes 
     /// </summary>
-    public static string ScenesRoot = "Assets/Scenes/";
+    public static string ScenesRoot = "Assets/InsightExamples/";
 
     /// <summary>
     /// Build with "Development" flag, so that we can see the console if something 
@@ -51,7 +51,7 @@ public class DemoBuildScript
 
         var gameServerScenes = new[]
         {
-            ScenesRoot+"SpawnerExample/Spawner.unity"
+            ScenesRoot+"4. Spawner/Spawner.unity"
         };
         PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.HiddenByDefault;
         PlayerSettings.productName = "Spawner";
@@ -68,7 +68,7 @@ public class DemoBuildScript
 
         var gameServerScenes = new[]
         {
-            ScenesRoot+"SpawnerExample/GameServer.unity"
+            ScenesRoot+"4. Spawner/GameServer.unity"
         };
         PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.HiddenByDefault;
         PlayerSettings.productName = "GameServer";

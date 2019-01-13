@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Insight;
 
 public class SpawnRequestModule : InsightModule
@@ -21,16 +20,16 @@ public class SpawnRequestModule : InsightModule
 
     void RegisterHandlers()
     {
-        server.RegisterHandler(SpawnDataMessage.MsgId, SpawnDataMessageHandler);
+        server.RegisterHandler(SpawnRequest.MsgId, SpawnRequestHandler);
     }
 
-    private void SpawnDataMessageHandler(InsightNetworkMessage netMsg)
+    private void SpawnRequestHandler(InsightNetworkMessage netMsg)
     {
-        SpawnDataMessage message = netMsg.ReadMessage<SpawnDataMessage>();
+        SpawnRequest message = netMsg.ReadMessage<SpawnRequest>();
 
         //This links to the BasicSpawnModule
 
         //Reply to ack the request
-        netMsg.Reply(SpawnDataMessage.MsgId, new SpawnDataMessage() { GameName = message.GameName, NetworkAddress = "test.com", NetworkPort = 420, UniqueID = Guid.NewGuid().ToString() });
+        netMsg.Reply(SpawnRequest.MsgId, new SpawnRequest() { GameName = message.GameName, NetworkAddress = "test.com", NetworkPort = 420, UniqueID = Guid.NewGuid().ToString() });
     }
 }

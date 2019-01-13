@@ -16,7 +16,7 @@ public class ClientSpawnRequest : InsightModule
 
     void RegisterHandlers()
     {
-        client.RegisterHandler(SpawnDataMessage.MsgId, SpawnDataMessageHandler);
+        client.RegisterHandler(SpawnRequest.MsgId, SpawnRequestHandler);
     }
 
     private void ClientOnConnectedEventHandler()
@@ -25,7 +25,7 @@ public class ClientSpawnRequest : InsightModule
         //Normally this would be called via a GUI or something
         string ExampleGameName = "SuperAwesomeGame"; //This would probably get passed in
 
-        client.Send(SpawnDataMessage.MsgId, new SpawnDataMessage() { GameName = ExampleGameName }, (status, reader) =>
+        client.Send(SpawnRequest.MsgId, new SpawnRequest() { GameName = ExampleGameName }, (status, reader) =>
         {
             if (status == CallbackStatus.Ok)
             {
@@ -41,9 +41,9 @@ public class ClientSpawnRequest : InsightModule
         });
     }
 
-    private void SpawnDataMessageHandler(InsightNetworkMessage netMsg)
+    private void SpawnRequestHandler(InsightNetworkMessage netMsg)
     {
-        SpawnDataMessage message = netMsg.ReadMessage<SpawnDataMessage>();
+        SpawnRequest message = netMsg.ReadMessage<SpawnRequest>();
 
         //The new server that was spawned should probably be running a NetworkManager.
         //So you could set the players NetworkManager to use the NetworkAddress and NetworkPort from this msg

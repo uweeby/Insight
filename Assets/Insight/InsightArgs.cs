@@ -5,41 +5,54 @@ namespace Insight
 {
     public static class InsightArgs
     {
-        public static Dictionary<string, string> dictionary = new Dictionary<string, string>();
+        private static Dictionary<string, List<string>> dictionary = new Dictionary<string, List<string>>();
 
-        static InsightArgs()
-        {
-            BuildDictionaryFromArgs();
+        private static bool _initalized;
 
-            foreach (KeyValuePair<string, string> kvp in dictionary)
-            {
-                Debug.Log("key:" + kvp.Key + " value:" + kvp.Value);
-            }
-        }
-
-        public static void BuildDictionaryFromArgs()
+        public static void Initialize()
         {
             string[] args = System.Environment.GetCommandLineArgs();
-            for (int i = 0; i < args.Length; i++)
+            string lastParam = string.Empty;
+
+            foreach (string arg in args)
             {
-                if (args[i].StartsWith("-")) //Argument Names start with a dash. Example: -NetworkAddress
+                //Cache the param
+                if(arg.StartsWith("-") || arg.StartsWith("--"))
                 {
-                    if (!args[i + 1].StartsWith("-")) //Check to make sure the next line does NOT start with a dash meaning this argument has a key and a value
-                    {
-                        dictionary.Add(args[i], args[i + 1]); //Add the key from this line and the value we peeked from the next line
-                        i++; //skip the next line since we know it was a value used in the dictionary.Add above
-                    }
-                    else //The argument is just a key with no value
-                    {
-                        dictionary.Add(args[i], string.Empty);
-                    }
+                    dictionary.Add(arg, new List<string>());
+                    lastParam = arg;
+                    continue;
+                }
+                if(lastParam != string.Empty)
+                {
+                    dictionary[lastParam].Add(arg);
+                }
+            }
+
+            //For debug only
+            foreach (KeyValuePair<string, List<string>> kvp in dictionary)
+            {
+                Debug.Log("key:" + kvp.Key);
+
+                foreach (string arg in kvp.Value)
+                {
+                    Debug.Log("key:" + kvp.Key + " value:" + arg);
                 }
             }
         }
 
-        public static string GetStringFromDictionary()
+        public static bool TryGetArgument(string ArgName, out List<string> ArgValue)
         {
-            return null;
+            if(!_initalized)
+            {
+                Initialize();
+            }
+
+            ArgValue = new List<string>();
+            if (!dictionary.ContainsKey(ArgName)) return false;
+
+            ArgValue.AddRange(dictionary[ArgName]);
+            return true;
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using Insight;
 
-public class SpawnRequestModule : InsightModule
+public class MasterSpawner : InsightModule
 {
     InsightServer server;
 

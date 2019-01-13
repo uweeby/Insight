@@ -95,4 +95,11 @@ namespace Insight
         public static short MsgId = 1012;
         public string UniqueID;
     }
+
+    //Test msg for GameManager
+    public class RegisterGame : MessageBase
+    {
+        public static short MsgId = 1012;
+        public string UniqueID;
+    }
 }

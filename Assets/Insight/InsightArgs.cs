@@ -45,6 +45,7 @@ namespace Insight
         {
             if(!_initalized)
             {
+                _initalized = true;
                 Initialize();
             }
 

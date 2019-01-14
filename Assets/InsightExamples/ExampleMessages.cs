@@ -102,4 +102,10 @@ namespace Insight
         public static short MsgId = 1012;
         public string UniqueID;
     }
+
+    public class GamesList : MessageBase
+    {
+        public static short MsgId = 1013;
+        //OptionCollection GOES HERE
+    }
 }

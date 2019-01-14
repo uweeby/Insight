@@ -5,7 +5,7 @@ namespace Insight
 {
     public static class InsightArgs
     {
-        private static Dictionary<string, List<string>> dictionary = new Dictionary<string, List<string>>();
+        private static Dictionary<string, List<string>> startupArgs = new Dictionary<string, List<string>>();
 
         private static bool _initalized;
 
@@ -19,18 +19,18 @@ namespace Insight
                 //Cache the param
                 if(arg.StartsWith("-") || arg.StartsWith("--"))
                 {
-                    dictionary.Add(arg, new List<string>());
+                    startupArgs.Add(arg, new List<string>());
                     lastParam = arg;
                     continue;
                 }
                 if(lastParam != string.Empty)
                 {
-                    dictionary[lastParam].Add(arg);
+                    startupArgs[lastParam].Add(arg);
                 }
             }
 
             //For debug only
-            foreach (KeyValuePair<string, List<string>> kvp in dictionary)
+            foreach (KeyValuePair<string, List<string>> kvp in startupArgs)
             {
                 Debug.Log("key:" + kvp.Key);
 
@@ -50,9 +50,9 @@ namespace Insight
             }
 
             ArgValue = new List<string>();
-            if (!dictionary.ContainsKey(ArgName)) return false;
+            if (!startupArgs.ContainsKey(ArgName)) return false;
 
-            ArgValue.AddRange(dictionary[ArgName]);
+            ArgValue.AddRange(startupArgs[ArgName]);
             return true;
         }
     }

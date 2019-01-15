@@ -151,6 +151,28 @@ namespace Insight
             }
         }
 
+        public T GetModule<T>() where T : class, IServerModule
+        {
+            InsightModule module;
+            _modules.TryGetValue(typeof(T), out module);
+
+            if (module == null)
+            {
+                // Try to find an assignable module
+                module = _modules.Values.FirstOrDefault(m => m is T);
+            }
+
+            return module as T;
+        }
+
+        public List<InsightModule> GetInitializedModules()
+        {
+            return _modules
+                .Where(m => _initializedModules.Contains(m.Key))
+                .Select(m => m.Value)
+                .ToList();
+        }
+
         public List<InsightModule> GetUninitializedModules()
         {
             return _modules

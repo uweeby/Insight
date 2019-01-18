@@ -39,7 +39,7 @@ public class ServerGameManagerModule : InsightModule
 
     private void HandleGamesList(InsightNetworkMessage netMsg)
     {
-        GamesList message = netMsg.ReadMessage<GamesList>();
+        //GamesList message = netMsg.ReadMessage<GamesList>();
 
         List<GameContainer> gamesMeetingCriteria = new List<GameContainer>();
 

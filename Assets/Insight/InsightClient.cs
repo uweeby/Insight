@@ -1,5 +1,4 @@
 using Mirror;
-using System;
 using System.Collections.Generic;
 using Telepathy;
 using UnityEngine;
@@ -219,6 +218,4 @@ namespace Insight
             if (logNetworkMessages) { Debug.Log("[InsightClient] - Disconnecting from Insight Server"); }
         }
     }
-
-  
 }

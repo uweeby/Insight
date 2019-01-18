@@ -99,13 +99,22 @@ namespace Insight
     //Test msg for GameManager
     public class RegisterGame : MessageBase
     {
-        public static short MsgId = 1012;
+        public static short MsgId = 1013;
         public string UniqueID;
     }
 
+    //Test msg for GameManager
     public class GamesList : MessageBase
     {
-        public static short MsgId = 1013;
+        public static short MsgId = 1014;
         //OptionCollection GOES HERE
+    }
+
+    //Test msg for MatchMaker
+    public class FindMatch : MessageBase
+    {
+        public static short MsgId = 1015;
+
+        //options/param of Match they want to join
     }
 }

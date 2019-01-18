@@ -5,7 +5,6 @@ using UnityEngine;
 public class ServerGameManagerModule : InsightModule
 {
     InsightServer server;
-    ModuleManager manager;
     public MasterSpawner masterSpawner;
 
     public List<GameContainer> registeredGames = new List<GameContainer>();
@@ -18,7 +17,6 @@ public class ServerGameManagerModule : InsightModule
     public override void Initialize(InsightServer insight, ModuleManager manager)
     {
         server = insight;
-        this.manager = manager;
         masterSpawner = manager.GetModule<MasterSpawner>();
         RegisterHandlers();
     }

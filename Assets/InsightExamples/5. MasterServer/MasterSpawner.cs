@@ -2,7 +2,7 @@
 using Insight;
 using UnityEngine;
 
-public class MasterSpawner : InsightModule
+public partial class MasterSpawner : InsightModule
 {
     InsightServer server;
 

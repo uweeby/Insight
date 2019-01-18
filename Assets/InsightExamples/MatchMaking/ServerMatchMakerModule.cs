@@ -8,8 +8,6 @@ public class ServerMatchMakerModule : InsightModule
     ModuleManager manager;
     ServerGameManagerModule gameManager;
 
-    //List of all players looking for a Match
-    //List of all games. If a new game needs to be spawned it should ask the GameManager to do it.
     List<UserSeekingMatch> usersSeekingMatchList = new List<UserSeekingMatch>();
 
     public void Awake()
@@ -23,6 +21,8 @@ public class ServerMatchMakerModule : InsightModule
         this.manager = manager;
         gameManager = this.manager.GetModule<ServerGameManagerModule>();
         RegisterHandlers();
+
+        InvokeRepeating("UpdateMatches", 10f, 10f);
     }
 
     void RegisterHandlers()
@@ -32,11 +32,16 @@ public class ServerMatchMakerModule : InsightModule
 
     private void HandleFindMatch(InsightNetworkMessage netMsg)
     {
-        FindMatch message = netMsg.ReadMessage<FindMatch>();
+        //FindMatch message = netMsg.ReadMessage<FindMatch>();
 
         //Add player to list of players looking for a match
         usersSeekingMatchList.Add(new UserSeekingMatch() { playerName = "Player01", gameType = "FFA" });
 
+    }
+
+    private void UpdateMatches()
+    {
+        //Check the list of players and current games at specified interval
     }
 
     public struct UserSeekingMatch

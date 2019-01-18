@@ -101,7 +101,7 @@ namespace Insight
 
         void HandleConnect(Message msg)
         {
-            Debug.Log("connectionID: " + msg.connectionId, this);
+            if (logNetworkMessages) { Debug.Log("[InsightServer] - connectionID: " + msg.connectionId, this); }
 
             // get ip address from connection
             string address = GetConnectionInfo(msg.connectionId);
@@ -200,7 +200,7 @@ namespace Insight
 
                 return connections[connectionId].Send(writer.ToArray());
             }
-            Debug.Log("Server.Send: not connected!", this);
+            Debug.LogError("Server.Send: not connected!", this);
             return false;
         }
 
@@ -215,7 +215,7 @@ namespace Insight
             {
                 return server.Send(connectionId, data);
             }
-            Debug.Log("Server.Send: not connected!", this);
+            Debug.LogError("Server.Send: not connected!", this);
             return false;
         }
 
@@ -241,7 +241,7 @@ namespace Insight
                 }
                 return true;
             }
-            Debug.Log("Server.Send: not connected!", this);
+            Debug.LogError("Server.Send: not connected!", this);
             return false;
         }
 
@@ -265,7 +265,7 @@ namespace Insight
                 }
                 return true;
             }
-            Debug.Log("Server.Send: not connected!", this);
+            Debug.LogError("Server.Send: not connected!", this);
             return false;
         }
 

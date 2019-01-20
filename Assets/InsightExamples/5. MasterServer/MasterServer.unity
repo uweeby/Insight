@@ -880,13 +880,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 1956574474}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ef24255e3d4a434e87316a7a2e032e8, type: 3}
+  m_Script: {fileID: 11500000, guid: 85d70c884f061d441a50834e9653d870, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   AutoStart: 1
-  logNetworkMessages: 1
+  logNetworkMessages: 0
   networkAddress: localhost
   networkPort: 5000
+  OnConnectedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  AutoReconnect: 1
+  ReconnectDelayInSeconds: 5
 --- !u!4 &1956574477
 Transform:
   m_ObjectHideFlags: 0

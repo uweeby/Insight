@@ -25,7 +25,7 @@ public class ClientChatModule : InsightModule
         if (client.logNetworkMessages) { Debug.Log("[InsightClient] - HandleChatMessage()"); }
 
         ChatMessage message = netMsg.ReadMessage<ChatMessage>();
-
+        
         chatGuiComp.textField.text += message.Origin + ": "  + message.Data + "\n";
     }
 }

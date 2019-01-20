@@ -32,14 +32,13 @@ public class ServerGameManagerModule : InsightModule
         RegisterGame message = netMsg.ReadMessage<RegisterGame>();
 
         if (server.logNetworkMessages) { Debug.Log("Received GameRegistration request"); }
-    
 
         registeredGames.Add(new GameContainer() { connectionId = netMsg.connectionId, uniqueId = message.UniqueID });
     }
 
     private void HandleGamesList(InsightNetworkMessage netMsg)
     {
-        GamesList message = netMsg.ReadMessage<GamesList>();
+        //GamesList message = netMsg.ReadMessage<GamesList>();
 
         List<GameContainer> gamesMeetingCriteria = new List<GameContainer>();
 

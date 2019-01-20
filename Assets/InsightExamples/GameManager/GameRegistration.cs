@@ -8,6 +8,7 @@ public class GameRegistration : InsightModule
 {
     InsightClient client;
     public NetworkManager networkManager;
+    public TelepathyTransport telepathyTransport;
 
     public List<GameContainer> registeredGames = new List<GameContainer>();
 
@@ -30,14 +31,16 @@ public class GameRegistration : InsightModule
     {
         //Gather Params
         List<string> portArgs;
-        if(InsightArgs.TryGetArgument("NetworkPort", out portArgs))
+        if(InsightArgs.TryGetArgument("-AssignedPort", out portArgs))
         {
-            networkManager.networkPort = Convert.ToUInt16(portArgs[0]);
+            Debug.Log("Setting Network Port based on Args provided: " + portArgs[0]);
+            telepathyTransport.port = Convert.ToUInt16(portArgs[0]);
         }
 
         //Apply necessary changes to NetworkManager
 
         //Start NetworkManager
+        networkManager.StartServer();
 
         //Register back to the GameManager now that the game is running
         SendGameRegistrationToGameManager();

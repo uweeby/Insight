@@ -21,7 +21,7 @@ public class ServerMatchMakerModule : InsightModule
 
     private void HandleFindMatch(InsightNetworkMessage netMsg)
     {
-        FindMatch message = netMsg.ReadMessage<FindMatch>();
+        //FindMatch message = netMsg.ReadMessage<FindMatch>();
 
 
     }

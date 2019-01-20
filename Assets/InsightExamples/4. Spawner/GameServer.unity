@@ -154,6 +154,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   networkManager: {fileID: 1056297556}
+  telepathyTransport: {fileID: 1056297558}
 --- !u!1 &626635187
 GameObject:
   m_ObjectHideFlags: 0
@@ -331,6 +332,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1056297557}
+  - component: {fileID: 1056297558}
   - component: {fileID: 1056297556}
   m_Layer: 0
   m_Name: NetworkManager
@@ -347,24 +349,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 1056297555}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 2108048308, guid: 1f82cede440b8483ba106133169d4112, type: 3}
+  m_Script: {fileID: 11500000, guid: 8aab4c8111b7c411b9b92cf3dbc5bd4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_NetworkPort: 7777
-  m_ServerBindToIP: 0
-  m_ServerBindAddress: 
-  m_NetworkAddress: localhost
-  m_DontDestroyOnLoad: 1
-  m_RunInBackground: 1
-  m_ShowDebugMessages: 0
-  m_PlayerPrefab: {fileID: 0}
-  m_AutoCreatePlayer: 0
-  m_PlayerSpawnMethod: 0
-  m_OfflineScene: 
-  m_OnlineScene: 
-  m_SpawnPrefabs: []
-  m_MaxConnections: 4
-  m_UseWebSockets: 0
+  networkAddress: localhost
+  dontDestroyOnLoad: 1
+  runInBackground: 1
+  showDebugMessages: 1
+  playerPrefab: {fileID: 0}
+  autoCreatePlayer: 1
+  playerSpawnMethod: 0
+  offlineScene: 
+  onlineScene: 
+  maxConnections: 4
+  spawnPrefabs: []
+  startOnHeadless: 1
+  clientLoadedScene: 0
   isNetworkActive: 0
 --- !u!4 &1056297557
 Transform:
@@ -379,3 +379,15 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1056297558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1056297555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7424c1070fad4ba2a7a96b02fbeb4bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  port: 7000

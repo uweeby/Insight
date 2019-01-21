@@ -1,7 +1,7 @@
 ﻿using Insight;
 using UnityEngine;
 
-public class ServerLoginModule : InsightModule
+public class ServerLogin : InsightModule
 {
     InsightServer server;
 
@@ -14,7 +14,7 @@ public class ServerLoginModule : InsightModule
 
     void RegisterHandlers()
     {
-        server.RegisterHandler(LoginMsg.MsgId, HandleLoginMsg);
+        server.RegisterHandler((short)MsgId.Login, HandleLoginMsg);
     }
 
     private void HandleLoginMsg(InsightNetworkMessage netMsg)
@@ -30,11 +30,11 @@ public class ServerLoginModule : InsightModule
         //We expect the SHA256 for 'password'. Its not salted with anything currently
         if (message.AccountName.Equals("root") && message.AccountPassword.Equals("5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"))
         {
-            netMsg.Reply(StatusMsg.MsgId, new StatusMsg() { Text = "Login Sucessful!" });
+            netMsg.Reply((short)MsgId.Status, new StatusMsg() { Text = "Login Sucessful!" });
         }
         else
         {
-            netMsg.Reply(StatusMsg.MsgId, new StatusMsg() { Text = "Login Failed!" });
+            netMsg.Reply((short)MsgId.Status, new StatusMsg() { Text = "Login Failed!" });
         }
     }
 }

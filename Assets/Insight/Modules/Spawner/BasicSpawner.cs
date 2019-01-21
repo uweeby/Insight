@@ -42,7 +42,7 @@ public class BasicSpawnerModule : InsightModule
             if (client.isConnected)
             {
                 UnityEngine.Debug.LogWarning("[Basic Spawner Module] - Registering to Master");
-                client.Send(RegisterSpawner.MsgId, new RegisterSpawner() { UniqueID = "" });
+                client.Send((short)MsgId.RegisterSpawner, new RegisterSpawnerMsg() { UniqueID = "" });
                 registrationComplete = true;
             }
         }
@@ -52,11 +52,11 @@ public class BasicSpawnerModule : InsightModule
     {
         if (client)
         {
-            client.RegisterHandler(SpawnRequest.MsgId, HandleSpawnRequest);
+            client.RegisterHandler((short)MsgId.RegisterSpawner, HandleSpawnRequest);
         }
         if (server)
         {
-            server.RegisterHandler(SpawnRequest.MsgId, HandleSpawnRequest);
+            server.RegisterHandler((short)MsgId.RegisterSpawner, HandleSpawnRequest);
         }
     }
 

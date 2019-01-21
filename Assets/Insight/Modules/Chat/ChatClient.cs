@@ -1,7 +1,7 @@
 ﻿using Insight;
 using UnityEngine;
 
-public class ClientChatModule : InsightModule
+public class ChatClient : InsightModule
 {
     InsightClient client;
 
@@ -17,14 +17,14 @@ public class ClientChatModule : InsightModule
 
     void RegisterHandlers()
     {
-        client.RegisterHandler(ChatMessage.MsgId, HandleChatMessage);
+        client.RegisterHandler((short)MsgId.Chat, HandleChatMsg);
     }
 
-    public void HandleChatMessage(InsightNetworkMessage netMsg)
+    public void HandleChatMsg(InsightNetworkMessage netMsg)
     {
-        if (client.logNetworkMessages) { Debug.Log("[InsightClient] - HandleChatMessage()"); }
+        if (client.logNetworkMessages) { Debug.Log("[InsightClient] - HandleChatMsg()"); }
 
-        ChatMessage message = netMsg.ReadMessage<ChatMessage>();
+        ChatMsg message = netMsg.ReadMessage<ChatMsg>();
         
         chatGuiComp.textField.text += message.Origin + ": "  + message.Data + "\n";
     }

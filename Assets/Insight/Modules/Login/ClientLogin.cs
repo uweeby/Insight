@@ -3,12 +3,13 @@ using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
 
-public class ClientLoginModule : InsightModule
+public class ClientLogin : InsightModule
 {
     InsightClient client;
 
     public LoginGUI loginGuiComp;
 
+    [HideInInspector]
     public string loginResponse; //This is put in the GUI. Just for example purposes
 
     public override void Initialize(InsightClient client, ModuleManager manager)
@@ -20,7 +21,7 @@ public class ClientLoginModule : InsightModule
 
     void RegisterHandlers()
     {
-        client.RegisterHandler(StatusMsg.MsgId, HandleStatusMsg);
+        client.RegisterHandler((short)MsgId.Status, HandleStatusMsg);
     }
 
     private void HandleStatusMsg(InsightNetworkMessage netMsg)
@@ -35,7 +36,7 @@ public class ClientLoginModule : InsightModule
 
     public void SendLoginMsg(string username, string password)
     {
-        client.Send(LoginMsg.MsgId, new LoginMsg() { AccountName = username, AccountPassword = Sha256(password) }, (success, reader) =>
+        client.Send((short)MsgId.Status, new LoginMsg() { AccountName = username, AccountPassword = Sha256(password) }, (success, reader) =>
         {
             if (success == CallbackStatus.Ok)
             {

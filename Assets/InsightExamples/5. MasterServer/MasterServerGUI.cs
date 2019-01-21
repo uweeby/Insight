@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class ActivatePlayerObject : MonoBehaviour
+public class MasterServerGUI : MonoBehaviour
 {
     public GameObject PlayerGameObject;
 

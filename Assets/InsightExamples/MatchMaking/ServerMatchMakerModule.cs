@@ -5,8 +5,8 @@ using UnityEngine;
 public class ServerMatchMakerModule : InsightModule
 {
     InsightServer server;
-    ModuleManager manager;
-    ServerGameManagerModule gameManager;
+    //ModuleManager manager;
+    //ServerGameManagerModule gameManager;
 
     List<UserSeekingMatch> usersSeekingMatchList = new List<UserSeekingMatch>();
 
@@ -18,8 +18,8 @@ public class ServerMatchMakerModule : InsightModule
     public override void Initialize(InsightServer insight, ModuleManager manager)
     {
         server = insight;
-        this.manager = manager;
-        gameManager = this.manager.GetModule<ServerGameManagerModule>();
+        //this.manager = manager;
+        //gameManager = this.manager.GetModule<ServerGameManagerModule>();
         RegisterHandlers();
 
         InvokeRepeating("UpdateMatches", 10f, 10f);

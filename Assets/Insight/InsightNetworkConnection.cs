@@ -198,7 +198,7 @@ namespace Insight
 
         public void Reply()
         {
-            Reply(this.msgType, new EmptyReply());
+            Reply(this.msgType, new EmptyMsg());
         }
 
         public void Reply(short msgId, MessageBase msg)

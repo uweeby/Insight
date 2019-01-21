@@ -52,11 +52,11 @@ public class BasicSpawner : InsightModule
     {
         if (client)
         {
-            client.RegisterHandler((short)MsgId.RegisterSpawner, HandleSpawnRequest);
+            client.RegisterHandler(SpawnRequest.MsgId, HandleSpawnRequest);
         }
         if (server)
         {
-            server.RegisterHandler((short)MsgId.RegisterSpawner, HandleSpawnRequest);
+            server.RegisterHandler(SpawnRequest.MsgId, HandleSpawnRequest);
         }
     }
 

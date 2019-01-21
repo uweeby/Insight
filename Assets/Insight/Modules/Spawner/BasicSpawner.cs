@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
 
-public class BasicSpawnerModule : InsightModule
+public class BasicSpawner : InsightModule
 {
     InsightServer server;
     InsightClient client;

@@ -16,13 +16,13 @@ public partial class MasterSpawner : InsightModule
 
     void RegisterHandlers()
     {
-        server.RegisterHandler(RegisterSpawner.MsgId, HandleRegisterSpawner);
-        server.RegisterHandler(SpawnRequest.MsgId, HandleSpawnRequest);
+        server.RegisterHandler((short)MsgId.RegisterSpawner, HandleRegisterSpawnerMsg);
+        server.RegisterHandler(SpawnRequest.MsgId, HandleSpawnRequestMsg);
     }
 
-    private void HandleRegisterSpawner(InsightNetworkMessage netMsg)
+    private void HandleRegisterSpawnerMsg(InsightNetworkMessage netMsg)
     {
-        RegisterSpawner message = netMsg.ReadMessage<RegisterSpawner>();
+        RegisterSpawnerMsg message = netMsg.ReadMessage<RegisterSpawnerMsg>();
 
         //Add the new child spawner to the list of spawners
         registeredSpawners.Add(new SpawnerContainer() { uniqueId = message.UniqueID, connectionId = netMsg.connectionId });
@@ -30,7 +30,7 @@ public partial class MasterSpawner : InsightModule
         if (server.logNetworkMessages) { Debug.Log("HandleRegisterSpawner - Count: " + registeredSpawners.Count); }
     }
 
-    private void HandleSpawnRequest(InsightNetworkMessage netMsg)
+    private void HandleSpawnRequestMsg(InsightNetworkMessage netMsg)
     {
         SpawnRequest message = netMsg.ReadMessage<SpawnRequest>();
 

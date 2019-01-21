@@ -23,13 +23,13 @@ public class ServerGameManagerModule : InsightModule
 
     void RegisterHandlers()
     {
-        server.RegisterHandler(RegisterGame.MsgId, HandleRegisterGame);
+        server.RegisterHandler((short)MsgId.RegisterGame, HandleRegisterGame);
         server.RegisterHandler(GamesList.MsgId, HandleGamesList);
     }
 
     private void HandleRegisterGame(InsightNetworkMessage netMsg)
     {
-        RegisterGame message = netMsg.ReadMessage<RegisterGame>();
+        RegisterGameMsg message = netMsg.ReadMessage<RegisterGameMsg>();
 
         if (server.logNetworkMessages) { Debug.Log("Received GameRegistration request"); }
 

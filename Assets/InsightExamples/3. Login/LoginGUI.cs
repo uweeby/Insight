@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class LoginGUI : MonoBehaviour
 {
-    public ClientLoginModule loginModule;
+    public ClientLogin loginModule;
 
     public InputField usernameField;
     public InputField passwordField;

@@ -12,7 +12,7 @@ public class ChatGUI : MonoBehaviour
 
     public void HandleSendChat()
     {
-        insight.Send(ChatMessage.MsgId, new ChatMessage() { Origin = nameInput.text, Data = chatInput.text });
+        insight.Send((short)MsgId.Chat, new ChatMsg() { Origin = nameInput.text, Data = chatInput.text });
 
         chatInput.text = ""; //Clear out the previously entered text from the field
     }

@@ -49,6 +49,6 @@ public class GameRegistration : InsightModule
     private void SendGameRegistrationToGameManager()
     {
         Debug.Log("sending registration msg back to master");
-        client.Send(RegisterGame.MsgId, new RegisterGame() { UniqueID = Guid.NewGuid().ToString()}); //The GUID can/should be provided by the spawner for security
+        client.Send((short)MsgId.RegisterGame, new RegisterGameMsg() { UniqueID = Guid.NewGuid().ToString()}); //The GUID can/should be provided by the spawner for security
     }
 }

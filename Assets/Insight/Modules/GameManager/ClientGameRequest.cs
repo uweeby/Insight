@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 using Insight;
 
 public class ClientGameRequest : InsightModule
@@ -21,6 +20,6 @@ public class ClientGameRequest : InsightModule
 
     public void SendGetGamesListMsg()
     {
-        client.Send(GamesList.MsgId, new GamesList()); //you should also be able to specify options
+        client.Send((short)MsgId.RequestGame, new PropertiesMsg() {  }); //you should also be able to specify options
     }
 }

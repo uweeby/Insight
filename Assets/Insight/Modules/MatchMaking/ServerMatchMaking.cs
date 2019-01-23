@@ -2,7 +2,7 @@
 using Insight;
 using UnityEngine;
 
-public class ServerMatchMakerModule : InsightModule
+public class ServerMatchMaking : InsightModule
 {
     InsightServer server;
     //ModuleManager manager;
@@ -12,7 +12,7 @@ public class ServerMatchMakerModule : InsightModule
 
     public void Awake()
     {
-        AddDependency<ServerGameManagerModule>();
+        AddDependency<ServerGameManager>();
     }
 
     public override void Initialize(InsightServer insight, ModuleManager manager)
@@ -27,12 +27,12 @@ public class ServerMatchMakerModule : InsightModule
 
     void RegisterHandlers()
     {
-        server.RegisterHandler(FindMatch.MsgId, HandleFindMatch);
+        server.RegisterHandler((short)MsgId.RequestMatch, HandleRequestMatchMsg);
     }
 
-    private void HandleFindMatch(InsightNetworkMessage netMsg)
+    private void HandleRequestMatchMsg(InsightNetworkMessage netMsg)
     {
-        //FindMatch message = netMsg.ReadMessage<FindMatch>();
+        //PropertiesMsg message = netMsg.ReadMessage<PropertiesMsg>();
 
         //Add player to list of players looking for a match
         usersSeekingMatchList.Add(new UserSeekingMatch() { playerName = "Player01", gameType = "FFA" });

@@ -17,7 +17,7 @@ public partial class MasterSpawner : InsightModule
     void RegisterHandlers()
     {
         server.RegisterHandler((short)MsgId.RegisterSpawner, HandleRegisterSpawnerMsg);
-        server.RegisterHandler(SpawnRequest.MsgId, HandleSpawnRequestMsg);
+        server.RegisterHandler((short)MsgId.RequestSpawn, HandleSpawnRequestMsg);
     }
 
     private void HandleRegisterSpawnerMsg(InsightNetworkMessage netMsg)
@@ -32,18 +32,18 @@ public partial class MasterSpawner : InsightModule
 
     private void HandleSpawnRequestMsg(InsightNetworkMessage netMsg)
     {
-        SpawnRequest message = netMsg.ReadMessage<SpawnRequest>();
+        RequestSpawn message = netMsg.ReadMessage<RequestSpawn>();
 
         //Instead of handling the msg here we will forward it to an available spawner.
         //In the future this is where load balancing should start
-        server.SendToClient(registeredSpawners[0].connectionId, SpawnRequest.MsgId, message, (success, reader) =>
+        server.SendToClient(registeredSpawners[0].connectionId, (short)MsgId.RequestSpawn, message, (success, reader) =>
         {
             if (success == CallbackStatus.Ok)
             {
-                SpawnRequest callbackResponse = reader.ReadMessage<SpawnRequest>();
+                RequestSpawn callbackResponse = reader.ReadMessage<RequestSpawn>();
                 if (server.logNetworkMessages) { Debug.Log("[Spawn Callback] Game Created on Child Spawner: " + callbackResponse.UniqueID); }
 
-                netMsg.Reply(SpawnRequest.MsgId, callbackResponse);
+                netMsg.Reply((short)MsgId.RequestSpawn, callbackResponse);
             }
         });
     }

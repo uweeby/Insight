@@ -52,30 +52,29 @@ public class BasicSpawner : InsightModule
     {
         if (client)
         {
-            client.RegisterHandler(SpawnRequest.MsgId, HandleSpawnRequest);
+            client.RegisterHandler((short)MsgId.RequestSpawn, this.HandleSpawnRequest);
         }
         if (server)
         {
-            server.RegisterHandler(SpawnRequest.MsgId, HandleSpawnRequest);
+            server.RegisterHandler((short)MsgId.RequestSpawn, this.HandleSpawnRequest);
         }
     }
 
     private void HandleSpawnRequest(InsightNetworkMessage netMsg)
     {
-        SpawnRequest message = netMsg.ReadMessage<SpawnRequest>();
+        RequestSpawn message = netMsg.ReadMessage<RequestSpawn>();
 
         if (message.NetworkPort != 0)
         {
             SpawnThread(message.NetworkPort);
+            netMsg.Reply((short)MsgId.RequestSpawn, new RequestSpawn() { GameName = message.GameName, NetworkAddress = "127.0.0.1", NetworkPort = message.NetworkPort, UniqueID = Guid.NewGuid().ToString() });
         }
         else
         {
             UnityEngine.Debug.LogWarning("[Basic Spawner Module] - Port not provided with HandleSpawnRequest. Using default 7777");
             SpawnThread(7777);
+            netMsg.Reply((short)MsgId.RequestSpawn, new RequestSpawn() { GameName = message.GameName, NetworkAddress = "127.0.0.1", NetworkPort = 7777, UniqueID = Guid.NewGuid().ToString() });
         }
-
-        //Reply to ack the request
-        netMsg.Reply(SpawnRequest.MsgId, new SpawnRequest() { GameName = message.GameName, NetworkAddress = "test.com", NetworkPort = 420, UniqueID = Guid.NewGuid().ToString() });
     }
 
 

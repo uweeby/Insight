@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MasterAdminModule : MonoBehaviour {
+public class ClientMatchMaking : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {

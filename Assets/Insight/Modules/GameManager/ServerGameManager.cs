@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ServerGameManagerModule : InsightModule
+public class ServerGameManager : InsightModule
 {
     InsightServer server;
     public MasterSpawner masterSpawner;
@@ -23,11 +23,11 @@ public class ServerGameManagerModule : InsightModule
 
     void RegisterHandlers()
     {
-        server.RegisterHandler((short)MsgId.RegisterGame, HandleRegisterGame);
-        server.RegisterHandler(GamesList.MsgId, HandleGamesList);
+        server.RegisterHandler((short)MsgId.RegisterGame, HandleRegisterGameMsg);
+        server.RegisterHandler((short)MsgId.RequestMatch, HandleRequestMatchMsg);
     }
 
-    private void HandleRegisterGame(InsightNetworkMessage netMsg)
+    private void HandleRegisterGameMsg(InsightNetworkMessage netMsg)
     {
         RegisterGameMsg message = netMsg.ReadMessage<RegisterGameMsg>();
 
@@ -36,7 +36,7 @@ public class ServerGameManagerModule : InsightModule
         registeredGames.Add(new GameContainer() { connectionId = netMsg.connectionId, uniqueId = message.UniqueID });
     }
 
-    private void HandleGamesList(InsightNetworkMessage netMsg)
+    private void HandleRequestMatchMsg(InsightNetworkMessage netMsg)
     {
         //GamesList message = netMsg.ReadMessage<GamesList>();
 
@@ -45,10 +45,10 @@ public class ServerGameManagerModule : InsightModule
         //Check the local collection of Registered Games.
         foreach(GameContainer game in registeredGames)
         {
-            if(game.GameType.Equals("SomeAwesomeGame"))
-            {
-                gamesMeetingCriteria.Add(game);
-            }
+            //if(game.Properties.ContainsKey("GameType").Equals("SomeAwesomeGame"))
+            //{
+            //    gamesMeetingCriteria.Add(game);
+            //}
         }
 
         //If a game meeting the options criteria is not found. Request a spawn.
@@ -62,7 +62,7 @@ public class ServerGameManagerModule : InsightModule
         }
 
         //Reply to fulfil the callback request.
-        netMsg.Reply(GamesList.MsgId, new GamesList() { }); //Send gamesMeetingCriteria back to fulfil callback.
+        //netMsg.Reply((short)MsgId.FindGame,  { }); //Send gamesMeetingCriteria back to fulfil callback.
     }
 }
 
@@ -78,5 +78,5 @@ public struct GameContainer
 {
     public string uniqueId;
     public int connectionId;
-    public string GameType;
+    public Dictionary<string, string> Properties;
 }

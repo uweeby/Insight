@@ -36,7 +36,7 @@ public class ClientLogin : InsightModule
 
     public void SendLoginMsg(string username, string password)
     {
-        client.Send((short)MsgId.Status, new LoginMsg() { AccountName = username, AccountPassword = Sha256(password) }, (success, reader) =>
+        client.Send((short)MsgId.Login, new LoginMsg() { AccountName = username, AccountPassword = Sha256(password) }, (success, reader) =>
         {
             if (success == CallbackStatus.Ok)
             {

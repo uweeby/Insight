@@ -19,7 +19,6 @@ namespace Insight
 
         InsightClient client;
         InsightServer server;
-        ITransport transport;
 
         public virtual void Initialize(InsightClient clientTransport, string networkAddress, int networkHostId, int networkConnectionId)
         {
@@ -35,14 +34,6 @@ namespace Insight
             hostId = networkHostId;
             connectionId = networkConnectionId;
             server = serverTransport;
-        }
-
-        public virtual void Initialize(ITransport transport, string networkAddress, int networkHostId, int networkConnectionId)
-        {
-            address = networkAddress;
-            hostId = networkHostId;
-            connectionId = networkConnectionId;
-            this.transport = transport;
         }
 
         ~InsightNetworkConnection()

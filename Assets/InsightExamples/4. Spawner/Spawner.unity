@@ -165,6 +165,7 @@ GameObject:
   - component: {fileID: 274071621}
   - component: {fileID: 274071620}
   - component: {fileID: 274071619}
+  - component: {fileID: 274071622}
   m_Layer: 0
   m_Name: Spawner(InsightServer)
   m_TagString: Untagged
@@ -192,7 +193,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 274071618}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ef24255e3d4a434e87316a7a2e032e8, type: 3}
+  m_Script: {fileID: 11500000, guid: a4d89852411b348489e26598bc0e80c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   AutoStart: 1
@@ -213,6 +214,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &274071622
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 274071618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7424c1070fad4ba2a7a96b02fbeb4bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  port: 7777
 --- !u!1 &600811066
 GameObject:
   m_ObjectHideFlags: 0
@@ -611,6 +624,7 @@ GameObject:
   - component: {fileID: 1922360361}
   - component: {fileID: 1922360360}
   - component: {fileID: 1922360362}
+  - component: {fileID: 1922360363}
   m_Layer: 0
   m_Name: Player(InsightClient)
   m_TagString: Untagged
@@ -626,7 +640,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1922360359}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 85d70c884f061d441a50834e9653d870, type: 3}
+  m_Script: {fileID: 11500000, guid: 1916eb8cc69f6f2479c684a0631292e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   AutoStart: 1
@@ -666,6 +680,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SearchChildrenForModule: 1
+--- !u!114 &1922360363
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1922360359}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7424c1070fad4ba2a7a96b02fbeb4bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  port: 7777
 --- !u!1 &1979211682
 GameObject:
   m_ObjectHideFlags: 0

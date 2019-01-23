@@ -1,9 +1,13 @@
 ﻿using Insight;
+using Mirror;
 using UnityEngine;
 
 public class ClientSpawnRequest : InsightModule
 {
     InsightClient client;
+
+    public NetworkManager networkManager;
+    public TelepathyTransport transport;
 
     public override void Initialize(InsightClient client, ModuleManager manager)
     {
@@ -16,7 +20,7 @@ public class ClientSpawnRequest : InsightModule
 
     void RegisterHandlers()
     {
-        client.RegisterHandler(SpawnRequest.MsgId, SpawnRequestHandler);
+        client.RegisterHandler((short)MsgId.RequestSpawn, SpawnRequestHandler);
     }
 
     private void ClientOnConnectedEventHandler()
@@ -25,7 +29,7 @@ public class ClientSpawnRequest : InsightModule
         //Normally this would be called via a GUI or something
         string ExampleGameName = "SuperAwesomeGame"; //This would probably get passed in
 
-        client.Send(SpawnRequest.MsgId, new SpawnRequest() { GameName = ExampleGameName }, (status, reader) =>
+        client.Send((short)MsgId.RequestSpawn, new RequestSpawn() { GameName = ExampleGameName }, (status, reader) =>
         {
             if (status == CallbackStatus.Ok)
             {
@@ -43,13 +47,10 @@ public class ClientSpawnRequest : InsightModule
 
     private void SpawnRequestHandler(InsightNetworkMessage netMsg)
     {
-        SpawnRequest message = netMsg.ReadMessage<SpawnRequest>();
+        RequestSpawn message = netMsg.ReadMessage<RequestSpawn>();
 
-        //The new server that was spawned should probably be running a NetworkManager.
-        //So you could set the players NetworkManager to use the NetworkAddress and NetworkPort from this msg
-
-        //networkManager.NetworkAddress = message.NetworkAddress
-        //networkManager.NetworkPort = message.NetworkPort
+        networkManager.networkAddress = message.NetworkAddress;
+        transport.port = message.NetworkPort;
 
         //To confirm it worked via the console print things:
         Debug.Log(message.GameName + " was just spawned at: " + message.NetworkAddress + ":" + message.NetworkPort);

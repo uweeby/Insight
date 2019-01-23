@@ -153,6 +153,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7238ce413b1e91499a0a3951f3e524d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  networkManager: {fileID: 600811067}
+  transport: {fileID: 600811068}
 --- !u!1 &274071618
 GameObject:
   m_ObjectHideFlags: 0
@@ -210,6 +212,73 @@ Transform:
   - {fileID: 1088249642}
   m_Father: {fileID: 0}
   m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &600811066
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 600811069}
+  - component: {fileID: 600811068}
+  - component: {fileID: 600811067}
+  m_Layer: 0
+  m_Name: Player(NetworkManager)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &600811067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 600811066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8aab4c8111b7c411b9b92cf3dbc5bd4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  networkAddress: localhost
+  dontDestroyOnLoad: 1
+  runInBackground: 1
+  showDebugMessages: 1
+  playerPrefab: {fileID: 0}
+  autoCreatePlayer: 0
+  playerSpawnMethod: 0
+  offlineScene: 
+  onlineScene: 
+  maxConnections: 4
+  spawnPrefabs: []
+  startOnHeadless: 1
+  clientLoadedScene: 0
+  isNetworkActive: 0
+--- !u!114 &600811068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 600811066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7424c1070fad4ba2a7a96b02fbeb4bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  port: 7777
+--- !u!4 &600811069
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 600811066}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &626635187
 GameObject:
@@ -382,9 +451,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Spawner Example:\r\n1. Use the Tools>Build>Spawner Example>GameServer to
-    build a GameServer.exe in\r a folder you choose.\r\n2. Put the path to that folder
-    in the Spawners Child GameObject named BasicSpawnerModule\r\n3. Press Play\r\n\nAfter
+  m_Text: "Spawner Example:\r\n1. Use the Tools>Build>Windows/Linux>BasicGameServer
+    to build a GameServer in\r a folder of your choice.\r\n2. Put the path to that
+    folder in the Spawners Child GameObject named BasicSpawnerModule\r\n3. Press Play\r\n\nAfter
     a few seconds a SpawnRequest message will travel from the Player to the\r Server
     where a new instance of Unity will start. This has a NetworkManager that\r you
     would then connect the Player."
@@ -436,7 +505,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EditorPath: C:\Dev\Insight\Builds\
   ProcessPath: .\
-  ProcessName: GameServer.exe
+  ProcessName: BasicGameServer.exe
   MaximumProcesses: 5
 --- !u!1 &1345812776
 GameObject:
@@ -525,7 +594,7 @@ RectTransform:
   m_Children:
   - {fileID: 748611846}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -657,5 +726,5 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

@@ -21,18 +21,18 @@ public class ClientLogin : InsightModule
 
     void RegisterHandlers()
     {
-        client.RegisterHandler((short)MsgId.Status, HandleStatusMsg);
+        //client.RegisterHandler((short)MsgId.Status, HandleStatusMsg);
     }
 
-    private void HandleStatusMsg(InsightNetworkMessage netMsg)
-    {
-        if (client.logNetworkMessages) { Debug.Log("[InsightClient] - HandleStatusMsg()"); }
+    //private void HandleStatusMsg(InsightNetworkMessage netMsg)
+    //{
+    //    if (client.logNetworkMessages) { Debug.Log("[InsightClient] - HandleStatusMsg()"); }
 
-        StatusMsg message = netMsg.ReadMessage<StatusMsg>();
+    //    StatusMsg message = netMsg.ReadMessage<StatusMsg>();
 
-        //Added for Demo Scene
-        loginGuiComp.statusText.text = message.Text;
-    }
+    //    //Added for Demo Scene
+    //    loginGuiComp.statusText.text = message.Text;
+    //}
 
     public void SendLoginMsg(string username, string password)
     {

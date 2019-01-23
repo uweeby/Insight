@@ -1,9 +1,10 @@
 using Mirror;
+using UnityEngine;
 
 namespace Insight
 {
     public enum MsgId : short
-    { 
+    {
         Error = -1,
         Empty,
         Status,
@@ -13,6 +14,10 @@ namespace Insight
 
         RegisterSpawner,
         RegisterGame,
+
+        RequestSpawn,
+        RequestGame,
+        RequestMatch,
     }
 
     public class ErrorMsg : MessageBase
@@ -21,11 +26,20 @@ namespace Insight
         public bool CauseDisconnect;
     }
 
-    public class EmptyMsg : MessageBase {}
+    public class EmptyMsg : MessageBase { }
 
     public class StatusMsg : MessageBase
     {
         public string Text;
+    }
+
+    public class PropertiesMsg : MessageBase
+    {
+        public string SceneName;
+        public string GameType;
+        public int MaxPlayers;
+        public bool IsPublic;
+        public string GamePassword;
     }
 
     public class LoginMsg : MessageBase
@@ -49,5 +63,14 @@ namespace Insight
     public class RegisterGameMsg : MessageBase
     {
         public string UniqueID; //Guid
+    }
+
+    public class RequestSpawn : MessageBase
+    {
+        //public static short MsgId = 1011;
+        public string GameName; //or SceneName
+        public string UniqueID;
+        public string NetworkAddress;
+        public ushort NetworkPort;
     }
 }

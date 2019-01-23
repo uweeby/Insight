@@ -1,79 +1,106 @@
 ﻿using UnityEditor;
 
-/// <summary>
-/// Instead of editing this script, I would recommend to write your own
-/// (or copy and change it). Otherwise, your changes will be overwriten when you
-/// update project :)
-/// </summary>
 public class DemoBuildScript
 {
-    /// <summary>
-    /// Have in mind that if you change it, it might take "a while" 
-    /// for the editor to pick up changes 
-    /// </summary>
     public static string ScenesRoot = "Assets/InsightExamples/";
-
-    /// <summary>
-    /// Build with "Development" flag, so that we can see the console if something 
-    /// goes wrong
-    /// </summary>
     public static BuildOptions BuildOptions = BuildOptions.Development;
-
     public static string PrevPath = null;
 
-    [MenuItem("Tools/Build/SpawnerExample/Spawner", false, 11)]
-    public static void BuildSpawnerMenu()
+    #region Windows Builds
+    [MenuItem("Tools/Build/Windows/BasicGameServer", false, 999)]
+    public static void WindowsBuildBasicGameServerMenu()
     {
         var path = GetPath();
         if (!string.IsNullOrEmpty(path))
         {
-            BuildSpawner(path);
+            WindowsBuildBasicGameServer(path);
         }
     }
 
-    [MenuItem("Tools/Build/SpawnerExample/GameServer", false, 11)]
-    public static void BuildGameServerMenu()
+    [MenuItem("Tools/Build/Windows/ManagedGameServer", false, 999)]
+    public static void WindowsBuildComplexGameServerMenu()
     {
         var path = GetPath();
         if (!string.IsNullOrEmpty(path))
         {
-            BuildGameServer(path);
+            WindowsBuildManagedGameServer(path);
         }
     }
 
-    /// <summary>
-    /// Creates a build for ZoneServer
-    /// </summary>
-    /// <param name="path"></param>
-    public static void BuildSpawner(string path)
+    public static void WindowsBuildBasicGameServer(string path)
     {
         BuildTarget TargetPlatform = BuildTarget.StandaloneWindows;
 
         var gameServerScenes = new[]
         {
-            ScenesRoot+"4. Spawner/Spawner.unity"
+            ScenesRoot+"4. Spawner/BasicGameServer.unity"
         };
-        PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.HiddenByDefault;
-        PlayerSettings.productName = "Spawner";
-        BuildPipeline.BuildPlayer(gameServerScenes, path + "/Spawner.exe", TargetPlatform, BuildOptions);
+        PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Enabled;
+        PlayerSettings.productName = "BasicGameServer";
+        BuildPipeline.BuildPlayer(gameServerScenes, path + "/BasicGameServer.exe", TargetPlatform, BuildOptions);
     }
 
-    /// <summary>
-    /// Creates a build for ZoneServer
-    /// </summary>
-    /// <param name="path"></param>
-    public static void BuildGameServer(string path)
+    public static void WindowsBuildManagedGameServer(string path)
     {
         BuildTarget TargetPlatform = BuildTarget.StandaloneWindows;
 
         var gameServerScenes = new[]
         {
-            ScenesRoot+"4. Spawner/GameServer.unity"
+            ScenesRoot+"5. MasterServer/ManagedGameServer.unity"
         };
-        PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.HiddenByDefault;
-        PlayerSettings.productName = "GameServer";
-        BuildPipeline.BuildPlayer(gameServerScenes, path + "/GameServer.exe", TargetPlatform, BuildOptions);
+        PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Enabled;
+        PlayerSettings.productName = "ManagedGameServer";
+        BuildPipeline.BuildPlayer(gameServerScenes, path + "/ManagedGameServer.exe", TargetPlatform, BuildOptions);
     }
+    #endregion
+
+    #region Linux Builds
+    [MenuItem("Tools/Build/Linux/BasicGameServer", false, 999)]
+    public static void LinuxBuildBasicGameServerMenu()
+    {
+        var path = GetPath();
+        if (!string.IsNullOrEmpty(path))
+        {
+            LinuxBuildBasicGameServer(path);
+        }
+    }
+
+    [MenuItem("Tools/Build/Linux/ManagedGameServer", false, 999)]
+    public static void LinuxBuildComplexGameServerMenu()
+    {
+        var path = GetPath();
+        if (!string.IsNullOrEmpty(path))
+        {
+            LinuxBuildManagedGameServer(path);
+        }
+    }
+
+    public static void LinuxBuildBasicGameServer(string path)
+    {
+        BuildTarget TargetPlatform = BuildTarget.StandaloneLinux64;
+
+        var gameServerScenes = new[]
+        {
+            ScenesRoot+"4. Spawner/BasicGameServer.unity"
+        };
+        PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Enabled;
+        PlayerSettings.productName = "BasicGameServer";
+        BuildPipeline.BuildPlayer(gameServerScenes, path + "Linux/BasicGameServer.x86_64", TargetPlatform, BuildOptions);
+    }
+
+    public static void LinuxBuildManagedGameServer(string path)
+    {
+        BuildTarget TargetPlatform = BuildTarget.StandaloneLinux64;
+
+        var gameServerScenes = new[]
+        {
+            ScenesRoot+"5. MasterServer/ManagedGameServer.unity"
+        };
+        PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Enabled;
+        PlayerSettings.productName = "ManagedGameServer";
+        BuildPipeline.BuildPlayer(gameServerScenes, path + "/ManagedGameServer.x86_64", TargetPlatform, BuildOptions);
+    }
+    #endregion
 
     public static string GetPath()
     {

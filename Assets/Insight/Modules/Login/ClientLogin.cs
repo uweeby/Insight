@@ -21,22 +21,12 @@ public class ClientLogin : InsightModule
 
     void RegisterHandlers()
     {
-        //client.RegisterHandler((short)MsgId.Status, HandleStatusMsg);
+
     }
-
-    //private void HandleStatusMsg(InsightNetworkMessage netMsg)
-    //{
-    //    if (client.logNetworkMessages) { Debug.Log("[InsightClient] - HandleStatusMsg()"); }
-
-    //    StatusMsg message = netMsg.ReadMessage<StatusMsg>();
-
-    //    //Added for Demo Scene
-    //    loginGuiComp.statusText.text = message.Text;
-    //}
 
     public void SendLoginMsg(string username, string password)
     {
-        client.Send((short)MsgId.Status, new LoginMsg() { AccountName = username, AccountPassword = Sha256(password) }, (success, reader) =>
+        client.Send((short)MsgId.Login, new LoginMsg() { AccountName = username, AccountPassword = Sha256(password) }, (success, reader) =>
         {
             if (success == CallbackStatus.Ok)
             {

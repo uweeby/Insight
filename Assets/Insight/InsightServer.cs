@@ -222,7 +222,7 @@ public class InsightServer : InsightCommon
             if (callback != null)
             {
                 callbackId = ++callbackIdIndex; // pre-increment to ensure that id 0 is never used.
-                callbacks.Add(callbackId, new CallbackData() { callback = callback, timeout = Time.realtimeSinceStartup + CALLBACKTIMEOUT });
+                callbacks.Add(callbackId, new CallbackData() { callback = callback, timeout = Time.realtimeSinceStartup + callbackTimeout });
             }
 
             writer.Write(callbackId);
@@ -267,7 +267,7 @@ public class InsightServer : InsightCommon
             if (finishedCallback != null && callback != null)
             {
                 finishedCallbackData.callback = finishedCallback;
-                finishedCallbackData.timeout = Time.realtimeSinceStartup + CALLBACKTIMEOUT;
+                finishedCallbackData.timeout = Time.realtimeSinceStartup + callbackTimeout;
                 sendToAllFinishedCallbacks.Add(finishedCallbackData);
             }
             return true;

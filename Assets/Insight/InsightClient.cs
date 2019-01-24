@@ -111,12 +111,8 @@ public class InsightClient : InsightCommon
             switch (transportEvent)
             {
                 case TransportEvent.Connected:
-                    //Debug.Log("NetworkClient loop: Connected");
-
                     if (insightNetworkConnection != null)
                     {
-                        // the handler may want to send messages to the client
-                        // thus we should set the connected state before calling the handler
                         connectState = ConnectState.Connected;
                         insightNetworkConnection.InvokeHandlerNoData((short)MsgType.Connect);
                     }
@@ -124,21 +120,18 @@ public class InsightClient : InsightCommon
 
                     break;
                 case TransportEvent.Data:
-                    //Debug.Log("NetworkClient loop: Data: " + BitConverter.ToString(data));
+                    HandleBytes(data);
 
-                    if (insightNetworkConnection != null)
-                    {
-                        insightNetworkConnection.TransportReceive(data);
-                    }
-                    else Debug.LogError("Skipped Data message handling because m_Connection is null.");
+                    //if (insightNetworkConnection != null)
+                    //{
+                    //    insightNetworkConnection.TransportReceive(data);
+                    //}
+                    //else Debug.LogError("Skipped Data message handling because m_Connection is null.");
 
                     break;
                 case TransportEvent.Disconnected:
-                    //Debug.Log("NetworkClient loop: Disconnected");
                     connectState = ConnectState.Disconnected;
 
-                    //GenerateDisconnectError(error); TODO which one?
-                    //ClientScene.HandleClientDisconnect(m_Connection);
                     if (insightNetworkConnection != null)
                     {
                         insightNetworkConnection.InvokeHandlerNoData((short)MsgType.Disconnect);
@@ -173,7 +166,7 @@ public class InsightClient : InsightCommon
         if (callback != null)
         {
             callbackId = ++callbackIdIndex; // pre-increment to ensure that id 0 is never used.
-            callbacks.Add(callbackId, new CallbackData() { callback = callback, timeout = Time.realtimeSinceStartup + CALLBACKTIMEOUT });
+            callbacks.Add(callbackId, new CallbackData() { callback = callback, timeout = Time.realtimeSinceStartup + callbackTimeout });
         }
 
         writer.Write(callbackId);
@@ -188,9 +181,6 @@ public class InsightClient : InsightCommon
 
     protected void HandleBytes(byte[] buffer)
     {
-        // unpack message
-        //ushort msgType;
-
         InsightNetworkMessageDelegate msgDelegate;
         NetworkReader reader = new NetworkReader(buffer);
         var msgType = reader.ReadInt16();

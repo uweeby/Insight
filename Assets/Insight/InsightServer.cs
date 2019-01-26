@@ -8,12 +8,12 @@ public class InsightServer : InsightCommon
 {
     protected int serverHostId = -1;
 
-    ITransport _transport;
-    public virtual ITransport transport
+    Transport _transport;
+    public virtual Transport transport
     {
         get
         {
-            _transport = _transport ?? GetComponent<ITransport>();
+            _transport = _transport ?? GetComponent<Transport>();
             if (_transport == null)
                 Debug.LogWarning("InsightServer has no Transport component. Networking won't work without a Transport");
             return _transport;

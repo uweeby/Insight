@@ -24,6 +24,8 @@ Note: The Spawner example requires the use of the build menu (Under Tools at the
 
 # Planned Examples or WIP:  
 ComplexSpawner - Create and register GameServer with GameManagerModule (almost complete)  
+GameManager - Builds on ComplexSpawner to register newly spawned games to a MasterServer. (50% done)  
+MatchMaking - Builds on GameManager to match players with existing games or spawn on demand. (50% done)  
 Database - Working on support for MySQL and SQLite (not implemented yet)  
 LoadBalancer - Track available spawners and their host health. (not implemented yet)  
 AdminConsole - Simple server management from MasterServer  

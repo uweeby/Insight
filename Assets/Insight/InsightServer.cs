@@ -53,16 +53,16 @@ public class InsightServer : InsightCommon
         CheckCallbackTimeouts();
     }
 
-    public void StartInsight(int Port)
-    {
-        networkPort = Port;
+    // public void StartInsight(int Port)
+    // {
+    //     networkPort = Port;
 
-        StartInsight();
-    }
+    //     StartInsight();
+    // }
 
     public override void StartInsight()
     {
-        if (logNetworkMessages) { Debug.Log("[InsightServer] - Start On Port: " + networkPort); }
+        if (logNetworkMessages) { Debug.Log("[InsightServer] - Start"); }
         transport.ServerStart();
         serverHostId = 0;
 

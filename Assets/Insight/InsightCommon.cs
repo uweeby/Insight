@@ -15,7 +15,7 @@ namespace Insight
         public bool AutoStart = true;
         public bool logNetworkMessages = false;
         public string networkAddress = "localhost";
-        public int networkPort = 5000;
+        //public int networkPort = 5000;
         
         protected Dictionary<short, InsightNetworkMessageDelegate> messageHandlers; //Default Handlers
 

@@ -14,7 +14,11 @@ You can run both the Client and Server from the same exe but the scope of this p
 Download this project and open in Unity.  
 Download Mirror from one of the two locations listed above.  
 Run the example scenes in editor.  
-Note: The Spawner example requires the use of the build menu (Under Tools at the top) to have a seperate running Standalone to spawn.  
+
+Notes:  
+-The Spawner example requires the use of the build menu (Under Tools at the top) to have a seperate running Standalone to spawn.  
+-Insight Examples are setup to use Telepathy by default. By convention Insight will use Port 7000 and Mirror (NetworkManager) will use port 7777+.  
+
 
 # Examples:  
 1. SimpleConnection - Shows an InsightServer autostart and a InsightClient autoconnect.

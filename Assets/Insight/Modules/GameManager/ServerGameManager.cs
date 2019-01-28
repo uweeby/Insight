@@ -5,7 +5,7 @@ using UnityEngine;
 public class ServerGameManager : InsightModule
 {
     InsightServer server;
-    public MasterSpawner masterSpawner;
+    MasterSpawner masterSpawner;
 
     public List<GameContainer> registeredGames = new List<GameContainer>();
 

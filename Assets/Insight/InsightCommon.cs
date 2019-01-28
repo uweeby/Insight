@@ -1,5 +1,4 @@
-﻿using Mirror;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Insight
@@ -16,7 +15,7 @@ namespace Insight
         public bool AutoStart = true;
         public bool logNetworkMessages = false;
         public string networkAddress = "localhost";
-        public int networkPort = 5000;
+        //public int networkPort = 5000;
         
         protected Dictionary<short, InsightNetworkMessageDelegate> messageHandlers; //Default Handlers
 
@@ -35,7 +34,7 @@ namespace Insight
         public delegate void CallbackHandler(CallbackStatus status, InsightNetworkMessage netMsg);
         public delegate void SendToAllFinishedCallbackHandler(CallbackStatus status);
 
-        public const float CALLBACKTIMEOUT = 30f; // all callbacks have a 30 second time out. 
+        public const float callbackTimeout = 30f; // all callbacks have a 30 second time out. 
 
         public bool isConnected { get { return connectState == ConnectState.Connected; } }
 

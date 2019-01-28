@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311918, g: 0.38073993, b: 0.35872698, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -121,6 +121,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 274071621}
+  - component: {fileID: 274071619}
   - component: {fileID: 274071620}
   m_Layer: 0
   m_Name: InsightServer
@@ -129,6 +130,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &274071619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 274071618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4d89852411b348489e26598bc0e80c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AutoStart: 1
+  logNetworkMessages: 1
+  networkAddress: localhost
+  networkPort: 5000
 --- !u!114 &274071620
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -137,13 +153,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 274071618}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ef24255e3d4a434e87316a7a2e032e8, type: 3}
+  m_Script: {fileID: 11500000, guid: c7424c1070fad4ba2a7a96b02fbeb4bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AutoStart: 1
-  logNetworkMessages: 1
-  networkAddress: localhost
-  networkPort: 5000
+  port: 7777
 --- !u!4 &274071621
 Transform:
   m_ObjectHideFlags: 0
@@ -269,7 +282,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1668111368}
-  - component: {fileID: 1668111367}
+  - component: {fileID: 1668111366}
   m_Layer: 0
   m_Name: InsightClient
   m_TagString: Untagged
@@ -277,7 +290,7 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1668111367
+--- !u!114 &1668111366
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -285,7 +298,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1668111365}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 85d70c884f061d441a50834e9653d870, type: 3}
+  m_Script: {fileID: 11500000, guid: 1916eb8cc69f6f2479c684a0631292e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   AutoStart: 1

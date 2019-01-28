@@ -565,6 +565,7 @@ GameObject:
   - component: {fileID: 1047710534}
   - component: {fileID: 1047710533}
   - component: {fileID: 1047710532}
+  - component: {fileID: 1047710535}
   m_Layer: 0
   m_Name: MasterServer(InsightServer)
   m_TagString: Untagged
@@ -592,11 +593,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1047710531}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ef24255e3d4a434e87316a7a2e032e8, type: 3}
+  m_Script: {fileID: 11500000, guid: a4d89852411b348489e26598bc0e80c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   AutoStart: 1
-  logNetworkMessages: 1
+  logNetworkMessages: 0
   networkAddress: localhost
   networkPort: 5000
 --- !u!4 &1047710534
@@ -615,6 +616,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1047710535
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1047710531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7424c1070fad4ba2a7a96b02fbeb4bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  port: 7777
 --- !u!1 &1370768993
 GameObject:
   m_ObjectHideFlags: 0
@@ -735,6 +748,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7238ce413b1e91499a0a3951f3e524d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  networkManager: {fileID: 0}
+  transport: {fileID: 0}
 --- !u!1 &1457652975
 GameObject:
   m_ObjectHideFlags: 0
@@ -745,6 +760,7 @@ GameObject:
   - component: {fileID: 1457652978}
   - component: {fileID: 1457652977}
   - component: {fileID: 1457652976}
+  - component: {fileID: 1457652979}
   m_Layer: 0
   m_Name: Player(InsightClient)
   m_TagString: Untagged
@@ -772,7 +788,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1457652975}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 85d70c884f061d441a50834e9653d870, type: 3}
+  m_Script: {fileID: 11500000, guid: 1916eb8cc69f6f2479c684a0631292e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   AutoStart: 1
@@ -800,6 +816,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1457652979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1457652975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7424c1070fad4ba2a7a96b02fbeb4bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  port: 7777
 --- !u!1 &1465977196
 GameObject:
   m_ObjectHideFlags: 0
@@ -959,6 +987,7 @@ GameObject:
   - component: {fileID: 1956574477}
   - component: {fileID: 1956574476}
   - component: {fileID: 1956574475}
+  - component: {fileID: 1956574478}
   m_Layer: 0
   m_Name: ChildSpawner(InsightClient)
   m_TagString: Untagged
@@ -986,13 +1015,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 1956574474}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ef24255e3d4a434e87316a7a2e032e8, type: 3}
+  m_Script: {fileID: 11500000, guid: 1916eb8cc69f6f2479c684a0631292e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   AutoStart: 1
   logNetworkMessages: 1
   networkAddress: localhost
   networkPort: 5000
+  OnConnectedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  AutoReconnect: 1
+  ReconnectDelayInSeconds: 5
 --- !u!4 &1956574477
 Transform:
   m_ObjectHideFlags: 0
@@ -1007,6 +1043,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1956574478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1956574474}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7424c1070fad4ba2a7a96b02fbeb4bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  port: 7777
 --- !u!1 &2020699614
 GameObject:
   m_ObjectHideFlags: 0

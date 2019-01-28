@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311918, g: 0.38073993, b: 0.35872698, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -220,6 +220,7 @@ GameObject:
   - component: {fileID: 626635189}
   - component: {fileID: 626635188}
   - component: {fileID: 626635192}
+  - component: {fileID: 626635193}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -302,20 +303,32 @@ MonoBehaviour:
   m_GameObject: {fileID: 626635187}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3e190785e1ded444a02253c8edac2b3, type: 3}
+  m_Script: {fileID: 11500000, guid: 5a71d54f725cc40d8acd32a334e9dcde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Title: Console
-  Show: 1
-  ShowDateTime: 1
-  ShowLatest: 1
-  CollapseDuplicates: 0
-  toggleKey: 27
-  MaxLogEntries: 1000
-  LeftMargin: 20
-  TopMargin: 20
-  RightMargin: 20
-  BottomMargin: 20
+  toggleKey: 96
+  openOnStart: 0
+  shakeToOpen: 1
+  shakeAcceleration: 3
+  restrictLogCount: 0
+  maxLogCount: 1000
+--- !u!114 &626635193
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 626635187}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a71d54f725cc40d8acd32a334e9dcde, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  toggleKey: 96
+  openOnStart: 0
+  shakeToOpen: 1
+  shakeAcceleration: 3
+  restrictLogCount: 0
+  maxLogCount: 1000
 --- !u!1 &1668111365
 GameObject:
   m_ObjectHideFlags: 0
@@ -347,11 +360,6 @@ MonoBehaviour:
   AutoStart: 1
   logNetworkMessages: 1
   networkAddress: localhost
-  OnConnectedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   AutoReconnect: 1
   ReconnectDelayInSeconds: 5
 --- !u!114 &1668111367

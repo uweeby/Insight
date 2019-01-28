@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311918, g: 0.38073993, b: 0.35872698, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -323,6 +323,7 @@ GameObject:
   - component: {fileID: 697869641}
   - component: {fileID: 697869640}
   - component: {fileID: 697869644}
+  - component: {fileID: 697869645}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -405,20 +406,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 697869639}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3e190785e1ded444a02253c8edac2b3, type: 3}
+  m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
-  Title: Console
-  Show: 1
-  ShowDateTime: 1
-  ShowLatest: 1
-  CollapseDuplicates: 0
-  toggleKey: 27
-  MaxLogEntries: 1000
-  LeftMargin: 20
-  TopMargin: 20
-  RightMargin: 20
-  BottomMargin: 20
+--- !u!114 &697869645
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 697869639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a71d54f725cc40d8acd32a334e9dcde, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  toggleKey: 96
+  openOnStart: 0
+  shakeToOpen: 1
+  shakeAcceleration: 3
+  restrictLogCount: 0
+  maxLogCount: 1000
 --- !u!1 &778794604
 GameObject:
   m_ObjectHideFlags: 0
@@ -905,7 +912,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7922e2bf913e2e34d80cb5f21a5521d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  masterSpawner: {fileID: 0}
 --- !u!1 &1664128101
 GameObject:
   m_ObjectHideFlags: 0

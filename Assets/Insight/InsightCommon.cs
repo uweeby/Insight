@@ -15,11 +15,10 @@ namespace Insight
         public bool AutoStart = true;
         public bool logNetworkMessages = false;
         public string networkAddress = "localhost";
-        //public int networkPort = 5000;
         
-        protected Dictionary<short, InsightNetworkMessageDelegate> messageHandlers; //Default Handlers
+        protected Dictionary<short, InsightNetworkMessageDelegate> messageHandlers = new Dictionary<short, InsightNetworkMessageDelegate>(); //Default handlers
 
-		protected enum ConnectState
+        protected enum ConnectState
         {
             None,
             Connecting,
@@ -77,7 +76,6 @@ namespace Insight
 
         public abstract void StopInsight();
 
-   
         public struct CallbackData
         {
             public InsightClient.CallbackHandler callback;

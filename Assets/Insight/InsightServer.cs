@@ -1,12 +1,15 @@
 ﻿using Insight;
 using Mirror;
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class InsightServer : InsightCommon
 {
+    //-1 = never connected, 0 = disconnected, 1 = connected
     protected int serverHostId = -1;
+    protected Dictionary<int, InsightNetworkConnection> connections = new Dictionary<int, InsightNetworkConnection>();
+    protected List<SendToAllFinishedCallbackData> sendToAllFinishedCallbacks = new List<SendToAllFinishedCallbackData>();
 
     Transport _transport;
     public virtual Transport transport
@@ -20,26 +23,15 @@ public class InsightServer : InsightCommon
         }
     }
 
-    protected Dictionary<int, InsightNetworkConnection> connections;
-
-    protected List<SendToAllFinishedCallbackData> sendToAllFinishedCallbacks = new List<SendToAllFinishedCallbackData>();
-
     public virtual void Start()
     {
         DontDestroyOnLoad(this);
         Application.runInBackground = true;
 
-        // use Debug.Log functions for Telepathy so we can see it in the console
-        Telepathy.Logger.LogMethod = Debug.Log;
-        Telepathy.Logger.LogWarningMethod = Debug.LogWarning;
-        Telepathy.Logger.LogErrorMethod = Debug.LogError;
-
-        // create and start the server
-        //server = new Server();
-
-        connections = new Dictionary<int, InsightNetworkConnection>();
-
-        messageHandlers = new Dictionary<short, InsightNetworkMessageDelegate>();
+        transport.OnServerConnected.AddListener(HandleConnect);
+        transport.OnServerDisconnected.AddListener(HandleDisconnect);
+        transport.OnServerDataReceived.AddListener(HandleData);
+        transport.OnServerError.AddListener(OnError);
 
         if (AutoStart)
         {
@@ -49,16 +41,8 @@ public class InsightServer : InsightCommon
 
     public virtual void Update()
     {
-        HandleNewMessages();
         CheckCallbackTimeouts();
     }
-
-    // public void StartInsight(int Port)
-    // {
-    //     networkPort = Port;
-
-    //     StartInsight();
-    // }
 
     public override void StartInsight()
     {
@@ -84,55 +68,9 @@ public class InsightServer : InsightCommon
         OnStopInsight();
     }
 
-    // grab all new messages. do this in your Update loop.
-    public void HandleNewMessages()
+    private void HandleConnect(int connectionId)
     {
-        if (serverHostId == -1)
-            return;
-
-        //Message msg;
-        //while (server.GetNextMessage(out msg))
-        //{
-        //    switch (msg.eventType)
-        //    {
-        //        case Telepathy.EventType.Connected:
-        //            HandleConnect(msg);
-        //            break;
-        //        case Telepathy.EventType.Data:
-        //            HandleData(msg.connectionId, msg.data, 0);
-        //            break;
-        //        case Telepathy.EventType.Disconnected:
-        //            HandleDisconnect(msg);
-        //            break;
-        //    }
-        //}
-
-        int connectionId;
-        TransportEvent transportEvent;
-        byte[] data;
-        while (transport.ServerGetNextMessage(out connectionId, out transportEvent, out data))
-        {
-            switch (transportEvent)
-            {
-                case TransportEvent.Connected:
-                    //Debug.Log("NetworkServer loop: Connected");
-                    HandleConnect(connectionId, 0);
-                    break;
-                case TransportEvent.Data:
-                    //Debug.Log("NetworkServer loop: clientId: " + message.connectionId + " Data: " + BitConverter.ToString(message.data));
-                    HandleData(connectionId, data, 0);
-                    break;
-                case TransportEvent.Disconnected:
-                    //Debug.Log("NetworkServer loop: Disconnected");
-                    HandleDisconnect(connectionId, 0);
-                    break;
-            }
-        }
-    }
-
-    void HandleConnect(int connectionId, byte error)
-    {
-        if (logNetworkMessages) { Debug.Log("[InsightServer] - connectionID: " + connectionId, this); }
+        if (logNetworkMessages) { Debug.Log("[InsightServer] - Client connected connectionID: " + connectionId, this); }
 
         // get ip address from connection
         string address = GetConnectionInfo(connectionId);
@@ -141,26 +79,22 @@ public class InsightServer : InsightCommon
         InsightNetworkConnection conn = new InsightNetworkConnection();
         conn.Initialize(this, address, serverHostId, connectionId);
         AddConnection(conn);
-
-        OnConnected(conn);
     }
 
-    void HandleDisconnect(int connectionId, byte error)
+    private void HandleDisconnect(int connectionId)
     {
+        if (logNetworkMessages) { Debug.Log("[InsightServer] - Client disconnected connectionID: " + connectionId, this); }
+
         InsightNetworkConnection conn;
         if (connections.TryGetValue(connectionId, out conn))
         {
             conn.Disconnect();
             RemoveConnection(connectionId);
-
-            OnDisconnected(conn);
         }
     }
 
-    void HandleData(int connectionId, byte[] data, byte error)
+    private void HandleData(int connectionId, byte[] data)
     {
-        //InsightNetworkConnection conn;
-
         NetworkReader reader = new NetworkReader(data);
         var msgType = reader.ReadInt16();
         var callbackId = reader.ReadInt32();
@@ -183,6 +117,12 @@ public class InsightServer : InsightCommon
         {
             insightNetworkConnection.TransportReceive(data);
         }
+    }
+
+    private void OnError(int connectionId, Exception exception)
+    {
+        // TODO Let's discuss how we will handle errors
+        Debug.LogException(exception);
     }
 
     public string GetConnectionInfo(int connectionId)
@@ -334,25 +274,14 @@ public class InsightServer : InsightCommon
         }
     }
 
-    //----------virtual handlers--------------//
-
-    public virtual void OnConnected(InsightNetworkConnection conn)
-    {
-        if (logNetworkMessages) { Debug.Log("[InsightServer] - Client connected from: " + conn.address); }
-    }
-
-    public virtual void OnDisconnected(InsightNetworkConnection conn)
-    {
-        if (logNetworkMessages) { Debug.Log("[InsightServer] - OnDisconnected()"); }
-    }
-
+    ////----------virtual handlers--------------//
     public virtual void OnStartInsight()
     {
-        if (logNetworkMessages) { Debug.Log("[InsightServer] - OnStartInsight()"); }
+        if (logNetworkMessages) { Debug.Log("[InsightServer] - Server started listening"); }
     }
 
     public virtual void OnStopInsight()
     {
-        if (logNetworkMessages) { Debug.Log("[InsightServer] - OnStopInsight()"); }
+        if (logNetworkMessages) { Debug.Log("[InsightServer] - Server stopping"); }
     }
 }

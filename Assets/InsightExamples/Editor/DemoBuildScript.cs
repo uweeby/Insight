@@ -46,7 +46,7 @@ public class DemoBuildScript
 
         var gameServerScenes = new[]
         {
-            ScenesRoot+"5. MasterServer/ManagedGameServer.unity"
+            ScenesRoot+"6. GameManager/ManagedGameServer.unity"
         };
         PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Enabled;
         PlayerSettings.productName = "ManagedGameServer";
@@ -94,7 +94,7 @@ public class DemoBuildScript
 
         var gameServerScenes = new[]
         {
-            ScenesRoot+"5. MasterServer/ManagedGameServer.unity"
+            ScenesRoot+"6. GameManager/ManagedGameServer.unity"
         };
         PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Enabled;
         PlayerSettings.productName = "ManagedGameServer";

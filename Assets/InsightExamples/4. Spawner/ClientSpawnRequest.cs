@@ -6,7 +6,6 @@ public class ClientSpawnRequest : InsightModule
 {
     InsightClient client;
 
-    public NetworkManager networkManager;
     public TelepathyTransport transport;
 
     public override void Initialize(InsightClient client, ModuleManager manager)
@@ -51,8 +50,10 @@ public class ClientSpawnRequest : InsightModule
     {
         RequestSpawn message = netMsg.ReadMessage<RequestSpawn>();
 
-        networkManager.networkAddress = message.NetworkAddress;
-        transport.port = message.NetworkPort;
+        //At this point you can pass the login connection info to the NetworkManager and Start it
+        //networkManager.networkAddress = message.NetworkAddress;
+        //transport.port = message.NetworkPort;
+        //networkManager.StartClient();
 
         //To confirm it worked via the console print things:
         Debug.Log(message.GameName + " was just spawned at: " + message.NetworkAddress + ":" + message.NetworkPort);

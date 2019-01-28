@@ -154,7 +154,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   networkManager: {fileID: 1056297556}
-  telepathyTransport: {fileID: 1056297558}
+  telepathyTransport: {fileID: 667357269}
 --- !u!1 &279384969
 GameObject:
   m_ObjectHideFlags: 0

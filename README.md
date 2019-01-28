@@ -1,5 +1,5 @@
 # Insight  
-Insight is a Simple Message Server for Unity based on Mirror. It can operafe on its network connection or alongside a NetworkMannager. Inspired by MasterServerFramework it can be expanded with flexible modules.
+Insight is a Simple Message Server for Unity based on Mirror. It can operate on its network connection or alongside a NetworkMannager. Inspired by MasterServerFramework it can be expanded with flexible modules.
 
 # Disclaimer  
 This software is currently alpha, and subject to change. Not to be used in production systems.  

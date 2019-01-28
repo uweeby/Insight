@@ -13,7 +13,7 @@ public class ClientSpawnRequest : InsightModule
     {
         this.client = client;
 
-        client.OnConnectedEvent.AddListener(ClientOnConnectedEventHandler);
+        transport.OnClientConnected.AddListener(ClientOnConnectedEventHandler);
 
         RegisterHandlers();
     }
@@ -25,6 +25,8 @@ public class ClientSpawnRequest : InsightModule
 
     private void ClientOnConnectedEventHandler()
     {
+        Debug.Log("Player requesting a new game spawn");
+
         //The spawn is requested once the Player connects to the server for simplicity.
         //Normally this would be called via a GUI or something
         string ExampleGameName = "SuperAwesomeGame"; //This would probably get passed in

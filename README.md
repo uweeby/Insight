@@ -20,16 +20,13 @@ Notes:
 -Insight Examples are setup to use Telepathy by default. By convention Insight will use Port 7000 and Mirror (NetworkManager) will use port 7777+.  
 
 
-# Examples:  
+# Working Examples:  
 1. SimpleConnection - Shows an InsightServer autostart and a InsightClient autoconnect.
 2. ChatModule - Sends messages to players anywhere in the game.  
 3. LoginModule - Simple user/pass verification  
-4. BasicSpawner - Creates GameServer with incrementing port numbers  
+4. BasicSpawner - Creates BasicGameServer. This is a standalone NetworkManager.
+5. MasterServer - Builds on the Spawner concept. All messages are passed through the MasterServer. RequestSpawn messages are sent to an available ChildSpawner. This ChildSpawner can be on the same machine (like the example) or any number of other machines.
 
-# Planned Examples or WIP:  
-ComplexSpawner - Create and register GameServer with GameManagerModule (almost complete)  
-GameManager - Builds on ComplexSpawner to register newly spawned games to a MasterServer. (50% done)  
-MatchMaking - Builds on GameManager to match players with existing games or spawn on demand. (50% done)  
-Database - Working on support for MySQL and SQLite (not implemented yet)  
-LoadBalancer - Track available spawners and their host health. (not implemented yet)  
-AdminConsole - Simple server management from MasterServer  
+# WIP Examples:  
+6. GameManager -  Builds on the MasterServer example. It uses a ManagedGameServer that will register back to the GameManager module.
+7. MatchMaking - Builds on the GameManager example. It uses a MatchMaking module to track users looking for a game. Then connects them to an available server.  

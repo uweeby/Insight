@@ -16,7 +16,7 @@ public class GameRegistration : InsightModule
     {
         client = insight;
 
-        client.OnConnectedEvent.AddListener(ClientOnConnectedEventHandler);
+        telepathyTransport.OnClientConnected.AddListener(ClientOnConnectedEventHandler);
 
         RegisterHandlers();
 

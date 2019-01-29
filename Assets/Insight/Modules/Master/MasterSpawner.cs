@@ -27,7 +27,7 @@ public partial class MasterSpawner : InsightModule
         //Add the new child spawner to the list of spawners
         registeredSpawners.Add(new SpawnerContainer() { uniqueId = message.UniqueID, connectionId = netMsg.connectionId });
 
-        if (server.logNetworkMessages) { Debug.Log("HandleRegisterSpawner - Count: " + registeredSpawners.Count); }
+        if (server.logNetworkMessages) { Debug.Log("[MasterSpawner] - New Process Spawner Regsitered"); }
     }
 
     private void HandleSpawnRequestMsg(InsightNetworkMessage netMsg)

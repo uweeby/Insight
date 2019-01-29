@@ -1,5 +1,4 @@
 using Mirror;
-using UnityEngine;
 
 namespace Insight
 {
@@ -67,10 +66,9 @@ namespace Insight
 
     public class RequestSpawn : MessageBase
     {
-        //public static short MsgId = 1011;
+        public string SpawnAlias;
         public string GameName; //or SceneName
         public string UniqueID;
         public string NetworkAddress;
-        public ushort NetworkPort;
     }
 }

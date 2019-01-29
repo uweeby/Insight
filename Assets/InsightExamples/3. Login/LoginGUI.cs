@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class LoginGUI : MonoBehaviour
 {
-    public ClientLogin loginModule;
+    public ClientAuthentication clientAuthentication;
 
     public InputField usernameField;
     public InputField passwordField;
@@ -12,10 +12,10 @@ public class LoginGUI : MonoBehaviour
 
     private void Update()
     {
-        statusText.text = loginModule.loginResponse;
+        statusText.text = clientAuthentication.loginResponse;
     }
     public void HandleLoginButton()
     {
-        loginModule.SendLoginMsg(usernameField.text, passwordField.text);
+        clientAuthentication.SendLoginMsg(usernameField.text, passwordField.text);
     }
 }

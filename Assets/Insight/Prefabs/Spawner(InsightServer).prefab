@@ -9,35 +9,35 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1406336066766078}
+  m_RootGameObject: {fileID: 1178176921884258}
   m_IsPrefabAsset: 1
---- !u!1 &1406336066766078
+--- !u!1 &1178176921884258
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4178253004730460}
-  - component: {fileID: 114455222607207600}
-  - component: {fileID: 114231125312246618}
-  - component: {fileID: 114331597634763136}
+  - component: {fileID: 4521271004364002}
+  - component: {fileID: 114591474328434966}
+  - component: {fileID: 114190588574666562}
+  - component: {fileID: 114214306215167458}
   m_Layer: 0
-  m_Name: ChildSpawner(InsightClient)
+  m_Name: Spawner(InsightServer)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1 &1813010759478642
+--- !u!1 &1914739297120198
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4732471643851174}
-  - component: {fileID: 114473571808863406}
+  - component: {fileID: 4894581312530470}
+  - component: {fileID: 114089506898083876}
   m_Layer: 0
   m_Name: ProcessSpawnerModule
   m_TagString: Untagged
@@ -45,51 +45,66 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4178253004730460
+--- !u!4 &4521271004364002
 Transform:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1406336066766078}
+  m_GameObject: {fileID: 1178176921884258}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 4732471643851174}
+  - {fileID: 4894581312530470}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &4732471643851174
+--- !u!4 &4894581312530470
 Transform:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1813010759478642}
+  m_GameObject: {fileID: 1914739297120198}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 4178253004730460}
+  m_Father: {fileID: 4521271004364002}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114231125312246618
+--- !u!114 &114089506898083876
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1406336066766078}
+  m_GameObject: {fileID: 1914739297120198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8382b135107eaf5458d6471f839dc241, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EditorPath: C:\Dev\Insight\Builds\
+  ProcessPath: .\
+  processArray: []
+  MaximumProcesses: 5
+--- !u!114 &114190588574666562
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1178176921884258}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 522bd96839d1e094c8ea81507da62403, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   SearchChildrenForModule: 1
---- !u!114 &114331597634763136
+--- !u!114 &114214306215167458
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1406336066766078}
+  m_GameObject: {fileID: 1178176921884258}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c7424c1070fad4ba2a7a96b02fbeb4bb, type: 3}
@@ -135,34 +150,17 @@ MonoBehaviour:
     m_TypeName: Mirror.UnityEventInt, Mirror, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   port: 7000
   NoDelay: 1
---- !u!114 &114455222607207600
+--- !u!114 &114591474328434966
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1406336066766078}
+  m_GameObject: {fileID: 1178176921884258}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1916eb8cc69f6f2479c684a0631292e1, type: 3}
+  m_Script: {fileID: 11500000, guid: a4d89852411b348489e26598bc0e80c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   AutoStart: 1
   logNetworkMessages: 1
   networkAddress: localhost
-  AutoReconnect: 1
-  ReconnectDelayInSeconds: 5
---- !u!114 &114473571808863406
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1813010759478642}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8382b135107eaf5458d6471f839dc241, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  EditorPath: C:\Dev\Insight\Builds\
-  ProcessPath: .\
-  processArray: []
-  MaximumProcesses: 5

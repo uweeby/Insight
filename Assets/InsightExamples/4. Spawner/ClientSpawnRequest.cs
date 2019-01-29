@@ -5,13 +5,13 @@ using UnityEngine;
 public class ClientSpawnRequest : InsightModule
 {
     InsightClient client;
-
-    public TelepathyTransport transport;
+    TelepathyTransport transport;
 
     public override void Initialize(InsightClient client, ModuleManager manager)
     {
         this.client = client;
 
+        transport = client.GetComponent<TelepathyTransport>();
         transport.OnClientConnected.AddListener(ClientOnConnectedEventHandler);
 
         RegisterHandlers();
@@ -56,6 +56,6 @@ public class ClientSpawnRequest : InsightModule
         //networkManager.StartClient();
 
         //To confirm it worked via the console print things:
-        Debug.Log(message.GameName + " was just spawned at: " + message.NetworkAddress + ":" + message.NetworkPort);
+        Debug.Log(message.GameName + " was just spawned at: " + message.NetworkAddress);
     }
 }

@@ -1,25 +1,24 @@
-﻿using System.Collections.Generic;
-using Insight;
-using UnityEngine;
+﻿using Insight;
 
 public class ServerMatchMaking : InsightModule
 {
     InsightServer server;
-    //ModuleManager manager;
-    //ServerGameManagerModule gameManager;
-
-    List<UserSeekingMatch> usersSeekingMatchList = new List<UserSeekingMatch>();
+    ModuleManager manager;
+    ServerAuthentication authModule;
+    ServerGameManager gameManager;
 
     public void Awake()
     {
-        AddDependency<ServerGameManager>();
+        AddDependency<ServerAuthentication>(); //Used to track logged in players
+        AddDependency<ServerGameManager>(); //Used to track available games
     }
 
     public override void Initialize(InsightServer insight, ModuleManager manager)
     {
         server = insight;
-        //this.manager = manager;
-        //gameManager = this.manager.GetModule<ServerGameManagerModule>();
+        this.manager = manager;
+        authModule = this.manager.GetModule<ServerAuthentication>();
+        gameManager = this.manager.GetModule<ServerGameManager>();
         RegisterHandlers();
 
         InvokeRepeating("UpdateMatches", 10f, 10f);
@@ -32,11 +31,7 @@ public class ServerMatchMaking : InsightModule
 
     private void HandleRequestMatchMsg(InsightNetworkMessage netMsg)
     {
-        //PropertiesMsg message = netMsg.ReadMessage<PropertiesMsg>();
-
-        //Add player to list of players looking for a match
-        usersSeekingMatchList.Add(new UserSeekingMatch() { playerName = "Player01", gameType = "FFA" });
-
+        
     }
 
     private void UpdateMatches()

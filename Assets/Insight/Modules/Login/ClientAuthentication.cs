@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
 
-public class ClientLogin : InsightModule
+public class ClientAuthentication : InsightModule
 {
     InsightClient client;
 

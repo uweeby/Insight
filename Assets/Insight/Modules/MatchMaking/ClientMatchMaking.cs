@@ -1,16 +1,23 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using Insight;
 
-public class ClientMatchMaking : MonoBehaviour {
+public class ClientMatchMaking : InsightModule
+{
+    InsightClient client;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public override void Initialize(InsightClient client, ModuleManager manager)
+    {
+        this.client = client;
+
+        RegisterHandlers();
+    }
+
+    void RegisterHandlers()
+    {
+        
+    }
+
+    public void SendMatchRequest()
+    {
+        client.Send((short)MsgId.RequestMatch, new RequestMatch() { GameType = 0, GameSlots = 16 });
+    }
 }

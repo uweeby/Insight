@@ -1398,6 +1398,46 @@ MonoBehaviour:
   restrictLogCount: 0
   maxLogCount: 1000
   autoGenerateHTML: 0
+--- !u!1 &650334109
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 650334110}
+  - component: {fileID: 650334111}
+  m_Layer: 0
+  m_Name: ClientMatchMaking
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &650334110
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 650334109}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1668111368}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &650334111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 650334109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2aaaa45661eb0ef48870aa372813121b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &667421593
 GameObject:
   m_ObjectHideFlags: 0
@@ -3029,6 +3069,7 @@ GameObject:
   - component: {fileID: 1365284631}
   - component: {fileID: 1365284630}
   - component: {fileID: 1365284629}
+  - component: {fileID: 1365284628}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -3036,6 +3077,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1365284628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1365284627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d12044b60ce8f6e4982a50b3823e249e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RootLoginPanel: {fileID: 2061953740}
+  RootMainPanel: {fileID: 1496749887}
+  RootGamesListPanel: {fileID: 696950907}
 --- !u!114 &1365284629
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3701,7 +3756,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1496749888
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4262,6 +4317,7 @@ Transform:
   m_Children:
   - {fileID: 972950912}
   - {fileID: 1750788653}
+  - {fileID: 650334110}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5182,7 +5238,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2061953741
 RectTransform:
   m_ObjectHideFlags: 0

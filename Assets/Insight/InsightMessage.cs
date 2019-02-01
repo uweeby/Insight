@@ -71,4 +71,11 @@ namespace Insight
         public string UniqueID;
         public string NetworkAddress;
     }
+
+    public class RequestMatch : MessageBase
+    {
+        public string GameName;
+        public int GameType;
+        public int GameSlots;
+    }
 }

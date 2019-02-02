@@ -1,12 +1,11 @@
 ﻿using UnityEngine;
 
-public enum PlayerClientGUIState { Login, Main, GamesList, Game};
+public enum PlayerClientGUIState { Login, Main, Game};
 
 public class PlayerClientGUI : MonoBehaviour
 {
     public GameObject RootLoginPanel;
     public GameObject RootMainPanel;
-    public GameObject RootGamesListPanel;
 
     public PlayerClientGUIState playerGuiState;
 
@@ -25,11 +24,6 @@ public class PlayerClientGUI : MonoBehaviour
             case PlayerClientGUIState.Main:
                 SwitchToMain();
                 break;
-
-            case PlayerClientGUIState.GamesList:
-                SwitchToGamesList();
-                break;
-
             case PlayerClientGUIState.Game:
                 SwitchToGame();
                 break;
@@ -40,27 +34,29 @@ public class PlayerClientGUI : MonoBehaviour
     {
         RootLoginPanel.SetActive(true);
         RootMainPanel.SetActive(false);
-        RootGamesListPanel.SetActive(false);
     }
 
     private void SwitchToMain()
     {
         RootLoginPanel.SetActive(false);
         RootMainPanel.SetActive(true);
-        RootGamesListPanel.SetActive(false);
     }
 
     private void SwitchToGamesList()
     {
         RootLoginPanel.SetActive(false);
         RootMainPanel.SetActive(false);
-        RootGamesListPanel.SetActive(true);
     }
 
     private void SwitchToGame()
     {
         RootLoginPanel.SetActive(false);
         RootMainPanel.SetActive(false);
-        RootGamesListPanel.SetActive(false);
+    }
+
+    //Msg Senders
+    public void SendFindMatch()
+    {
+
     }
 }

@@ -14,6 +14,8 @@ public class LoginGUI : MonoBehaviour
     {
         statusText.text = clientAuthentication.loginResponse;
     }
+
+    //MsgSender
     public void HandleLoginButton()
     {
         clientAuthentication.SendLoginMsg(usernameField.text, passwordField.text);

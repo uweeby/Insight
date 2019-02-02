@@ -21,26 +21,19 @@ public class ServerAuthentication : InsightModule
         server.RegisterHandler((short)MsgId.Login, HandleLoginMsg);
     }
 
+    //You would probably want to use a database to check for accounts that are already registered
+    //Since this is a simple example we will just assume any new login is valid.
     private void HandleLoginMsg(InsightNetworkMessage netMsg)
     {
-        if (server.logNetworkMessages) { Debug.Log("[InsightServer] - HandleLoginMsg()"); }
-
         LoginMsg message = netMsg.ReadMessage<LoginMsg>();
 
         if (server.logNetworkMessages) { Debug.Log("[InsightServer] - Login Received: " + message.AccountName + " / " + message.AccountPassword); }
 
-        //Add code to verify the user/pass are correct
+        //Add your own code to verify the user/pass are correct
 
-        //We expect the SHA256 for 'password'. Its not salted with anything currently
-        if (message.AccountName.Equals("root") && message.AccountPassword.Equals("5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"))
-        {
-            registeredUsers.Add(new UserContainer() { username = message.AccountName, uniqueId = Guid.NewGuid().ToString() });
-            netMsg.Reply((short)MsgId.Status, new StatusMsg() { Text = "Login Sucessful!" });
-        }
-        else
-        {
-            netMsg.Reply((short)MsgId.Status, new StatusMsg() { Text = "Login Failed!" });
-        }
+        //For demo purposes just accept anything. THIS IS BAD PRACTICE REPLACE THIS CODE IN YOUR GAME.
+        registeredUsers.Add(new UserContainer() { username = message.AccountName, uniqueId = Guid.NewGuid().ToString() });
+        netMsg.Reply((short)MsgId.Status, new StatusMsg() { Text = "Login Sucessful!" });
     }
 }
 

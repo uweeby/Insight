@@ -590,6 +590,11 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 114473571808863406, guid: fb641c96eed9f4776bdfaadb82174b97,
+        type: 2}
+      propertyPath: processArray.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4178253004730460, guid: fb641c96eed9f4776bdfaadb82174b97, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -621,6 +626,16 @@ Prefab:
     - target: {fileID: 4178253004730460, guid: fb641c96eed9f4776bdfaadb82174b97, type: 2}
       propertyPath: m_RootOrder
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114473571808863406, guid: fb641c96eed9f4776bdfaadb82174b97,
+        type: 2}
+      propertyPath: processArray.Array.data[0].Alias
+      value: managedgameserver
+      objectReference: {fileID: 0}
+    - target: {fileID: 114473571808863406, guid: fb641c96eed9f4776bdfaadb82174b97,
+        type: 2}
+      propertyPath: processArray.Array.data[0].Path
+      value: MatchedGameServer.exe
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fb641c96eed9f4776bdfaadb82174b97, type: 2}

@@ -32,7 +32,12 @@ public class ServerGameManager : InsightModule
 
         if (server.logNetworkMessages) { Debug.Log("Received GameRegistration request"); }
 
-        registeredGames.Add(new GameContainer() { connectionId = netMsg.connectionId, uniqueId = message.UniqueID });
+        registeredGames.Add(new GameContainer() { connectionId = netMsg.connectionId, uniqueId = message.UniqueID});
+    }
+
+    private void HandleUnregisterGameMsg(InsightNetworkMessage netMsg)
+    {
+        //registeredGames.Remove();
     }
 }
 

@@ -9,6 +9,8 @@ public class ProcessSpawner : InsightModule
     InsightServer server;
     InsightClient client;
 
+    public string SpawnerNetworkAddress; //This is the address that any spawns will show they are listening on.
+
     [Header("Paths")]
     public string EditorPath;
     public string ProcessPath;
@@ -73,7 +75,10 @@ public class ProcessSpawner : InsightModule
 
         if(SpawnThread(message.SpawnAlias))
         {
-            netMsg.Reply((short)MsgId.RequestSpawn, new RequestSpawn() { GameName = message.GameName, NetworkAddress = "127.0.0.1", UniqueID = Guid.NewGuid().ToString() });
+            netMsg.Reply((short)MsgId.RequestSpawn, new RequestSpawn() {
+                GameName = message.GameName,
+                NetworkAddress = SpawnerNetworkAddress, //Need to decide how to pull the IP the server is listening on since there could be many. For now ugly hardcoding
+                UniqueID = Guid.NewGuid().ToString() });
         }
         else
         {

@@ -11,6 +11,8 @@ public class ClientAuthentication : InsightModule
 
     [HideInInspector]
     public string loginResponse; //This is put in the GUI. Just for example purposes
+    [HideInInspector]
+    public bool loginSucessful;
 
     public override void Initialize(InsightClient client, ModuleManager manager)
     {
@@ -32,6 +34,7 @@ public class ClientAuthentication : InsightModule
             {
                 StatusMsg msg = reader.ReadMessage<StatusMsg>();
                 loginResponse = msg.Text;
+                loginSucessful = true; //This will always be true for prototyping
                 Debug.Log(msg.Text);
             }
             else Debug.Log("Callback Error: Login Message was lost or a reply was not sent");

@@ -16,7 +16,7 @@ public class LoginGUI : MonoBehaviour
     }
 
     //MsgSender
-    public void HandleLoginButton()
+    public void SendLoginMsg()
     {
         clientAuthentication.SendLoginMsg(usernameField.text, passwordField.text);
     }

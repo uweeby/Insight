@@ -9,6 +9,8 @@ public class PlayerClientGUI : MonoBehaviour
 
     public PlayerClientGUIState playerGuiState;
 
+    public ClientAuthentication authComp;
+
     private void Start()
     {
         SwitchToLogin();
@@ -20,6 +22,12 @@ public class PlayerClientGUI : MonoBehaviour
         {
             case PlayerClientGUIState.Login:
                 SwitchToLogin();
+
+                if(authComp.loginSucessful)
+                {
+                    playerGuiState = PlayerClientGUIState.Main;
+                    return;
+                }
                 break;
             case PlayerClientGUIState.Main:
                 SwitchToMain();
@@ -52,11 +60,5 @@ public class PlayerClientGUI : MonoBehaviour
     {
         RootLoginPanel.SetActive(false);
         RootMainPanel.SetActive(false);
-    }
-
-    //Msg Senders
-    public void SendFindMatch()
-    {
-
     }
 }

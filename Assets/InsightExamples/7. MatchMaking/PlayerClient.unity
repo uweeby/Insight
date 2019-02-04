@@ -483,8 +483,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: HandleLoginButton
+      - m_Target: {fileID: 2061953744}
+        m_MethodName: SendLoginMsg
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -572,6 +572,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   loginGuiComp: {fileID: 0}
   loginResponse: 
+  loginSucessful: 0
 --- !u!1 &1021337903
 GameObject:
   m_ObjectHideFlags: 0
@@ -1059,6 +1060,7 @@ MonoBehaviour:
   RootLoginPanel: {fileID: 2061953740}
   RootMainPanel: {fileID: 1496749887}
   playerGuiState: 0
+  authComp: {fileID: 972950913}
 --- !u!114 &1365284629
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1424,7 +1426,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1496749888
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1629,8 +1631,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1365284628}
-        m_MethodName: SendFindMatch
+      - m_Target: {fileID: 650334111}
+        m_MethodName: SendMatchRequest
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

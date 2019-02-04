@@ -16,7 +16,8 @@ namespace Insight
 
         RequestSpawn,
         RequestGame,
-        RequestMatch,
+        StartMatchSearch,
+        StopMatchSearch,
     }
 
     public class ErrorMsg : MessageBase
@@ -69,7 +70,7 @@ namespace Insight
         public string SpawnAlias;
         public string GameName; //or SceneName
         public string UniqueID;
-        public string NetworkAddress;
+        public string NetworkAddress; //Only valid in the reply from the spawner.
     }
 
     public class RequestMatch : MessageBase

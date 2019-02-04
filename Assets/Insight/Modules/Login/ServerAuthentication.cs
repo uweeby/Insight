@@ -35,10 +35,28 @@ public class ServerAuthentication : InsightModule
         registeredUsers.Add(new UserContainer() { username = message.AccountName, uniqueId = Guid.NewGuid().ToString() });
         netMsg.Reply((short)MsgId.Status, new StatusMsg() { Text = "Login Sucessful!" });
     }
+
+    private void HandleLogout(InsightNetworkMessage netMsg)
+    {
+        //registeredUsers.Remove();
+    }
+
+    public UserContainer GetUserByConnection(int connectionId)
+    {
+        foreach (UserContainer user in registeredUsers)
+        {
+            if(user.connectionId == connectionId)
+            {
+                return user;
+            }
+        }
+        return null;
+    }
 }
 
-public struct UserContainer
+public class UserContainer
 {
     public string uniqueId;
     public string username;
+    public int connectionId;
 }

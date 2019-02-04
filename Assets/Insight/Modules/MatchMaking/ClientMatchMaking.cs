@@ -18,6 +18,6 @@ public class ClientMatchMaking : InsightModule
 
     public void SendMatchRequest()
     {
-        client.Send((short)MsgId.RequestMatch, new RequestMatch() { GameType = 0, GameSlots = 16 });
+        client.Send((short)MsgId.StartMatchSearch, new RequestMatch());
     }
 }

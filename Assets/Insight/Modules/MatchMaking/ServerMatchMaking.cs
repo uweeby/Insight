@@ -63,6 +63,15 @@ public class ServerMatchMaking : InsightModule
             if(gameManager.registeredGames.Count > 0)
             {
                 //Tell the players to join the active game
+                for(int i = 0; i < searchingForMatch.Count; i++)
+                {
+                    server.SendToClient(searchingForMatch[i].user.connectionId, (short)MsgId.ChangeServers, new ChangeServers() {
+                        NetworkAddress = "",
+                        NetworkPort = 7777,
+                        SceneName = ""
+                    });
+                    searchingForMatch.Remove(searchingForMatch[i]);
+                }
             }
             else
             {

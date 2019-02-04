@@ -41,14 +41,6 @@ public class ServerGameManager : InsightModule
     }
 }
 
-public partial class MasterSpawner
-{
-    public void RequestGameSpawn() //Take in the options here
-    {
-
-    }
-}
-
 public struct GameContainer
 {
     public string uniqueId;

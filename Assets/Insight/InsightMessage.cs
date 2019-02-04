@@ -18,6 +18,9 @@ namespace Insight
         RequestGame,
         StartMatchSearch,
         StopMatchSearch,
+
+        ChangeServers,
+
     }
 
     public class ErrorMsg : MessageBase
@@ -78,5 +81,13 @@ namespace Insight
         public string GameName;
         public int GameType;
         public int GameSlots;
+    }
+
+    //Used to tell a player to connect to a new game server
+    public class ChangeServers : MessageBase
+    {
+        public string NetworkAddress;
+        public ushort NetworkPort;
+        public string SceneName;
     }
 }

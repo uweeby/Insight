@@ -52,6 +52,23 @@ public partial class MasterSpawner : InsightModule
             }
         });
     }
+
+    //Take in the options here
+    public void RequestGameSpawn()
+    {
+        //Instead of handling the msg here we will forward it to an available spawner.
+        //In the future this is where load balancing should start
+        server.SendToClient(registeredSpawners[0].connectionId, (short)MsgId.RequestSpawn, new RequestSpawn(), (success, reader) =>
+        {
+            if (success == CallbackStatus.Ok)
+            {
+                RequestSpawn callbackResponse = reader.ReadMessage<RequestSpawn>();
+                if (server.logNetworkMessages) { Debug.Log("[Spawn Callback] Game Created on Child Spawner: " + callbackResponse.UniqueID); }
+
+                //netMsg.Reply((short)MsgId.RequestSpawn, callbackResponse);
+            }
+        });
+    }
 }
 
 public struct SpawnerContainer

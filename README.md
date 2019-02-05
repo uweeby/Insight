@@ -30,3 +30,4 @@ Run the example scenes in editor.
 
 # TODO:  
 -Better error handling along registration/callback process. Many locations where things can get lost.  
+-Spawner does not track running processes or have the ability to kill them.  

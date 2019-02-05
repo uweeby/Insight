@@ -17,6 +17,8 @@ public class GUIMasterServer : MonoBehaviour
     public Text spawnerCountText;
     public Text gameCountText;
     public Text userCountText;
+    public Text playersInQueueCountText;
+    public Text activeGamesCountText;
 
     private bool Init;
 
@@ -40,5 +42,7 @@ public class GUIMasterServer : MonoBehaviour
         spawnerCountText.text = masterSpawnerModule.registeredSpawners.Count.ToString();
         gameCountText.text = gameModule.registeredGames.Count.ToString();
         userCountText.text = authModule.registeredUsers.Count.ToString();
+        playersInQueueCountText.text = matchModule.searchingForMatch.Count.ToString();
+        //activeGamesCountText.text = 
     }
 }

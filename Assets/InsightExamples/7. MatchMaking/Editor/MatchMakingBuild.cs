@@ -6,6 +6,18 @@ public class MatchMakingBuild
     public static BuildOptions BuildOptions = BuildOptions.Development;
     public static string PrevPath = null;
 
+    [MenuItem("Tools/Build/Windows MatchMaking/Build Add", false, 999)]
+    public static void WindowsBuildAllMatchMaking()
+    {
+        var path = GetPath();
+        if (!string.IsNullOrEmpty(path))
+        {
+            WindowsBuildMMPlayerClient(path);
+            WindowsBuildMMServer(path);
+            WindowsBuildMMGame(path);
+        }
+    }
+
     [MenuItem("Tools/Build/Windows MatchMaking/Client", false, 999)]
     public static void WindowsBuildMatchMakingClient()
     {

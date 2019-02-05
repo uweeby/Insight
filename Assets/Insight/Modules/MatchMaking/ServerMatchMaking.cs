@@ -9,7 +9,7 @@ public class ServerMatchMaking : InsightModule
     ServerGameManager gameManager;
     MasterSpawner masterSpawner;
 
-    public float MatchListPollRateInSeconds = 10f;
+    public int MinimumPlayersForGame;
 
     public List<SearchingForMatch> searchingForMatch = new List<SearchingForMatch>();
 
@@ -29,8 +29,6 @@ public class ServerMatchMaking : InsightModule
         masterSpawner = this.manager.GetModule<MasterSpawner>();
 
         RegisterHandlers();
-
-        InvokeRepeating("UpdateMatches", MatchListPollRateInSeconds, MatchListPollRateInSeconds);
     }
 
     void RegisterHandlers()
@@ -48,6 +46,8 @@ public class ServerMatchMaking : InsightModule
         UserContainer newUser = authModule.GetUserByConnection(netMsg.connectionId);
 
         searchingForMatch.Add(new SearchingForMatch() { user = newUser });
+
+        CheckQueue();
     }
 
     private void HandleStopMatchSearchMsg(InsightNetworkMessage netMsg)
@@ -64,19 +64,19 @@ public class ServerMatchMaking : InsightModule
         }
     }
 
-    private void UpdateMatches()
+    private void CheckQueue()
     {
         //Check the list of players and current games at specified interval
-        if(searchingForMatch.Count > 0)
+        if(searchingForMatch.Count > MinimumPlayersForGame)
         {
-            if(gameManager.registeredGames.Count > 0)
+            if(gameManager.registeredGameServers.Count > 0)
             {
                 //Tell the players to join the active game
                 for(int i = 0; i < searchingForMatch.Count; i++)
                 {
                     server.SendToClient(searchingForMatch[i].user.connectionId, (short)MsgId.ChangeServers, new ChangeServers() {
-                        NetworkAddress = gameManager.registeredGames[0].NetworkAddress,
-                        NetworkPort = gameManager.registeredGames[0].NetworkPort,
+                        NetworkAddress = gameManager.registeredGameServers[0].NetworkAddress,
+                        NetworkPort = gameManager.registeredGameServers[0].NetworkPort,
                         SceneName = "SuperAwesomeGame"
                     });
                     searchingForMatch.Remove(searchingForMatch[i]);

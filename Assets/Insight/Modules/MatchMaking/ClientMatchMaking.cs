@@ -33,8 +33,13 @@ public class ClientMatchMaking : InsightModule
         networkManager.StartClient();
     }
 
-    public void SendMatchRequest()
+    public void SendStartMatchMaking()
     {
-        client.Send((short)MsgId.StartMatchSearch, new RequestMatch());
+        client.Send((short)MsgId.StartMatchMaking, new StartMatchMaking());
+    }
+
+    public void SendStopMatchMaking()
+    {
+        client.Send((short)MsgId.StopMatchMaking, new StopMatchMaking());
     }
 }

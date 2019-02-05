@@ -10,6 +10,10 @@ public class PlayerClientGUI : MonoBehaviour
     public PlayerClientGUIState playerGuiState;
 
     public ClientAuthentication authComp;
+    public ClientMatchMaking matchComp;
+
+    public GameObject StartMatchMakingButton;
+    public GameObject StopMatchMakingButton;
 
     private void Start()
     {
@@ -60,5 +64,21 @@ public class PlayerClientGUI : MonoBehaviour
     {
         RootLoginPanel.SetActive(false);
         RootMainPanel.SetActive(false);
+    }
+
+    public void HandleStartMatchMakingButton()
+    {
+        StartMatchMakingButton.SetActive(false);
+        StopMatchMakingButton.SetActive(true);
+
+        matchComp.SendStartMatchMaking();
+    }
+
+    public void HandleStopMatchMakingButton()
+    {
+        StartMatchMakingButton.SetActive(true);
+        StopMatchMakingButton.SetActive(false);
+
+        matchComp.SendStopMatchMaking();
     }
 }

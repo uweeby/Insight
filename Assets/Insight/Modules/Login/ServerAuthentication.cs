@@ -21,24 +21,29 @@ public class ServerAuthentication : InsightModule
         server.RegisterHandler((short)MsgId.Login, HandleLoginMsg);
     }
 
-    //You would probably want to use a database to check for accounts that are already registered
-    //Since this is a simple example we will just assume any new login is valid.
+    //This is just an example. No actual authentication happens.
+    //You would need to replace with your own logic. Perhaps with a DB connection.
     private void HandleLoginMsg(InsightNetworkMessage netMsg)
     {
         LoginMsg message = netMsg.ReadMessage<LoginMsg>();
-
+        
         if (server.logNetworkMessages) { Debug.Log("[InsightServer] - Login Received: " + message.AccountName + " / " + message.AccountPassword); }
 
-        //Add your own code to verify the user/pass are correct
-
-        //For demo purposes just accept anything. THIS IS BAD PRACTICE REPLACE THIS CODE IN YOUR GAME.
         registeredUsers.Add(new UserContainer() { username = message.AccountName, uniqueId = Guid.NewGuid().ToString(), connectionId = netMsg.connectionId});
+
         netMsg.Reply((short)MsgId.Status, new StatusMsg() { Text = "Login Sucessful!" });
     }
 
     private void HandleLogout(InsightNetworkMessage netMsg)
     {
-        //registeredUsers.Remove();
+        foreach(UserContainer user in registeredUsers)
+        {
+            if(user.connectionId == netMsg.connectionId)
+            {
+                registeredUsers.Remove(user);
+                return;
+            }
+        }
     }
 
     public UserContainer GetUserByConnection(int connectionId)

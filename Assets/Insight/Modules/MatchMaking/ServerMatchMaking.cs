@@ -9,7 +9,7 @@ public class ServerMatchMaking : InsightModule
     ServerGameManager gameManager;
     MasterSpawner masterSpawner;
 
-    public float MatchListPollRateInSeconds = 1f;
+    public float MatchListPollRateInSeconds = 10f;
 
     public List<SearchingForMatch> searchingForMatch = new List<SearchingForMatch>();
 

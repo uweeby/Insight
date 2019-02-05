@@ -12,7 +12,7 @@ public class ServerGameManager : InsightModule
     InsightServer server;
     MasterSpawner masterSpawner;
 
-    public List<GameContainer> registeredGames = new List<GameContainer>();
+    public List<GameContainer> registeredGameServers = new List<GameContainer>();
 
     public void Awake()
     {
@@ -39,19 +39,32 @@ public class ServerGameManager : InsightModule
 
         if (server.logNetworkMessages) { Debug.Log("Received GameRegistration request"); }
 
-        registeredGames.Add(new GameContainer() { connectionId = netMsg.connectionId, uniqueId = message.UniqueID, NetworkAddress = message.NetworkAddress, NetworkPort = message.NetworkPort});
+        registeredGameServers.Add(new GameContainer() { connectionId = netMsg.connectionId, uniqueId = message.UniqueID, NetworkAddress = message.NetworkAddress, NetworkPort = message.NetworkPort});
     }
 
     private void HandleDisconnect(int connectionId)
     {
-        foreach (GameContainer game in registeredGames)
+        foreach (GameContainer game in registeredGameServers)
         {
             if (game.connectionId == connectionId)
             {
-                registeredGames.Remove(game);
+                registeredGameServers.Remove(game);
                 return;
             }
         }
+    }
+
+    public List<GameContainer> GetActiveGameServers()
+    {
+        List<GameContainer> activeGames = new List<GameContainer>();
+        foreach(GameContainer game in registeredGameServers)
+        {
+            if(game.state == GameServerState.Active)
+            {
+                activeGames.Add(game);
+            }
+        }
+        return activeGames;
     }
 }
 
@@ -61,6 +74,6 @@ public struct GameContainer
     public ushort NetworkPort;
     public string uniqueId;
     public int connectionId;
-    public GameServerState gameServerState;
+    public GameServerState state;
     public Dictionary<string, string> Properties;
 }

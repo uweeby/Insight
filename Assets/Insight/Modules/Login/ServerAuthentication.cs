@@ -1,4 +1,5 @@
 ﻿using Insight;
+using Mirror;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,7 @@ using UnityEngine;
 public class ServerAuthentication : InsightModule
 {
     InsightServer server;
+    public TelepathyTransport telepathyTransport;
 
     public List<UserContainer> registeredUsers = new List<UserContainer>();
 
@@ -14,6 +16,8 @@ public class ServerAuthentication : InsightModule
         this.server = server;
 
         RegisterHandlers();
+
+        server.transport.OnServerDisconnected.AddListener(HandleDisconnect);
     }
 
     void RegisterHandlers()
@@ -34,11 +38,11 @@ public class ServerAuthentication : InsightModule
         netMsg.Reply((short)MsgId.Status, new StatusMsg() { Text = "Login Sucessful!" });
     }
 
-    private void HandleLogout(InsightNetworkMessage netMsg)
+    private void HandleDisconnect(int connectionId)
     {
         foreach(UserContainer user in registeredUsers)
         {
-            if(user.connectionId == netMsg.connectionId)
+            if(user.connectionId == connectionId)
             {
                 registeredUsers.Remove(user);
                 return;

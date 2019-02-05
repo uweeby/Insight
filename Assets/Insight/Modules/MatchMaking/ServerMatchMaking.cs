@@ -35,13 +35,13 @@ public class ServerMatchMaking : InsightModule
 
     void RegisterHandlers()
     {
-        server.RegisterHandler((short)MsgId.StartMatchSearch, HandleStartMatchSearchMsg);
-        server.RegisterHandler((short)MsgId.StopMatchSearch, HandleStopMatchSearchMsg);
+        server.RegisterHandler((short)MsgId.StartMatchMaking, HandleStartMatchSearchMsg);
+        server.RegisterHandler((short)MsgId.StopMatchMaking, HandleStopMatchSearchMsg);
     }
 
     private void HandleStartMatchSearchMsg(InsightNetworkMessage netMsg)
     {
-        RequestMatch message = netMsg.ReadMessage<RequestMatch>();
+        StartMatchMaking message = netMsg.ReadMessage<StartMatchMaking>();
 
         if (server.logNetworkMessages) { UnityEngine.Debug.Log("[InsightServer] - Player joining MatchMaking."); }
 
@@ -52,7 +52,16 @@ public class ServerMatchMaking : InsightModule
 
     private void HandleStopMatchSearchMsg(InsightNetworkMessage netMsg)
     {
-        //searchingForMatch.Remove();
+        StopMatchMaking message = netMsg.ReadMessage<StopMatchMaking>();
+
+        foreach (SearchingForMatch seraching in searchingForMatch)
+        {
+            if (seraching.user.connectionId == netMsg.connectionId)
+            {
+                searchingForMatch.Remove(seraching);
+                return;
+            }
+        }
     }
 
     private void UpdateMatches()
@@ -66,8 +75,8 @@ public class ServerMatchMaking : InsightModule
                 for(int i = 0; i < searchingForMatch.Count; i++)
                 {
                     server.SendToClient(searchingForMatch[i].user.connectionId, (short)MsgId.ChangeServers, new ChangeServers() {
-                        NetworkAddress = "127.0.0.1",
-                        NetworkPort = 7777,
+                        NetworkAddress = gameManager.registeredGames[0].NetworkAddress,
+                        NetworkPort = gameManager.registeredGames[0].NetworkPort,
                         SceneName = "SuperAwesomeGame"
                     });
                     searchingForMatch.Remove(searchingForMatch[i]);

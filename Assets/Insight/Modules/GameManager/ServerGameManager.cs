@@ -24,6 +24,8 @@ public class ServerGameManager : InsightModule
         server = insight;
         masterSpawner = manager.GetModule<MasterSpawner>();
         RegisterHandlers();
+
+        server.transport.OnServerDisconnected.AddListener(HandleDisconnect);
     }
 
     void RegisterHandlers()
@@ -37,17 +39,26 @@ public class ServerGameManager : InsightModule
 
         if (server.logNetworkMessages) { Debug.Log("Received GameRegistration request"); }
 
-        registeredGames.Add(new GameContainer() { connectionId = netMsg.connectionId, uniqueId = message.UniqueID});
+        registeredGames.Add(new GameContainer() { connectionId = netMsg.connectionId, uniqueId = message.UniqueID, NetworkAddress = message.NetworkAddress, NetworkPort = message.NetworkPort});
     }
 
-    private void HandleUnregisterGameMsg(InsightNetworkMessage netMsg)
+    private void HandleDisconnect(int connectionId)
     {
-        //registeredGames.Remove();
+        foreach (GameContainer game in registeredGames)
+        {
+            if (game.connectionId == connectionId)
+            {
+                registeredGames.Remove(game);
+                return;
+            }
+        }
     }
 }
 
 public struct GameContainer
 {
+    public string NetworkAddress;
+    public ushort NetworkPort;
     public string uniqueId;
     public int connectionId;
     public GameServerState gameServerState;

@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Idle - GameServer just started. It has not been assigned a scene. It has no running NetworkManager
+// Active - GameServer was provided a scene and its NetworkManager is now running. Players can connect.
+// Done - Game session is now complete. Marked to either be destroyed or returned to a pool.
+public enum GameServerState { Idle, Active, Done}
+
 public class ServerGameManager : InsightModule
 {
     InsightServer server;
@@ -45,5 +50,6 @@ public struct GameContainer
 {
     public string uniqueId;
     public int connectionId;
+    public GameServerState gameServerState;
     public Dictionary<string, string> Properties;
 }

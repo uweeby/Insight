@@ -7,7 +7,7 @@ public class DemoBuildScript
     public static string PrevPath = null;
 
     #region Windows Builds
-    [MenuItem("Tools/Build/Windows/BasicGameServer", false, 999)]
+    [MenuItem("Tools/Build/Windows/Build All", false, 999)]
     public static void WindowsBuildAllMenu()
     {
         var path = GetPath();
@@ -39,7 +39,7 @@ public class DemoBuildScript
         }
     }
 
-    [MenuItem("Tools/Build/Windows/ManagedGameServer", false, 999)]
+    [MenuItem("Tools/Build/Windows/ChildSpawner", false, 999)]
     public static void WindowsBuildChildSpawnerMenu()
     {
         var path = GetPath();
@@ -90,7 +90,7 @@ public class DemoBuildScript
     #endregion
 
     #region Linux Builds
-    [MenuItem("Tools/Build/Linux/BasicGameServer", false, 999)]
+    [MenuItem("Tools/Build/Linux/Build All", false, 999)]
     public static void LinuxBuildAllMenu()
     {
         var path = GetPath();
@@ -122,7 +122,7 @@ public class DemoBuildScript
         }
     }
 
-    [MenuItem("Tools/Build/Linux/BasicGameServer", false, 999)]
+    [MenuItem("Tools/Build/Linux/ChildSpawner", false, 999)]
     public static void LinuxBuildChildSpawnerMenu()
     {
         var path = GetPath();

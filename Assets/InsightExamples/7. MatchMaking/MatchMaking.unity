@@ -1107,6 +1107,8 @@ MonoBehaviour:
   spawnerCountText: {fileID: 2111806610}
   gameCountText: {fileID: 163716046}
   userCountText: {fileID: 1653868710}
+  playersInQueueCountText: {fileID: 1775356791}
+  activeGamesCountText: {fileID: 967018986}
 --- !u!1 &1713495146
 GameObject:
   m_ObjectHideFlags: 0
@@ -1298,6 +1300,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ecd18586a6de01439a817b99a266185, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  telepathyTransport: {fileID: 0}
 --- !u!1 &2111806608
 GameObject:
   m_ObjectHideFlags: 0

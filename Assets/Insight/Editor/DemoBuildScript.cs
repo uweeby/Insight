@@ -31,7 +31,7 @@ public class DemoBuildScript
     }
 
     [MenuItem("Tools/Build/Windows/ManagedGameServer", false, 999)]
-    public static void WindowsBuildComplexGameServerMenu()
+    public static void WindowsBuildManagedGameServerMenu()
     {
         var path = GetPath();
         if (!string.IsNullOrEmpty(path))
@@ -137,7 +137,7 @@ public class DemoBuildScript
     }
 
     [MenuItem("Tools/Build/Linux/ManagedGameServer", false, 999)]
-    public static void LinuxBuildComplexGameServerMenu()
+    public static void LinuxBuildManagedGameServerMenu()
     {
         var path = GetPath();
         if (!string.IsNullOrEmpty(path))

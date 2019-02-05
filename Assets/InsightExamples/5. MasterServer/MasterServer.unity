@@ -457,7 +457,7 @@ MonoBehaviour:
   restrictLogCount: 0
   maxLogCount: 1000
   autoGenerateHTML: 0
---- !u!1 &735398365
+--- !u!1 &778794604
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 1960458110905104, guid: e28689e5cfcf647ae9f75ac10bff424d,
@@ -700,12 +700,13 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "MasterServer Example:\r\n1. Use the Tools>Build>Windows/Linux>ManagedGameServer
-    to build in\r a folder of your choice.\r\n2. Put the path to that folder in the
-    ProcessSpawner Child GameObject\r\n3. Press Play\r\n\n\nAfter the MasterServer
-    and ChildSpawner are both connected (1-2 seconds) hit\r the button below to ''log
-    the Player in''. This will ensure that when the Player\r immediatly asks for a
-    game to be spawned the Spawner is registered and ready to\r fulfil the request."
+  m_Text: "Master Example:\r\n1. Use the Tools>Build>Windows/Linux>BasicGameServer
+    to build a GameServer in\r a folder of your choice.\r\n2. Put the path to that
+    folder in the Spawners Child GameObject named BasicSpawnerModule\r\n3. Press Play\r\n\n\nAfter
+    the MasterServer and SpawnerClient are both connected (1-2 seconds) hit\r the
+    button below to ''log the Player in''. This will ensure that when the Player\r
+    immediatly asks for a game to be spawned the Spawner is registered and ready to\r
+    fulfil the request."
 --- !u!222 &1370768996
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -16,8 +16,8 @@ namespace Insight
 
         RequestSpawn,
         RequestGame,
-        StartMatchSearch,
-        StopMatchSearch,
+        StartMatchMaking,
+        StopMatchMaking,
 
         ChangeServers,
 
@@ -66,6 +66,8 @@ namespace Insight
     public class RegisterGameMsg : MessageBase
     {
         public string UniqueID; //Guid
+        public string NetworkAddress;
+        public ushort NetworkPort;
     }
 
     public class RequestSpawn : MessageBase
@@ -76,11 +78,14 @@ namespace Insight
         public string NetworkAddress; //Only valid in the reply from the spawner.
     }
 
-    public class RequestMatch : MessageBase
+    public class StartMatchMaking : MessageBase
     {
-        public string GameName;
-        public int GameType;
-        public int GameSlots;
+
+    }
+
+    public class StopMatchMaking : MessageBase
+    {
+
     }
 
     //Used to tell a player to connect to a new game server

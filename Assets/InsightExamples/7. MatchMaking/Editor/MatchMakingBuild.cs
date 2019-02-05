@@ -6,7 +6,7 @@ public class MatchMakingBuild
     public static BuildOptions BuildOptions = BuildOptions.Development;
     public static string PrevPath = null;
 
-    [MenuItem("Tools/Build/Windows MatchMaking/Build Add", false, 999)]
+    [MenuItem("Tools/Build/Windows MatchMaking/Build All", false, 999)]
     public static void WindowsBuildAllMatchMaking()
     {
         var path = GetPath();

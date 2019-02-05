@@ -27,3 +27,7 @@ Run the example scenes in editor.
 
 # WIP Examples:  
 7. MatchMaking - Builds on the GameManager example. It uses a MatchMaking module to track users looking for a game. Then connects them to an available server.  
+
+# TODO:  
+-Better error handling along registration/callback process. Many locations where things can get lost.  
+-Spawner does not track running processes or have the ability to kill them.  

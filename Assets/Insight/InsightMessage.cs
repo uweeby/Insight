@@ -20,7 +20,7 @@ namespace Insight
         StopMatchMaking,
 
         ChangeServers,
-
+        SpawnerStatus,
     }
 
     public class ErrorMsg : MessageBase
@@ -61,6 +61,7 @@ namespace Insight
     public class RegisterSpawnerMsg : MessageBase
     {
         public string UniqueID; //Guid
+        public int MaxThreads;
     }
 
     public class RegisterGameMsg : MessageBase
@@ -94,5 +95,11 @@ namespace Insight
         public string NetworkAddress;
         public ushort NetworkPort;
         public string SceneName;
+    }
+
+    //Updates the MasterSpawner with current status
+    public class SpawnerStatus : MessageBase
+    {
+        public int CurrentThreads;
     }
 }

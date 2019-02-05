@@ -82,8 +82,7 @@ public class ProcessSpawner : InsightModule
         }
         else
         {
-            UnityEngine.Debug.LogError("[ProcessSpawner] - Spawn failed. This needs better error handling");
-            netMsg.Reply((short)MsgId.Error, new ErrorMsg() { Text = "[ProcessSpawner] - Spawn failed. This needs better error handling" });
+            netMsg.Reply((short)MsgId.Error, new ErrorMsg() { Text = "[ProcessSpawner] - Spawn failed" });
         }
     }
 
@@ -108,7 +107,15 @@ public class ProcessSpawner : InsightModule
                 if (p.Start())
                 {
                     print("[ProcessSpawner]: spawning: " + p.StartInfo.FileName + "; args=" + p.StartInfo.Arguments);
-                    _processUsageCounter++; //Increment current port after sucessful spawn.
+                    
+                    //Increment current port after sucessful spawn.
+                    _processUsageCounter++; 
+
+                    //If registered to a master. Notify it of the current thread utilization
+                    if(client != null)
+                    {
+                        client.Send((short)MsgId.SpawnerStatus, new SpawnerStatus() { CurrentThreads = _processUsageCounter });
+                    }
                     return true;
                 }
                 else

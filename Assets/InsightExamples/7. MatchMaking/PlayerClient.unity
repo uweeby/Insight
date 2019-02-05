@@ -275,6 +275,7 @@ GameObject:
   - component: {fileID: 626635189}
   - component: {fileID: 626635188}
   - component: {fileID: 626635192}
+  - component: {fileID: 626635193}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -367,6 +368,17 @@ MonoBehaviour:
   restrictLogCount: 0
   maxLogCount: 1000
   autoGenerateHTML: 0
+--- !u!114 &626635193
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 626635187}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e3cf949581415141975ae7478a7503d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &650334109
 GameObject:
   m_ObjectHideFlags: 0
@@ -407,6 +419,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2aaaa45661eb0ef48870aa372813121b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  networkManager: {fileID: 1115168652}
+  transport: {fileID: 1115168651}
 --- !u!1 &768617412
 GameObject:
   m_ObjectHideFlags: 0
@@ -738,7 +752,7 @@ MonoBehaviour:
   maxConnections: 4
   playerPrefab: {fileID: 1400470782367046, guid: 882433c6d10ed3c4c9d6a0aa740cbfb4,
     type: 2}
-  autoCreatePlayer: 0
+  autoCreatePlayer: 1
   playerSpawnMethod: 0
   spawnPrefabs: []
 --- !u!4 &1115168653

@@ -260,7 +260,7 @@ public class DemoBuildScript
         ScenesRoot = "Assets/InsightExamples/7. MatchMaking/";
         BuildTarget TargetPlatform = BuildTarget.StandaloneWindows;
 
-        var gameServerScenes = new[]
+        var scenes = new[]
         {
             ScenesRoot+"PlayerClient.unity",
             //Add all scenes from game
@@ -268,7 +268,7 @@ public class DemoBuildScript
         };
         PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Enabled;
         PlayerSettings.productName = "PlayerClient";
-        BuildPipeline.BuildPlayer(gameServerScenes, path + "/MM_PlayerClient.exe", TargetPlatform, BuildOptions);
+        BuildPipeline.BuildPlayer(scenes, path + "/MM_PlayerClient.exe", TargetPlatform, BuildOptions);
     }
 
     //MatchMaking Builds
@@ -277,13 +277,13 @@ public class DemoBuildScript
         ScenesRoot = "Assets/InsightExamples/7. MatchMaking/";
         BuildTarget TargetPlatform = BuildTarget.StandaloneWindows;
 
-        var gameServerScenes = new[]
+        var scenes = new[]
         {
             ScenesRoot+"MatchMaking.unity"
         };
         PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Enabled;
         PlayerSettings.productName = "MatchMaking";
-        BuildPipeline.BuildPlayer(gameServerScenes, path + "/MatchMaking.exe", TargetPlatform, BuildOptions);
+        BuildPipeline.BuildPlayer(scenes, path + "/MatchMaking.exe", TargetPlatform, BuildOptions);
     }
 
     //MatchMaking Builds
@@ -292,7 +292,7 @@ public class DemoBuildScript
         ScenesRoot = "Assets/InsightExamples/7. MatchMaking/";
         BuildTarget TargetPlatform = BuildTarget.StandaloneWindows;
 
-        var gameServerScenes = new[]
+        var scenes = new[]
         {
             ScenesRoot+"MatchedGameServer.unity",
             //Add all scenes from game
@@ -300,7 +300,7 @@ public class DemoBuildScript
         };
         PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Enabled;
         PlayerSettings.productName = "MatchedGameServer";
-        BuildPipeline.BuildPlayer(gameServerScenes, path + "/MatchedGameServer.exe", TargetPlatform, BuildOptions);
+        BuildPipeline.BuildPlayer(scenes, path + "/MatchedGameServer.exe", TargetPlatform, BuildOptions);
     }
     #endregion
 

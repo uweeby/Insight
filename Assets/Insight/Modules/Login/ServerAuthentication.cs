@@ -32,7 +32,7 @@ public class ServerAuthentication : InsightModule
         //Add your own code to verify the user/pass are correct
 
         //For demo purposes just accept anything. THIS IS BAD PRACTICE REPLACE THIS CODE IN YOUR GAME.
-        registeredUsers.Add(new UserContainer() { username = message.AccountName, uniqueId = Guid.NewGuid().ToString() });
+        registeredUsers.Add(new UserContainer() { username = message.AccountName, uniqueId = Guid.NewGuid().ToString(), connectionId = netMsg.connectionId});
         netMsg.Reply((short)MsgId.Status, new StatusMsg() { Text = "Login Sucessful!" });
     }
 

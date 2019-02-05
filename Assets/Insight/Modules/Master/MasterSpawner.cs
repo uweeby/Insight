@@ -58,7 +58,7 @@ public partial class MasterSpawner : InsightModule
     {
         //Instead of handling the msg here we will forward it to an available spawner.
         //In the future this is where load balancing should start
-        server.SendToClient(registeredSpawners[0].connectionId, (short)MsgId.RequestSpawn, new RequestSpawn(), (success, reader) =>
+        server.SendToClient(registeredSpawners[0].connectionId, (short)MsgId.RequestSpawn, new RequestSpawn() { SpawnAlias = "managedgameserver" }, (success, reader) =>
         {
             if (success == CallbackStatus.Ok)
             {

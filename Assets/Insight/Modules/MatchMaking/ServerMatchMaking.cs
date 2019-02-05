@@ -9,7 +9,7 @@ public class ServerMatchMaking : InsightModule
     ServerGameManager gameManager;
     MasterSpawner masterSpawner;
 
-    public float MatchListPollRateInSeconds = 10f;
+    public float MatchListPollRateInSeconds = 1f;
 
     public List<SearchingForMatch> searchingForMatch = new List<SearchingForMatch>();
 
@@ -66,9 +66,9 @@ public class ServerMatchMaking : InsightModule
                 for(int i = 0; i < searchingForMatch.Count; i++)
                 {
                     server.SendToClient(searchingForMatch[i].user.connectionId, (short)MsgId.ChangeServers, new ChangeServers() {
-                        NetworkAddress = "",
+                        NetworkAddress = "127.0.0.1",
                         NetworkPort = 7777,
-                        SceneName = ""
+                        SceneName = "SuperAwesomeGame"
                     });
                     searchingForMatch.Remove(searchingForMatch[i]);
                 }

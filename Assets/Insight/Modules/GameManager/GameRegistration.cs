@@ -3,6 +3,7 @@ using Mirror;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameRegistration : InsightModule
 {
@@ -38,6 +39,7 @@ public class GameRegistration : InsightModule
         }
 
         //Apply necessary changes to NetworkManager
+        SceneManager.LoadScene("SuperAwesomeGame");
 
         //Start NetworkManager
         networkManager.StartServer();

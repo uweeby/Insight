@@ -118,6 +118,7 @@ public class ProcessSpawner : InsightModule
                 }
             }
         }
+        UnityEngine.Debug.LogError("Process Alias not found");
         return false;
     }
 

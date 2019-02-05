@@ -1275,9 +1275,9 @@ MonoBehaviour:
   RootMainPanel: {fileID: 1496749887}
   playerGuiState: 0
   authComp: {fileID: 972950913}
-  matchComp: {fileID: 0}
-  StartMatchMakingButton: {fileID: 0}
-  StopMatchMakingButton: {fileID: 0}
+  matchComp: {fileID: 650334111}
+  StartMatchMakingButton: {fileID: 1635566046}
+  StopMatchMakingButton: {fileID: 858910305}
 --- !u!114 &1365284629
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Insight;
 using UnityEngine;
@@ -40,11 +38,17 @@ public partial class MasterSpawner : InsightModule
         RequestSpawn message = netMsg.ReadMessage<RequestSpawn>();
 
         //Get all spawners that have atleast 1 slot free
-        List<SpawnerContainer> freeSlotSpawners = registeredSpawners.Where(x => (x.CurrentThreads < x.MaxThreads)).ToList();
+        List<SpawnerContainer> freeSlotSpawners = new List<SpawnerContainer>();
+        foreach (SpawnerContainer spawner in registeredSpawners)
+        {
+            if(spawner.CurrentThreads < spawner.MaxThreads)
+            {
+                freeSlotSpawners.Add(spawner);
+            }
+        }
 
         //sort by least busy spawner first
         freeSlotSpawners = freeSlotSpawners.OrderBy(x => x.CurrentThreads).ToList();
-
         server.SendToClient(freeSlotSpawners[0].connectionId, (short)MsgId.RequestSpawn, message, (callbackStatus, reader) =>
         {
             if (callbackStatus == CallbackStatus.Ok)

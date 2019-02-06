@@ -63,8 +63,9 @@ public class ServerMatchMaking : InsightModule
 
     private void CheckQueue()
     {
-        if(usersInQueue.Count >= MinimumPlayersForGame)
+        if(usersInQueue.Count <= MinimumPlayersForGame)
         {
+            if (server.logNetworkMessages) { UnityEngine.Debug.Log("[InsightServer] - Minimum players in queue not reached."); }
             return;
         }
 
@@ -75,6 +76,11 @@ public class ServerMatchMaking : InsightModule
         }
 
         //Create Match
+        CreateMatch();
+    }
+
+    private void CreateMatch()
+    {
         MatchContainer newMatch = new MatchContainer();
 
         //Used to track completion of requested spawn
@@ -95,17 +101,20 @@ public class ServerMatchMaking : InsightModule
         newMatch.MatchServer = gameManager.GetGameByUniqueID(uniqueID);
 
         //Add the players from the queue into this match:
-        foreach (UserContainer user in usersInQueue)
+        for (int i = 0; i < newMatch.MatchServer.MaxPlayer; i++)
         {
-            newMatch.MatchUsers.Add(user);
+            newMatch.MatchUsers.Add(usersInQueue[i]);
 
-            server.SendToClient(user.connectionId, (short)MsgId.ChangeServers, new ChangeServers() {
+            server.SendToClient(usersInQueue[i].connectionId, (short)MsgId.ChangeServers, new ChangeServers()
+            {
                 NetworkAddress = newMatch.MatchServer.NetworkAddress,
                 NetworkPort = newMatch.MatchServer.NetworkPort,
                 SceneName = newMatch.MatchServer.SceneName
             });
         }
         usersInQueue.Clear();
+
+        matchList.Add(newMatch);
     }
 }
 
@@ -113,4 +122,7 @@ public class MatchContainer
 {
     public GameContainer MatchServer;
     public List<UserContainer> MatchUsers;
+    public string SceneName;
+    public int MaxPlayer;
+    public int CurrentPlayers;
 }

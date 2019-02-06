@@ -86,11 +86,4 @@ public class ServerMatchMaking : InsightModule
             }
         }
     }
-
-    public struct UserSeekingMatch
-    {
-        //Placeholder
-        public string playerName;
-        public string gameType;
-    }
 }

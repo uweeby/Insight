@@ -73,10 +73,12 @@ namespace Insight
 
     public class RequestSpawn : MessageBase
     {
-        public string SpawnAlias;
-        public string GameName; //or SceneName
-        public string UniqueID;
-        public string NetworkAddress; //Only valid in the reply from the spawner.
+        public string ProcessAlias;
+        public string SceneName;
+
+        //Only valid in the reply from the spawner. So it should be moved to another message
+        public string UniqueID; //Guid
+        public string NetworkAddress; 
     }
 
     public class StartMatchMaking : MessageBase

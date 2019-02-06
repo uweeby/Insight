@@ -2,11 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Idle - GameServer just started. It has not been assigned a scene. It has no running NetworkManager
-// Active - GameServer was provided a scene and its NetworkManager is now running. Players can connect.
-// Done - Game session is now complete. Marked to either be destroyed or returned to a pool.
-public enum GameServerState { Idle, Active, Done}
-
 public class ServerGameManager : InsightModule
 {
     InsightServer server;
@@ -39,7 +34,11 @@ public class ServerGameManager : InsightModule
 
         if (server.logNetworkMessages) { Debug.Log("Received GameRegistration request"); }
 
-        registeredGameServers.Add(new GameContainer() { connectionId = netMsg.connectionId, uniqueId = message.UniqueID, NetworkAddress = message.NetworkAddress, NetworkPort = message.NetworkPort});
+        registeredGameServers.Add(new GameContainer() {
+            connectionId = netMsg.connectionId,
+            uniqueId = message.UniqueID,
+            NetworkAddress = message.NetworkAddress,
+            NetworkPort = message.NetworkPort});
     }
 
     private void HandleDisconnect(int connectionId)
@@ -54,17 +53,9 @@ public class ServerGameManager : InsightModule
         }
     }
 
-    public List<GameContainer> GetActiveGameServers()
+    public void SendGameServerStopMsg()
     {
-        List<GameContainer> activeGames = new List<GameContainer>();
-        foreach(GameContainer game in registeredGameServers)
-        {
-            if(game.state == GameServerState.Active)
-            {
-                activeGames.Add(game);
-            }
-        }
-        return activeGames;
+
     }
 }
 
@@ -74,6 +65,8 @@ public struct GameContainer
     public ushort NetworkPort;
     public string uniqueId;
     public int connectionId;
-    public GameServerState state;
-    public Dictionary<string, string> Properties;
+
+    public string SceneName;
+    public int MaxPlayer;
+    public int CurrentPlayers;
 }

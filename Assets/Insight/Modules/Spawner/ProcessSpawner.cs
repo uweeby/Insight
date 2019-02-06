@@ -112,7 +112,7 @@ public class ProcessSpawner : InsightModule
                 p.StartInfo.Arguments = ArgsString() +
                     " -NetworkAddress " + SpawnerNetworkAddress + 
                     " -NetworkPort " + (StartingNetworkPort + _portCounter) +
-                    " -NetworkPort " + spawnProperties.SceneName +
+                    " -SceneName " + spawnProperties.SceneName +
                     " -UniqueID " + spawnProperties.UniqueID;
 
                 if (p.Start())

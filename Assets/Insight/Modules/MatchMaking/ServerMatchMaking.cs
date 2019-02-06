@@ -1,4 +1,4 @@
-﻿using Insight;
+using Insight;
 using System.Collections.Generic;
 
 public class ServerMatchMaking : InsightModule
@@ -39,8 +39,6 @@ public class ServerMatchMaking : InsightModule
 
     private void HandleStartMatchSearchMsg(InsightNetworkMessage netMsg)
     {
-        StartMatchMaking message = netMsg.ReadMessage<StartMatchMaking>();
-
         if (server.logNetworkMessages) { UnityEngine.Debug.Log("[InsightServer] - Player joining MatchMaking."); }
 
         usersInQueue.Add(authModule.GetUserByConnection(netMsg.connectionId));
@@ -50,8 +48,6 @@ public class ServerMatchMaking : InsightModule
 
     private void HandleStopMatchSearchMsg(InsightNetworkMessage netMsg)
     {
-        StopMatchMaking message = netMsg.ReadMessage<StopMatchMaking>();
-
         foreach (UserContainer seraching in usersInQueue)
         {
             if (seraching.connectionId == netMsg.connectionId)

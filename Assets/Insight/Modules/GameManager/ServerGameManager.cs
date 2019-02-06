@@ -5,7 +5,7 @@ using UnityEngine;
 public class ServerGameManager : InsightModule
 {
     InsightServer server;
-    MasterSpawner masterSpawner;
+    //MasterSpawner masterSpawner;
 
     public List<GameContainer> registeredGameServers = new List<GameContainer>();
 
@@ -17,7 +17,7 @@ public class ServerGameManager : InsightModule
     public override void Initialize(InsightServer insight, ModuleManager manager)
     {
         server = insight;
-        masterSpawner = manager.GetModule<MasterSpawner>();
+        //masterSpawner = manager.GetModule<MasterSpawner>();
         RegisterHandlers();
 
         server.transport.OnServerDisconnected.AddListener(HandleDisconnect);

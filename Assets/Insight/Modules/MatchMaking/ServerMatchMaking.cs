@@ -63,7 +63,7 @@ public class ServerMatchMaking : InsightModule
 
     private void CheckQueue()
     {
-        if(usersInQueue.Count <= MinimumPlayersForGame)
+        if(usersInQueue.Count < MinimumPlayersForGame)
         {
             if (server.logNetworkMessages) { UnityEngine.Debug.Log("[InsightServer] - Minimum players in queue not reached."); }
             return;

@@ -19,11 +19,7 @@ public partial class MasterSpawner : InsightModule
     {
         server.RegisterHandler((short)MsgId.RegisterSpawner, HandleRegisterSpawnerMsg);
         server.RegisterHandler((short)MsgId.RequestSpawn, HandleSpawnRequestMsg);
-    }
-
-    public void SpawnRequest()
-    {
-
+        server.RegisterHandler((short)MsgId.SpawnerStatus, HandleSpawnerStatusMsg);
     }
 
     private void HandleRegisterSpawnerMsg(InsightNetworkMessage netMsg)

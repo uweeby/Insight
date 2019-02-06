@@ -84,9 +84,16 @@ public partial class MasterSpawner : InsightModule
         //Get all spawners that have atleast 1 slot free
         List<SpawnerContainer> freeSlotSpawners = registeredSpawners.Where(x => (x.CurrentThreads < x.MaxThreads)).ToList();
 
+        if(freeSlotSpawners.Count == 0)
+        {
+            Debug.LogError("[MasterSpawner] - No Spawners with slots free available to service SpawnRequest.");
+            return;
+        }
+
         //sort by least busy spawner first
         freeSlotSpawners = freeSlotSpawners.OrderBy(x => x.CurrentThreads).ToList();
 
+        //Send SpawnRequest to the least busy Spawner
         server.SendToClient(freeSlotSpawners[0].connectionId, (short)MsgId.RequestSpawn, message);
     }
 }

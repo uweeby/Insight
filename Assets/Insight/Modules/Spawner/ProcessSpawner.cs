@@ -12,8 +12,9 @@ public class ProcessSpawner : InsightModule
 
     [Header("Network")]
     [Tooltip("NetworkAddress that spawned processes will use")]
-    public string SpawnerNetworkAddress = "";
-    public int StartingNetworkPort;
+    public string SpawnerNetworkAddress = "localhost";
+    [Tooltip("Port that will be used by the NetworkManager in the spawned game")]
+    public int StartingNetworkPort = 7777; //Default port of the NetworkManager.
     private int _portCounter;
 
     [Header("Paths")]

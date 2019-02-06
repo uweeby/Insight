@@ -11,7 +11,7 @@ public class ServerMatchMaking : InsightModule
 
     public int MinimumPlayersForGame;
 
-    public List<SearchingForMatch> searchingForMatch = new List<SearchingForMatch>();
+    public List<UserContainer> usersInQueue = new List<UserContainer>();
 
     public void Awake()
     {
@@ -43,9 +43,7 @@ public class ServerMatchMaking : InsightModule
 
         if (server.logNetworkMessages) { UnityEngine.Debug.Log("[InsightServer] - Player joining MatchMaking."); }
 
-        UserContainer newUser = authModule.GetUserByConnection(netMsg.connectionId);
-
-        searchingForMatch.Add(new SearchingForMatch() { user = newUser });
+        usersInQueue.Add(authModule.GetUserByConnection(netMsg.connectionId));
 
         CheckQueue();
     }
@@ -54,11 +52,11 @@ public class ServerMatchMaking : InsightModule
     {
         StopMatchMaking message = netMsg.ReadMessage<StopMatchMaking>();
 
-        foreach (SearchingForMatch seraching in searchingForMatch)
+        foreach (UserContainer seraching in usersInQueue)
         {
-            if (seraching.user.connectionId == netMsg.connectionId)
+            if (seraching.connectionId == netMsg.connectionId)
             {
-                searchingForMatch.Remove(seraching);
+                usersInQueue.Remove(seraching);
                 return;
             }
         }
@@ -67,19 +65,19 @@ public class ServerMatchMaking : InsightModule
     private void CheckQueue()
     {
         //Check the list of players and current games at specified interval
-        if(searchingForMatch.Count > MinimumPlayersForGame)
+        if(usersInQueue.Count > MinimumPlayersForGame)
         {
             if(gameManager.registeredGameServers.Count > 0)
             {
                 //Tell the players to join the active game
-                for(int i = 0; i < searchingForMatch.Count; i++)
+                for(int i = 0; i < usersInQueue.Count; i++)
                 {
-                    server.SendToClient(searchingForMatch[i].user.connectionId, (short)MsgId.ChangeServers, new ChangeServers() {
+                    server.SendToClient(usersInQueue[i].connectionId, (short)MsgId.ChangeServers, new ChangeServers() {
                         NetworkAddress = gameManager.registeredGameServers[0].NetworkAddress,
                         NetworkPort = gameManager.registeredGameServers[0].NetworkPort,
                         SceneName = "SuperAwesomeGame"
                     });
-                    searchingForMatch.Remove(searchingForMatch[i]);
+                    usersInQueue.Remove(usersInQueue[i]);
                 }
             }
             else
@@ -95,10 +93,4 @@ public class ServerMatchMaking : InsightModule
         public string playerName;
         public string gameType;
     }
-}
-
-//Collection of users that are authenticted that are currently looking for a match
-public struct SearchingForMatch
-{
-    public UserContainer user;
 }

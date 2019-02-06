@@ -41,6 +41,6 @@ public class GUIMasterServer : MonoBehaviour
         spawnerCountText.text = masterSpawnerModule.registeredSpawners.Count.ToString();
         gameCountText.text = gameModule.registeredGameServers.Count.ToString();
         userCountText.text = authModule.registeredUsers.Count.ToString();
-        playersInQueueCountText.text = matchModule.searchingForMatch.Count.ToString();
+        playersInQueueCountText.text = matchModule.usersInQueue.Count.ToString();
     }
 }

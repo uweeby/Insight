@@ -1,4 +1,4 @@
-﻿using Insight;
+using Insight;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -61,11 +61,11 @@ public class ProcessSpawner : InsightModule
     {
         if (client)
         {
-            client.RegisterHandler((short)MsgId.RequestSpawn, this.HandleSpawnRequest);
+            client.RegisterHandler((short)MsgId.RequestSpawn, HandleSpawnRequest);
         }
         if (server)
         {
-            server.RegisterHandler((short)MsgId.RequestSpawn, this.HandleSpawnRequest);
+            server.RegisterHandler((short)MsgId.RequestSpawn, HandleSpawnRequest);
         }
     }
 

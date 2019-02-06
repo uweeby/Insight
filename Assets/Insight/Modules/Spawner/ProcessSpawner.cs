@@ -56,7 +56,9 @@ public class ProcessSpawner : InsightModule
             if (client.isConnected)
             {
                 UnityEngine.Debug.LogWarning("[ProcessSpawner] - Registering to Master");
-                client.Send((short)MsgId.RegisterSpawner, new RegisterSpawnerMsg() { UniqueID = "" }); //Can provide a password to authenticate to the master as a trusted spawner
+                client.Send((short)MsgId.RegisterSpawner, new RegisterSpawnerMsg() {
+                    UniqueID = "",
+                    MaxThreads = MaximumProcesses }); //Can provide a password to authenticate to the master as a trusted spawner
                 registrationComplete = true;
             }
         }

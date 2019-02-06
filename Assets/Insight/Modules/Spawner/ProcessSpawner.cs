@@ -1,5 +1,6 @@
-using Insight;
+﻿using Insight;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
@@ -9,7 +10,11 @@ public class ProcessSpawner : InsightModule
     InsightServer server;
     InsightClient client;
 
-    public string SpawnerNetworkAddress; //This is the address that any spawns will show they are listening on.
+    [Header("Network")]
+    [Tooltip("NetworkAddress that spawned processes will use")]
+    public string SpawnerNetworkAddress = "";
+    public int StartingNetworkPort;
+    private int _portCounter;
 
     [Header("Paths")]
     public string EditorPath;
@@ -73,11 +78,11 @@ public class ProcessSpawner : InsightModule
     {
         RequestSpawn message = netMsg.ReadMessage<RequestSpawn>();
 
-        if(SpawnThread(message.SpawnAlias))
+        if(SpawnThread(message))
         {
             netMsg.Reply((short)MsgId.RequestSpawn, new RequestSpawn() {
-                GameName = message.GameName,
-                NetworkAddress = SpawnerNetworkAddress, //Need to decide how to pull the IP the server is listening on since there could be many. For now ugly hardcoding
+                SceneName = message.SceneName,
+                NetworkAddress = SpawnerNetworkAddress,
                 UniqueID = Guid.NewGuid().ToString() });
         }
         else
@@ -86,7 +91,7 @@ public class ProcessSpawner : InsightModule
         }
     }
 
-    private bool SpawnThread(string ProcessAlias)
+    private bool SpawnThread(RequestSpawn spawnProperties)
     {
         if(_processUsageCounter >= MaximumProcesses)
         {
@@ -97,18 +102,23 @@ public class ProcessSpawner : InsightModule
         //Find process name from AlaisStruct
         foreach (ProcessStruct process in processArray)
         {
-            if(process.Alias.Equals(ProcessAlias))
+            if(process.Alias.Equals(spawnProperties.ProcessAlias))
             {
                 Process p = new Process();
                 p.StartInfo.FileName = ProcessPath + process.Path;
                 //Args to pass: Port, Scene, UniqueID...
-                p.StartInfo.Arguments = ArgsString();
+                p.StartInfo.Arguments = ArgsString() +
+                    " -NetworkAddress " + SpawnerNetworkAddress + 
+                    " -NetworkPort " + (StartingNetworkPort + _portCounter) +
+                    " -NetworkPort " + spawnProperties.SceneName +
+                    " -UniqueID " + spawnProperties.UniqueID;
 
                 if (p.Start())
                 {
                     print("[ProcessSpawner]: spawning: " + p.StartInfo.FileName + "; args=" + p.StartInfo.Arguments);
-                    
-                    //Increment current port after sucessful spawn.
+
+                    //Increment current port and process counter after sucessful spawn.
+                    _portCounter++;
                     _processUsageCounter++; 
 
                     //If registered to a master. Notify it of the current thread utilization
@@ -120,7 +130,7 @@ public class ProcessSpawner : InsightModule
                 }
                 else
                 {
-                    UnityEngine.Debug.LogError("[ProcessSpawner] - Process Createion Failed");
+                    UnityEngine.Debug.LogError("[ProcessSpawner] - Process Createion Failed.");
                     return false;
                 }
             }

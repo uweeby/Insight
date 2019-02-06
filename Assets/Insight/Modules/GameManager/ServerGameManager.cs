@@ -52,11 +52,6 @@ public class ServerGameManager : InsightModule
             }
         }
     }
-
-    public void SendGameServerStopMsg()
-    {
-
-    }
 }
 
 public struct GameContainer

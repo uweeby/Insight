@@ -1,59 +1,85 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
+using System.Linq;
 
-namespace Insight
+public class InsightArgs
 {
-    public static class InsightArgs
+    private readonly string[] _args;
+
+    public ArgNames Names;
+
+    public InsightArgs()
     {
-        private static Dictionary<string, List<string>> startupArgs = new Dictionary<string, List<string>>();
+        _args = Environment.GetCommandLineArgs();
 
-        private static bool _initalized;
+        Names = new ArgNames();
 
-        public static void Initialize()
-        {
-            string[] args = System.Environment.GetCommandLineArgs();
-            string lastParam = string.Empty;
+        StartMaster = IsProvided(Names.StartMaster);
+        MasterPort = ExtractValueInt(Names.MasterPort, 5000);
+        MasterIp = ExtractValue(Names.MasterIp);
+        MachineIp = ExtractValue(Names.MachineIp);
+        DestroyUi = IsProvided(Names.DestroyUi);
 
-            foreach (string arg in args)
-            {
-                //Cache the param
-                if(arg.StartsWith("-") || arg.StartsWith("--"))
-                {
-                    startupArgs.Add(arg, new List<string>());
-                    lastParam = arg;
-                    continue;
-                }
-                if(lastParam != string.Empty)
-                {
-                    startupArgs[lastParam].Add(arg);
-                }
-            }
+        AssignedPort = ExtractValueInt(Names.AssignedPort, -1);
+        UniqueID = ExtractValue(Names.UniqueID);
+        ExecutablePath = ExtractValue(Names.ExecutablePath);
+        DontSpawnInBatchmode = IsProvided(Names.DontSpawnInBatchmode);
+        MaxProcesses = ExtractValueInt(Names.MaxProcesses, 0);
+        SceneName = ExtractValue(Names.SceneName);
+    }
 
-            //For debug only
-            foreach (KeyValuePair<string, List<string>> kvp in startupArgs)
-            {
-                Debug.Log("key:" + kvp.Key);
+    #region Arguments
+    public bool StartMaster { get; private set; }
+    public int MasterPort { get; private set; }
+    public string MasterIp { get; private set; }
+    public string MachineIp { get; private set; }
+    public bool DestroyUi { get; private set; }
 
-                foreach (string arg in kvp.Value)
-                {
-                    Debug.Log("key:" + kvp.Key + " value:" + arg);
-                }
-            }
-        }
+    public int AssignedPort { get; private set; }
+    public string UniqueID { get; private set; }
+    public string ExecutablePath { get; private set; }
+    public bool DontSpawnInBatchmode { get; private set; }
+    public int MaxProcesses { get; private set; }
+    public string SceneName { get; private set; }
+    #endregion
 
-        public static bool TryGetArgument(string ArgName, out List<string> ArgValue)
-        {
-            if(!_initalized)
-            {
-                _initalized = true;
-                Initialize();
-            }
+    #region Helper methods
+    public string ExtractValue(string argName, string defaultValue = null)
+    {
+        if (!_args.Contains(argName))
+            return defaultValue;
 
-            ArgValue = new List<string>();
-            if (!startupArgs.ContainsKey(ArgName)) return false;
+        var index = _args.ToList().FindIndex(0, a => a.Equals(argName));
+        return _args[index + 1];
+    }
 
-            ArgValue.AddRange(startupArgs[ArgName]);
-            return true;
-        }
+    public int ExtractValueInt(string argName, int defaultValue = -1)
+    {
+        var number = ExtractValue(argName, defaultValue.ToString());
+        return Convert.ToInt32(number);
+    }
+
+    public bool IsProvided(string argName)
+    {
+        return _args.Contains(argName);
+    }
+
+    #endregion
+
+    public class ArgNames
+    {
+        public string StartMaster { get { return "-StartMaster"; } }
+        public string MasterPort { get { return "-MasterPort"; } }
+        public string MasterIp { get { return "-MasterIp"; } }
+        public string MachineIp { get { return "-MachineIp"; } }
+        public string DestroyUi { get { return "-DestroyUi"; } }
+
+        public string StartSpawner { get { return "-StartSpawner"; } }
+
+        public string AssignedPort { get { return "-AssignedPort"; } }
+        public string UniqueID { get { return "-UniqueID"; } }
+        public string ExecutablePath { get { return "-Exe"; } }
+        public string DontSpawnInBatchmode { get { return "-DontSpawnInBatchmode"; } }
+        public string MaxProcesses { get { return "-MaxProcesses"; } }
+        public string SceneName { get { return "-SceneName"; } }
     }
 }

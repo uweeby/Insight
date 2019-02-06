@@ -13,44 +13,59 @@ public class GameRegistration : InsightModule
 
     public List<GameContainer> registeredGames = new List<GameContainer>();
 
+    //Pulled from command line arguments
+    public string GameScene;
+    public string NetworkAddress;
+    public ushort NetworkPort;
+    public string UniqueID;
+
     public override void Initialize(InsightClient insight, ModuleManager manager)
     {
         client = insight;
 
-        telepathyTransport.OnClientConnected.AddListener(ClientOnConnectedEventHandler);
+        telepathyTransport.OnClientConnected.AddListener(SendGameRegistrationToGameManager);
 
         RegisterHandlers();
 
         networkManager = NetworkManager.singleton;
+
+        GatherCmdArgs();
     }
 
     void RegisterHandlers()
     {
     }
 
-    private void ClientOnConnectedEventHandler()
+    private void GatherCmdArgs()
     {
-        //Gather Params
-        List<string> portArgs;
-        if(InsightArgs.TryGetArgument("-AssignedPort", out portArgs))
+        InsightArgs args = new InsightArgs();
+        if (args.IsProvided("-AssignedPort"))
         {
-            Debug.Log("Setting Network Port based on Args provided: " + portArgs[0]);
-            telepathyTransport.port = Convert.ToUInt16(portArgs[0]);
+            Debug.Log("Setting Network Port based on Args provided: " + args.AssignedPort);
+            NetworkPort = (ushort)args.AssignedPort;
+            telepathyTransport.port = (ushort)args.AssignedPort;
         }
 
-        //Apply necessary changes to NetworkManager
-        SceneManager.LoadScene("SuperAwesomeGame");
+        if (args.IsProvided("-SceneName"))
+        {
+            Debug.Log("Loading Scene: " + args.SceneName);
+            GameScene = args.SceneName;
+            SceneManager.LoadScene(args.SceneName);
+        }
+
+        if (args.IsProvided("-UniqueID"))
+        {
+            Debug.Log("Loading Scene: " + args.UniqueID);
+            UniqueID = args.UniqueID;
+        }
 
         //Start NetworkManager
         networkManager.StartServer();
-
-        //Register back to the GameManager now that the game is running
-        SendGameRegistrationToGameManager();
     }
 
     private void SendGameRegistrationToGameManager()
     {
         Debug.Log("sending registration msg back to master");
-        client.Send((short)MsgId.RegisterGame, new RegisterGameMsg() { UniqueID = Guid.NewGuid().ToString()}); //The GUID can/should be provided by the spawner for security
+        client.Send((short)MsgId.RegisterGame, new RegisterGameMsg() { UniqueID = Guid.NewGuid().ToString()});
     }
 }

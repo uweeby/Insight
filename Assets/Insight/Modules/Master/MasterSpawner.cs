@@ -34,20 +34,33 @@ public partial class MasterSpawner : InsightModule
         if (server.logNetworkMessages) { Debug.Log("[MasterSpawner] - New Process Spawner Regsitered"); }
     }
 
+    //Instead of handling the msg here we will forward it to an available spawner.
     private void HandleSpawnRequestMsg(InsightNetworkMessage netMsg)
     {
         RequestSpawn message = netMsg.ReadMessage<RequestSpawn>();
 
-        //Instead of handling the msg here we will forward it to an available spawner.
-        //In the future this is where load balancing should start
-        server.SendToClient(registeredSpawners[0].connectionId, (short)MsgId.RequestSpawn, message, (success, reader) =>
+        //Get all spawners that have atleast 1 slot free
+        List<SpawnerContainer> freeSlotSpawners = registeredSpawners.Where(x => (x.CurrentThreads < x.MaxThreads)).ToList();
+
+        //sort by least busy spawner first
+        freeSlotSpawners = freeSlotSpawners.OrderBy(x => x.CurrentThreads).ToList();
+
+        server.SendToClient(freeSlotSpawners[0].connectionId, (short)MsgId.RequestSpawn, message, (callbackStatus, reader) =>
         {
-            if (success == CallbackStatus.Ok)
+            if (callbackStatus == CallbackStatus.Ok)
             {
                 RequestSpawn callbackResponse = reader.ReadMessage<RequestSpawn>();
                 if (server.logNetworkMessages) { Debug.Log("[Spawn Callback] Game Created on Child Spawner: " + callbackResponse.UniqueID); }
 
                 netMsg.Reply((short)MsgId.RequestSpawn, callbackResponse);
+            }
+            if(callbackStatus == CallbackStatus.Timeout)
+            {
+
+            }
+            if (callbackStatus == CallbackStatus.Error)
+            {
+
             }
         });
     }

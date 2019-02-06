@@ -29,17 +29,21 @@ public class ClientSpawnRequest : InsightModule
     {
         Debug.Log("[ClientSpawnRequest] - Player requesting a new game spawn");
         
-        client.Send((short)MsgId.RequestSpawn, new RequestSpawn() { SceneName = GameSceneName }, (status, reader) =>
+        client.Send((short)MsgId.RequestSpawn, new RequestSpawn() { SceneName = GameSceneName }, (callbackStatus, reader) =>
         {
-            if (status == CallbackStatus.Ok)
+            if (callbackStatus == CallbackStatus.Ok)
             {
-                // excellent, we are registered! 
-                Debug.Log("Callback: spawn request sucessful for game: '" + GameSceneName + "'", this);
+                Debug.Log("[ClientSpawnRequest] - Spawn request sucessful for game: '" + GameSceneName + "'", this);
+                return;
             }
-            else
+            if(callbackStatus == CallbackStatus.Timeout)
             {
-                // bummer, we should try to re-register or throw an error or something. 
-                Debug.LogError("Callback: failed to spawn game: '" + GameSceneName + "'.", this);
+                Debug.LogError("[ClientSpawnRequest] - Request Timed Out,");
+                return;
+            }
+            if(callbackStatus == CallbackStatus.Error)
+            {
+                Debug.LogError("[ClientSpawnRequest] - Failed to spawn game: '" + GameSceneName + "'.", this);
                 return;
             }
         });

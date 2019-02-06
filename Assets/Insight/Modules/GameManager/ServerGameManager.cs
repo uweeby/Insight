@@ -5,7 +5,7 @@ using UnityEngine;
 public class ServerGameManager : InsightModule
 {
     InsightServer server;
-    //MasterSpawner masterSpawner;
+    MasterSpawner masterSpawner;
 
     public List<GameContainer> registeredGameServers = new List<GameContainer>();
 
@@ -17,7 +17,7 @@ public class ServerGameManager : InsightModule
     public override void Initialize(InsightServer insight, ModuleManager manager)
     {
         server = insight;
-        //masterSpawner = manager.GetModule<MasterSpawner>();
+        masterSpawner = manager.GetModule<MasterSpawner>();
         RegisterHandlers();
 
         server.transport.OnServerDisconnected.AddListener(HandleDisconnect);
@@ -36,7 +36,7 @@ public class ServerGameManager : InsightModule
 
         registeredGameServers.Add(new GameContainer() {
             connectionId = netMsg.connectionId,
-            uniqueId = message.UniqueID,
+            UniqueId = message.UniqueID,
             NetworkAddress = message.NetworkAddress,
             NetworkPort = message.NetworkPort});
     }
@@ -52,13 +52,31 @@ public class ServerGameManager : InsightModule
             }
         }
     }
+
+    //Take in the options here
+    public void RequestGameSpawn(RequestSpawn requestSpawn)
+    {
+        masterSpawner.InternalSpawnRequest(requestSpawn);
+    }
+
+    public GameContainer GetGameByUniqueID(string uniqueID)
+    {
+        foreach(GameContainer game in registeredGameServers)
+        {
+            if (game.UniqueId.Equals(uniqueID))
+            {
+                return game;
+            }
+        }
+        return null;
+    }
 }
 
-public struct GameContainer
+public class GameContainer
 {
     public string NetworkAddress;
     public ushort NetworkPort;
-    public string uniqueId;
+    public string UniqueId;
     public int connectionId;
 
     public string SceneName;

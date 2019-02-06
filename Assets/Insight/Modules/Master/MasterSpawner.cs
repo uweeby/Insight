@@ -78,6 +78,17 @@ public partial class MasterSpawner : InsightModule
             }
         }
     }
+
+    public void InternalSpawnRequest(RequestSpawn message)
+    {
+        //Get all spawners that have atleast 1 slot free
+        List<SpawnerContainer> freeSlotSpawners = registeredSpawners.Where(x => (x.CurrentThreads < x.MaxThreads)).ToList();
+
+        //sort by least busy spawner first
+        freeSlotSpawners = freeSlotSpawners.OrderBy(x => x.CurrentThreads).ToList();
+
+        server.SendToClient(freeSlotSpawners[0].connectionId, (short)MsgId.RequestSpawn, message);
+    }
 }
 
 public struct SpawnerContainer

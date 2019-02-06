@@ -251,7 +251,13 @@ Prefab:
       propertyPath: m_Name
       value: MasterSpawner
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 114832192691361872, guid: e28689e5cfcf647ae9f75ac10bff424d,
+        type: 2}
+      propertyPath: MinimumPlayersForGame
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 114832192691361872, guid: e28689e5cfcf647ae9f75ac10bff424d, type: 2}
   m_SourcePrefab: {fileID: 100100000, guid: e28689e5cfcf647ae9f75ac10bff424d, type: 2}
   m_IsPrefabAsset: 0
 --- !u!1 &321749784
@@ -330,6 +336,24 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 321749784}
   m_CullTransparentMesh: 0
+--- !u!1 &414147576 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1864796554326948, guid: e28689e5cfcf647ae9f75ac10bff424d,
+    type: 2}
+  m_PrefabInternal: {fileID: 182689069}
+--- !u!114 &414147578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 414147576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 166bafde3b95c2a45af8cbd32e9d9896, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MinimumPlayersForGame: 1
+  MatchMakingPollRate: 10
 --- !u!114 &584415629 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 114111681706678862, guid: e28689e5cfcf647ae9f75ac10bff424d,
@@ -716,7 +740,12 @@ Prefab:
     - target: {fileID: 114473571808863406, guid: fb641c96eed9f4776bdfaadb82174b97,
         type: 2}
       propertyPath: SpawnerNetworkAddress
-      value: 127.0.0.1
+      value: localhost
+      objectReference: {fileID: 0}
+    - target: {fileID: 114473571808863406, guid: fb641c96eed9f4776bdfaadb82174b97,
+        type: 2}
+      propertyPath: StartingNetworkPort
+      value: 7777
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fb641c96eed9f4776bdfaadb82174b97, type: 2}

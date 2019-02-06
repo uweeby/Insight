@@ -1,4 +1,5 @@
-using Insight;
+﻿using Insight;
+using System;
 using System.Collections.Generic;
 
 public class ServerMatchMaking : InsightModule
@@ -9,9 +10,11 @@ public class ServerMatchMaking : InsightModule
     ServerGameManager gameManager;
     MasterSpawner masterSpawner;
 
-    public int MinimumPlayersForGame;
+    public int MinimumPlayersForGame = 1;
+    public float MatchMakingPollRate = 10f;
 
     public List<UserContainer> usersInQueue = new List<UserContainer>();
+    public List<MatchContainer> matchList = new List<MatchContainer>();
 
     public void Awake()
     {
@@ -29,6 +32,8 @@ public class ServerMatchMaking : InsightModule
         masterSpawner = this.manager.GetModule<MasterSpawner>();
 
         RegisterHandlers();
+
+        InvokeRepeating("CheckQueue", MatchMakingPollRate, MatchMakingPollRate);
     }
 
     void RegisterHandlers()
@@ -42,8 +47,6 @@ public class ServerMatchMaking : InsightModule
         if (server.logNetworkMessages) { UnityEngine.Debug.Log("[InsightServer] - Player joining MatchMaking."); }
 
         usersInQueue.Add(authModule.GetUserByConnection(netMsg.connectionId));
-
-        CheckQueue();
     }
 
     private void HandleStopMatchSearchMsg(InsightNetworkMessage netMsg)
@@ -60,26 +63,54 @@ public class ServerMatchMaking : InsightModule
 
     private void CheckQueue()
     {
-        //Check the list of players and current games at specified interval
-        if(usersInQueue.Count > MinimumPlayersForGame)
+        if(usersInQueue.Count >= MinimumPlayersForGame)
         {
-            if(gameManager.registeredGameServers.Count > 0)
-            {
-                //Tell the players to join the active game
-                for(int i = 0; i < usersInQueue.Count; i++)
-                {
-                    server.SendToClient(usersInQueue[i].connectionId, (short)MsgId.ChangeServers, new ChangeServers() {
-                        NetworkAddress = gameManager.registeredGameServers[0].NetworkAddress,
-                        NetworkPort = gameManager.registeredGameServers[0].NetworkPort,
-                        SceneName = "SuperAwesomeGame"
-                    });
-                    usersInQueue.Remove(usersInQueue[i]);
-                }
-            }
-            else
-            {
-                masterSpawner.RequestGameSpawn();
-            }
+            return;
         }
+
+        if (masterSpawner.registeredSpawners.Count == 0)
+        {
+            if (server.logNetworkMessages) { UnityEngine.Debug.Log("[InsightServer] - No spawners for players in queue."); }
+            return;
+        }
+
+        //Create Match
+        MatchContainer newMatch = new MatchContainer();
+
+        //Used to track completion of requested spawn
+        string uniqueID = Guid.NewGuid().ToString();
+
+        //Specify the match details
+        RequestSpawn requestSpawn = new RequestSpawn()
+        {
+            ProcessAlias = "managedgameserver",
+            SceneName = "SuperAwesomeGame",
+            UniqueID = uniqueID
+        };
+
+        //Request a new server
+        gameManager.RequestGameSpawn(requestSpawn);
+
+        //Wait for it to spin up
+        newMatch.MatchServer = gameManager.GetGameByUniqueID(uniqueID);
+
+        //Add the players from the queue into this match:
+        foreach (UserContainer user in usersInQueue)
+        {
+            newMatch.MatchUsers.Add(user);
+
+            server.SendToClient(user.connectionId, (short)MsgId.ChangeServers, new ChangeServers() {
+                NetworkAddress = newMatch.MatchServer.NetworkAddress,
+                NetworkPort = newMatch.MatchServer.NetworkPort,
+                SceneName = newMatch.MatchServer.SceneName
+            });
+        }
+        usersInQueue.Clear();
     }
+}
+
+public class MatchContainer
+{
+    public GameContainer MatchServer;
+    public List<UserContainer> MatchUsers;
 }

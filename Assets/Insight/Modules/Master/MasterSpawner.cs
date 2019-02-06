@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Insight;
 using UnityEngine;
@@ -62,24 +64,6 @@ public partial class MasterSpawner : InsightModule
                 instance.CurrentThreads = message.CurrentThreads;
             }
         }
-    }
-
-    //Take in the options here
-    public void RequestGameSpawn()
-    {
-        //sort by least busy spawner first
-        registeredSpawners = registeredSpawners.OrderBy(x => x.CurrentThreads).ToList();
-
-        server.SendToClient(registeredSpawners[0].connectionId, (short)MsgId.RequestSpawn, new RequestSpawn() { SpawnAlias = "managedgameserver" }, (success, reader) =>
-        {
-            if (success == CallbackStatus.Ok)
-            {
-                RequestSpawn callbackResponse = reader.ReadMessage<RequestSpawn>();
-                if (server.logNetworkMessages) { Debug.Log("[Spawn Callback] Game Created on Child Spawner: " + callbackResponse.UniqueID); }
-
-            //netMsg.Reply((short)MsgId.RequestSpawn, callbackResponse);
-        }
-        });
     }
 }
 

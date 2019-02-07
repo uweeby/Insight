@@ -29,7 +29,7 @@ public class ClientSpawnRequest : InsightModule
     {
         Debug.Log("[ClientSpawnRequest] - Player requesting a new game spawn");
         
-        client.Send((short)MsgId.RequestSpawn, new RequestSpawn() { SceneName = GameSceneName }, (callbackStatus, reader) =>
+        client.Send((short)MsgId.RequestSpawn, new RequestSpawn() { SceneName = GameSceneName, ProcessAlias = "managedgameserver" }, (callbackStatus, reader) =>
         {
             if (callbackStatus == CallbackStatus.Ok)
             {

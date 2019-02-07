@@ -16,6 +16,8 @@ public class ServerMatchMaking : InsightModule
     public List<UserContainer> usersInQueue = new List<UserContainer>();
     public List<MatchContainer> matchList = new List<MatchContainer>();
 
+    private bool _spawnInProgress;
+
     public void Awake()
     {
         AddDependency<MasterSpawner>();
@@ -95,26 +97,44 @@ public class ServerMatchMaking : InsightModule
         };
 
         //Request a new server
-        gameManager.RequestGameSpawn(requestSpawn);
-
-        //Wait for it to spin up
-        newMatch.MatchServer = gameManager.GetGameByUniqueID(uniqueID);
-
-        //Add the players from the queue into this match:
-        for (int i = 0; i < newMatch.MatchServer.MaxPlayer; i++)
+        if(!_spawnInProgress)
         {
-            newMatch.MatchUsers.Add(usersInQueue[i]);
-
-            server.SendToClient(usersInQueue[i].connectionId, (short)MsgId.ChangeServers, new ChangeServers()
-            {
-                NetworkAddress = newMatch.MatchServer.NetworkAddress,
-                NetworkPort = newMatch.MatchServer.NetworkPort,
-                SceneName = newMatch.MatchServer.SceneName
-            });
+            _spawnInProgress = true;
+            gameManager.RequestGameSpawn(requestSpawn);
         }
-        usersInQueue.Clear();
+        else
+        {
+            //Check to see if the server is up
+            newMatch.MatchServer = gameManager.GetGameByUniqueID(uniqueID);
 
-        matchList.Add(newMatch);
+            if (newMatch.MatchServer == null)
+            {
+                UnityEngine.Debug.Log("Server not active at this time");
+                return;
+            }
+
+            //Server is active
+            else
+            {
+                _spawnInProgress = false;
+
+                //Add the players from the queue into this match:
+                for (int i = 0; i < newMatch.MatchServer.MaxPlayer; i++)
+                {
+                    newMatch.MatchUsers.Add(usersInQueue[i]);
+
+                    server.SendToClient(usersInQueue[i].connectionId, (short)MsgId.ChangeServers, new ChangeServers()
+                    {
+                        NetworkAddress = newMatch.MatchServer.NetworkAddress,
+                        NetworkPort = newMatch.MatchServer.NetworkPort,
+                        SceneName = newMatch.MatchServer.SceneName
+                    });
+                }
+                //usersInQueue.Clear();
+
+                matchList.Add(newMatch);
+            }
+        }
     }
 }
 

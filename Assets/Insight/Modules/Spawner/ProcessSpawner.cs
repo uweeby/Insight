@@ -80,12 +80,12 @@ public class ProcessSpawner : InsightModule
     {
         RequestSpawn message = netMsg.ReadMessage<RequestSpawn>();
 
-        if(SpawnThread(message))
+        if (SpawnThread(message))
         {
-            netMsg.Reply((short)MsgId.RequestSpawn, new RequestSpawn() {
-                SceneName = message.SceneName,
-                NetworkAddress = SpawnerNetworkAddress,
-                UniqueID = Guid.NewGuid().ToString() });
+            //netMsg.Reply((short)MsgId.RequestSpawn, new RequestSpawn() {
+            //    SceneName = message.SceneName,
+            //    NetworkAddress = SpawnerNetworkAddress,
+            //    UniqueID = Guid.NewGuid().ToString() });
         }
         else
         {
@@ -101,6 +101,7 @@ public class ProcessSpawner : InsightModule
             return false;
         }
 
+        bool spawnComplete = false;
         //Find process name from AlaisStruct
         foreach (ProcessStruct process in processArray)
         {
@@ -116,6 +117,7 @@ public class ProcessSpawner : InsightModule
 
                 if (p.Start())
                 {
+                    spawnComplete = true;
                     print("[ProcessSpawner]: spawning: " + p.StartInfo.FileName + "; args=" + p.StartInfo.Arguments);
 
                     //Increment current port and process counter after sucessful spawn.
@@ -127,7 +129,7 @@ public class ProcessSpawner : InsightModule
                     {
                         client.Send((short)MsgId.SpawnerStatus, new SpawnerStatus() { CurrentThreads = _processUsageCounter });
                     }
-                    return true;
+                    break;
                 }
                 else
                 {
@@ -136,8 +138,13 @@ public class ProcessSpawner : InsightModule
                 }
             }
         }
-        UnityEngine.Debug.LogError("Process Alias not found");
-        return false;
+
+        if(!spawnComplete)
+        {
+            UnityEngine.Debug.LogError("Process Alias not found");
+            return false;
+        }
+        return true;
     }
 
     private static string ArgsString()

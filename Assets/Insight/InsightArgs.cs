@@ -15,8 +15,8 @@ public class InsightArgs
 
         NetworkAddress = ExtractValue(Names.NetworkAddress, "localhost");
         NetworkPort = ExtractValueInt(Names.NetworkPort, 7777);
-        UniqueID = ExtractValue(Names.UniqueID);
-        SceneName = ExtractValue(Names.SceneName);
+        UniqueID = ExtractValue(Names.UniqueID, "");
+        SceneName = ExtractValue(Names.SceneName, "");
     }
 
     #region Arguments

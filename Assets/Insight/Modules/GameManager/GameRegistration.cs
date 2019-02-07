@@ -15,7 +15,6 @@ public class GameRegistration : InsightModule
 
     //Pulled from command line arguments
     public string GameScene;
-    public string NetworkAddress;
     public ushort NetworkPort;
     public string UniqueID;
 
@@ -39,23 +38,23 @@ public class GameRegistration : InsightModule
     private void GatherCmdArgs()
     {
         InsightArgs args = new InsightArgs();
-        if (args.IsProvided("-AssignedPort"))
+        if (args.IsProvided("-NetworkPort"))
         {
-            Debug.Log("Setting Network Port based on Args provided: " + args.AssignedPort);
-            NetworkPort = (ushort)args.AssignedPort;
-            telepathyTransport.port = (ushort)args.AssignedPort;
+            Debug.Log("[Args] - NetworkPort: " + args.NetworkPort);
+            NetworkPort = (ushort)args.NetworkPort;
+            telepathyTransport.port = (ushort)args.NetworkPort;
         }
 
         if (args.IsProvided("-SceneName"))
         {
-            Debug.Log("Loading Scene: " + args.SceneName);
+            Debug.Log("[Args] - SceneName: " + args.SceneName);
             GameScene = args.SceneName;
             SceneManager.LoadScene(args.SceneName);
         }
 
         if (args.IsProvided("-UniqueID"))
         {
-            Debug.Log("Loading Scene: " + args.UniqueID);
+            Debug.Log("[Args] - UniqueID: " + args.UniqueID);
             UniqueID = args.UniqueID;
         }
 
@@ -65,7 +64,7 @@ public class GameRegistration : InsightModule
 
     private void SendGameRegistrationToGameManager()
     {
-        Debug.Log("sending registration msg back to master");
+        Debug.Log("[GameRegistration] - registering with master");
         client.Send((short)MsgId.RegisterGame, new RegisterGameMsg() { UniqueID = Guid.NewGuid().ToString()});
     }
 }

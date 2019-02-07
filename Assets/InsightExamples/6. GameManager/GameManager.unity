@@ -760,6 +760,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7238ce413b1e91499a0a3951f3e524d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GameSceneName: 
 --- !u!1 &1457652975
 GameObject:
   m_ObjectHideFlags: 0
@@ -1170,7 +1171,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8382b135107eaf5458d6471f839dc241, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SpawnerNetworkAddress: localhost
+  StartingNetworkPort: 7777
   EditorPath: C:\Dev\Insight\Builds\
   ProcessPath: .\
-  processArray: []
+  processArray:
+  - Alias: managedgameserver
+    Path: ManagedGameServer.exe
   MaximumProcesses: 5

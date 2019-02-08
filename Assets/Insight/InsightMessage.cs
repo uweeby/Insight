@@ -69,6 +69,7 @@ namespace Insight
         public string UniqueID; //Guid
         public string NetworkAddress;
         public ushort NetworkPort;
+        public string SceneName;
     }
 
     public class RequestSpawn : MessageBase

@@ -1,4 +1,4 @@
-﻿using Insight;
+using Insight;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -42,7 +42,7 @@ public class GUIMasterServer : MonoBehaviour
         spawnerCountText.text = masterSpawnerModule.registeredSpawners.Count.ToString();
         gameCountText.text = gameModule.registeredGameServers.Count.ToString();
         userCountText.text = authModule.registeredUsers.Count.ToString();
-        playersInQueueCountText.text = matchModule.usersInQueue.Count.ToString();
+        playersInQueueCountText.text = matchModule.playerQueue.Count.ToString();
         activeMatchesCountText.text = matchModule.matchList.Count.ToString();
     }
 }

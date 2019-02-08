@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Insight
@@ -14,7 +14,7 @@ namespace Insight
         public int MinimumPlayersForGame = 1;
         public float MatchMakingPollRate = 10f;
 
-        public List<UserContainer> usersInQueue = new List<UserContainer>();
+        public List<UserContainer> playerQueue = new List<UserContainer>();
         public List<MatchContainer> matchList = new List<MatchContainer>();
 
         private bool _spawnInProgress;

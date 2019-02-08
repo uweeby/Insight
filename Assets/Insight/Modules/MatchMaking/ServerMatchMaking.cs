@@ -57,14 +57,14 @@ namespace Insight
         {
             if (server.logNetworkMessages) { UnityEngine.Debug.Log("[MatchMaking] - Player joining MatchMaking."); }
 
-            playerQueue.Add(new MatchMakingUser(){ playlistName = "", user = authModule.GetUserByConnection(netMsg.connectionId)});
+            playerQueue.Add(authModule.GetUserByConnection(netMsg.connectionId));
         }
 
         private void HandleStopMatchSearchMsg(InsightNetworkMessage netMsg)
         {
-            foreach (MatchMakingUser seraching in playerQueue)
+            foreach (UserContainer seraching in playerQueue)
             {
-                if (seraching.user.connectionId == netMsg.connectionId)
+                if (seraching.connectionId == netMsg.connectionId)
                 {
                     playerQueue.Remove(seraching);
                     return;
@@ -128,7 +128,7 @@ namespace Insight
             //Add the players from the queue into this match:
             for(int i = playerQueue.Count -1; i >= 0; i--)
             {
-                matchUsers.Add(playerQueue[i].user);
+                matchUsers.Add(playerQueue[i]);
                 playerQueue.RemoveAt(i);
             }
 
@@ -227,7 +227,7 @@ namespace Insight
             //Put the users back in the queue
             foreach (UserContainer user in matchUsers)
             {
-                matchModule.playerQueue.Add(new MatchMakingUser() { playlistName = playlistName, user = user});
+                matchModule.playerQueue.Add(user);
             }
             matchUsers.Clear();
 

@@ -353,7 +353,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MinimumPlayersForGame: 1
-  MatchMakingPollRate: 10
+  MatchMakingPollRate: 5
 --- !u!114 &584415629 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 114111681706678862, guid: e28689e5cfcf647ae9f75ac10bff424d,

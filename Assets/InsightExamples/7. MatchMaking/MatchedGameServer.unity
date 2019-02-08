@@ -614,6 +614,27 @@ Prefab:
       propertyPath: networkManager
       value: 
       objectReference: {fileID: 1056297556}
+    - target: {fileID: 114178012850769670, guid: 6d4ef6489e7e342acad73552aaaea6d9,
+        type: 2}
+      propertyPath: telepathyTransport
+      value: 
+      objectReference: {fileID: 1056297558}
+    - target: {fileID: 114178012850769670, guid: 6d4ef6489e7e342acad73552aaaea6d9,
+        type: 2}
+      propertyPath: networkManagerTelepathyTransport
+      value: 
+      objectReference: {fileID: 1056297558}
+    - target: {fileID: 114178012850769670, guid: 6d4ef6489e7e342acad73552aaaea6d9,
+        type: 2}
+      propertyPath: insightTelepathyTransport
+      value: 
+      objectReference: {fileID: 2100275550}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6d4ef6489e7e342acad73552aaaea6d9, type: 2}
   m_IsPrefabAsset: 0
+--- !u!114 &2100275550 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114262604607040350, guid: 6d4ef6489e7e342acad73552aaaea6d9,
+    type: 2}
+  m_PrefabInternal: {fileID: 2100275549}
+  m_Script: {fileID: 11500000, guid: c7424c1070fad4ba2a7a96b02fbeb4bb, type: 3}

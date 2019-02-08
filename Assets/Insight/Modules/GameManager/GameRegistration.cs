@@ -9,7 +9,9 @@ public class GameRegistration : InsightModule
 {
     InsightClient client;
     public NetworkManager networkManager;
-    public TelepathyTransport telepathyTransport;
+    public TelepathyTransport networkManagerTelepathyTransport;
+    public TelepathyTransport insightTelepathyTransport;
+
 
     public List<GameContainer> registeredGames = new List<GameContainer>();
 
@@ -22,7 +24,7 @@ public class GameRegistration : InsightModule
     {
         client = insight;
 
-        telepathyTransport.OnClientConnected.AddListener(SendGameRegistrationToGameManager);
+        insightTelepathyTransport.OnClientConnected.AddListener(SendGameRegistrationToGameManager);
 
         RegisterHandlers();
 
@@ -42,7 +44,7 @@ public class GameRegistration : InsightModule
         {
             Debug.Log("[Args] - NetworkPort: " + args.NetworkPort);
             NetworkPort = (ushort)args.NetworkPort;
-            telepathyTransport.port = (ushort)args.NetworkPort;
+            networkManagerTelepathyTransport.port = (ushort)args.NetworkPort;
         }
 
         if (args.IsProvided("-SceneName"))
@@ -65,6 +67,6 @@ public class GameRegistration : InsightModule
     private void SendGameRegistrationToGameManager()
     {
         Debug.Log("[GameRegistration] - registering with master");
-        client.Send((short)MsgId.RegisterGame, new RegisterGameMsg() { UniqueID = Guid.NewGuid().ToString()});
+        client.Send((short)MsgId.RegisterGame, new RegisterGameMsg() { UniqueID = UniqueID });
     }
 }

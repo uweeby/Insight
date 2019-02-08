@@ -18,6 +18,7 @@ public class GUIMasterServer : MonoBehaviour
     public Text gameCountText;
     public Text userCountText;
     public Text playersInQueueCountText;
+    public Text activeMatchesCountText;
 
     private bool Init;
 
@@ -42,5 +43,6 @@ public class GUIMasterServer : MonoBehaviour
         gameCountText.text = gameModule.registeredGameServers.Count.ToString();
         userCountText.text = authModule.registeredUsers.Count.ToString();
         playersInQueueCountText.text = matchModule.usersInQueue.Count.ToString();
+        activeMatchesCountText.text = matchModule.matchList.Count.ToString();
     }
 }

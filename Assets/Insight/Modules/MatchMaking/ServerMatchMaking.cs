@@ -1,148 +1,202 @@
-﻿using Insight;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-public class ServerMatchMaking : InsightModule
+namespace Insight
 {
-    InsightServer server;
-    ModuleManager manager;
-    ServerAuthentication authModule;
-    ServerGameManager gameManager;
-    MasterSpawner masterSpawner;
-
-    public int MinimumPlayersForGame = 1;
-    public float MatchMakingPollRate = 10f;
-
-    public List<UserContainer> usersInQueue = new List<UserContainer>();
-    public List<MatchContainer> matchList = new List<MatchContainer>();
-
-    private bool _spawnInProgress;
-
-    public void Awake()
+    public class ServerMatchMaking : InsightModule
     {
-        AddDependency<MasterSpawner>();
-        AddDependency<ServerAuthentication>(); //Used to track logged in players
-        AddDependency<ServerGameManager>(); //Used to track available games
-    }
+        public InsightServer server;
+        public ModuleManager manager;
+        public ServerAuthentication authModule;
+        public ServerGameManager gameManager;
+        public MasterSpawner masterSpawner;
 
-    public override void Initialize(InsightServer insight, ModuleManager manager)
-    {
-        server = insight;
-        this.manager = manager;
-        authModule = this.manager.GetModule<ServerAuthentication>();
-        gameManager = this.manager.GetModule<ServerGameManager>();
-        masterSpawner = this.manager.GetModule<MasterSpawner>();
+        public int MinimumPlayersForGame = 1;
+        public float MatchMakingPollRate = 10f;
 
-        RegisterHandlers();
+        public List<UserContainer> usersInQueue = new List<UserContainer>();
+        public List<MatchContainer> matchList = new List<MatchContainer>();
 
-        InvokeRepeating("CheckQueue", MatchMakingPollRate, MatchMakingPollRate);
-    }
+        private bool _spawnInProgress;
 
-    void RegisterHandlers()
-    {
-        server.RegisterHandler((short)MsgId.StartMatchMaking, HandleStartMatchSearchMsg);
-        server.RegisterHandler((short)MsgId.StopMatchMaking, HandleStopMatchSearchMsg);
-    }
-
-    private void HandleStartMatchSearchMsg(InsightNetworkMessage netMsg)
-    {
-        if (server.logNetworkMessages) { UnityEngine.Debug.Log("[InsightServer] - Player joining MatchMaking."); }
-
-        usersInQueue.Add(authModule.GetUserByConnection(netMsg.connectionId));
-    }
-
-    private void HandleStopMatchSearchMsg(InsightNetworkMessage netMsg)
-    {
-        foreach (UserContainer seraching in usersInQueue)
+        public void Awake()
         {
-            if (seraching.connectionId == netMsg.connectionId)
+            AddDependency<MasterSpawner>();
+            AddDependency<ServerAuthentication>(); //Used to track logged in players
+            AddDependency<ServerGameManager>(); //Used to track available games
+        }
+
+        public override void Initialize(InsightServer insight, ModuleManager manager)
+        {
+            server = insight;
+            this.manager = manager;
+            authModule = this.manager.GetModule<ServerAuthentication>();
+            gameManager = this.manager.GetModule<ServerGameManager>();
+            masterSpawner = this.manager.GetModule<MasterSpawner>();
+
+            RegisterHandlers();
+
+            InvokeRepeating("UpdateStuff", MatchMakingPollRate, MatchMakingPollRate);
+        }
+
+        void RegisterHandlers()
+        {
+            server.RegisterHandler((short)MsgId.StartMatchMaking, HandleStartMatchSearchMsg);
+            server.RegisterHandler((short)MsgId.StopMatchMaking, HandleStopMatchSearchMsg);
+        }
+
+        void UpdateStuff()
+        {
+            UpdateQueue();
+            UpdateMatches();
+        }
+
+        private void HandleStartMatchSearchMsg(InsightNetworkMessage netMsg)
+        {
+            if (server.logNetworkMessages) { UnityEngine.Debug.Log("[InsightServer] - Player joining MatchMaking."); }
+
+            usersInQueue.Add(authModule.GetUserByConnection(netMsg.connectionId));
+        }
+
+        private void HandleStopMatchSearchMsg(InsightNetworkMessage netMsg)
+        {
+            foreach (UserContainer seraching in usersInQueue)
             {
-                usersInQueue.Remove(seraching);
-                return;
-            }
-        }
-    }
-
-    private void CheckQueue()
-    {
-        if(usersInQueue.Count < MinimumPlayersForGame)
-        {
-            if (server.logNetworkMessages) { UnityEngine.Debug.Log("[InsightServer] - Minimum players in queue not reached."); }
-            return;
-        }
-
-        if (masterSpawner.registeredSpawners.Count == 0)
-        {
-            if (server.logNetworkMessages) { UnityEngine.Debug.Log("[InsightServer] - No spawners for players in queue."); }
-            return;
-        }
-
-        //Create Match
-        CreateMatch();
-    }
-
-    private void CreateMatch()
-    {
-        MatchContainer newMatch = new MatchContainer();
-
-        //Used to track completion of requested spawn
-        string uniqueID = Guid.NewGuid().ToString();
-
-        //Specify the match details
-        RequestSpawn requestSpawn = new RequestSpawn()
-        {
-            ProcessAlias = "managedgameserver",
-            SceneName = "SuperAwesomeGame",
-            UniqueID = uniqueID
-        };
-
-        //Request a new server
-        if(!_spawnInProgress)
-        {
-            _spawnInProgress = true;
-            gameManager.RequestGameSpawn(requestSpawn);
-        }
-        else
-        {
-            //Check to see if the server is up
-            newMatch.MatchServer = gameManager.GetGameByUniqueID(uniqueID);
-
-            if (newMatch.MatchServer == null)
-            {
-                UnityEngine.Debug.Log("Server not active at this time");
-                return;
-            }
-
-            //Server is active
-            else
-            {
-                _spawnInProgress = false;
-
-                //Add the players from the queue into this match:
-                for (int i = 0; i < newMatch.MatchServer.MaxPlayer; i++)
+                if (seraching.connectionId == netMsg.connectionId)
                 {
-                    newMatch.MatchUsers.Add(usersInQueue[i]);
-
-                    server.SendToClient(usersInQueue[i].connectionId, (short)MsgId.ChangeServers, new ChangeServers()
-                    {
-                        NetworkAddress = newMatch.MatchServer.NetworkAddress,
-                        NetworkPort = newMatch.MatchServer.NetworkPort,
-                        SceneName = newMatch.MatchServer.SceneName
-                    });
+                    usersInQueue.Remove(seraching);
+                    return;
                 }
-                //usersInQueue.Clear();
+            }
+        }
 
-                matchList.Add(newMatch);
+        private void UpdateQueue()
+        {
+            if (usersInQueue.Count < MinimumPlayersForGame)
+            {
+                if (server.logNetworkMessages) { UnityEngine.Debug.Log("[InsightServer] - Minimum players in queue not reached."); }
+                return;
+            }
+
+            if (masterSpawner.registeredSpawners.Count == 0)
+            {
+                if (server.logNetworkMessages) { UnityEngine.Debug.Log("[InsightServer] - No spawners for players in queue."); }
+                return;
+            }
+
+            //Create Match
+            CreateMatch();
+        }
+
+        private void CreateMatch()
+        {
+            //Used to track completion of requested spawn
+            string uniqueID = Guid.NewGuid().ToString();
+
+            //Specify the match details
+            RequestSpawn requestSpawn = new RequestSpawn()
+            {
+                ProcessAlias = "managedgameserver",
+                SceneName = "SuperAwesomeGame",
+                UniqueID = uniqueID
+            };
+
+            List<UserContainer> matchUsers = new List<UserContainer>();
+
+            //This should check to make sure that the max players is not higher than the number in queue
+            //Add the players from the queue into this match:
+            for(int i = usersInQueue.Count -1; i >= 0; i--)
+            {
+                matchUsers.Add(usersInQueue[i]);
+                usersInQueue.RemoveAt(i);
+            }
+
+            matchList.Add(new MatchContainer(this, requestSpawn, matchUsers));
+        }
+
+        private void UpdateMatches()
+        {
+            foreach (MatchContainer match in matchList)
+            {
+                if(match.MatchComplete)
+                {
+                    matchList.Remove(match);
+                }
+                match.Update();
             }
         }
     }
-}
 
-public class MatchContainer
-{
-    public GameContainer MatchServer;
-    public List<UserContainer> MatchUsers;
-    public string SceneName;
-    public int MaxPlayer;
-    public int CurrentPlayers;
+    public class MatchContainer
+    {
+        public ServerMatchMaking matchModule;
+        public GameContainer MatchServer;
+        public List<UserContainer> matchUsers;
+        public string SceneName;
+        public int MaxPlayer;
+        public int CurrentPlayers;
+        public RequestSpawn matchProperties;
+
+        public DateTime matchStartTime;
+        public float MatchTimeoutInSeconds = 30f; //How long to wait for the server to start before cancelling the match and returning the players to the queue
+
+        public bool InitMatch;
+        public bool MatchComplete;
+
+        public MatchContainer(ServerMatchMaking MatchModule, RequestSpawn MatchProperties, List<UserContainer> MatchUsers)
+        {
+            matchModule = MatchModule;
+            matchProperties = MatchProperties;
+            matchModule.gameManager.RequestGameSpawn(matchProperties);
+            matchUsers = MatchUsers;
+            matchStartTime = DateTime.UtcNow;
+        }
+
+        public void Update()
+        {
+            if(!InitMatch)
+            {
+                //Check to see if the server is up
+                if (matchModule.gameManager.GetGameByUniqueID(matchProperties.UniqueID) == null)
+                {
+                    //Server spawn timeout check
+                    if(matchStartTime.AddSeconds(MatchTimeoutInSeconds) < DateTime.UtcNow)
+                    {
+                        CancelMatch();
+                    }
+
+                    UnityEngine.Debug.Log("Server not active at this time");
+                    return;
+                }
+                //Server is registered and active
+                else
+                {
+                    InitMatch = true;
+                    MatchServer = matchModule.gameManager.GetGameByUniqueID(matchProperties.UniqueID);
+
+                    //Move players to server
+                    foreach (UserContainer user in matchUsers)
+                    {
+                        matchModule.server.SendToClient(user.connectionId, (short)MsgId.ChangeServers, new ChangeServers()
+                        {
+                            NetworkAddress = MatchServer.NetworkAddress,
+                            NetworkPort = MatchServer.NetworkPort,
+                            SceneName = MatchServer.SceneName
+                        });
+                    }
+                }
+            }
+        }
+
+        private void CancelMatch()
+        {
+            UnityEngine.Debug.LogError("Server failed to start within timoue period. Cancelling match.");
+
+            //TODO: Destroy the match process somewhere: MatchServer
+
+            matchModule.usersInQueue.AddRange(matchUsers);
+            matchUsers.Clear();
+            MatchComplete = true; //Flag to destroy match on next update
+        }
+    }
 }

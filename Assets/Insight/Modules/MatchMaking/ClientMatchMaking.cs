@@ -42,4 +42,9 @@ public class ClientMatchMaking : InsightModule
     {
         client.Send((short)MsgId.StopMatchMaking, new StopMatchMaking());
     }
+
+    public void SendJoinMatch(string UniqueID)
+    {
+        client.Send((short)MsgId.JoinMatch, new JoinMatch());
+    }
 }

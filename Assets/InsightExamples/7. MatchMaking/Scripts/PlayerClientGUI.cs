@@ -14,6 +14,8 @@ public class PlayerClientGUI : MonoBehaviour
 
     public GameObject StartMatchMakingButton;
     public GameObject StopMatchMakingButton;
+    public GameObject GetMatchListButton;
+    public GameObject MatchListArea;
 
     private void Start()
     {
@@ -80,5 +82,19 @@ public class PlayerClientGUI : MonoBehaviour
         StopMatchMakingButton.SetActive(false);
 
         matchComp.SendStopMatchMaking();
+    }
+
+    public void HandleGetMatchListButton()
+    {
+        GetMatchListButton.SetActive(false);
+        StartMatchMakingButton.SetActive(false);
+        StopMatchMakingButton.SetActive(false);
+
+        MatchListArea.SetActive(true);
+    }
+
+    public void HandleJoinMatchButton(string UniqueID)
+    {
+        matchComp.SendJoinMatch(UniqueID);
     }
 }

@@ -35,7 +35,7 @@ public class ClientMatchMaking : InsightModule
 
     public void SendStartMatchMaking()
     {
-        client.Send((short)MsgId.StartMatchMaking, new StartMatchMaking());
+        client.Send((short)MsgId.StartMatchMaking, new StartMatchMaking() { PlayListName = "SuperAwesomeGame"});
     }
 
     public void SendStopMatchMaking()

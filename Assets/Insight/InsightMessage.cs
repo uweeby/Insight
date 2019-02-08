@@ -18,6 +18,8 @@ namespace Insight
         RequestGame,
         StartMatchMaking,
         StopMatchMaking,
+        MatchList,
+        JoinMatch,
 
         ChangeServers,
         SpawnerStatus,
@@ -84,12 +86,22 @@ namespace Insight
 
     public class StartMatchMaking : MessageBase
     {
-
+        public string PlayListName;
     }
 
     public class StopMatchMaking : MessageBase
     {
 
+    }
+
+    public class MatchList : MessageBase
+    {
+
+    }
+
+    public class JoinMatch : MessageBase
+    {
+        public string UniqueID;
     }
 
     //Used to tell a player to connect to a new game server

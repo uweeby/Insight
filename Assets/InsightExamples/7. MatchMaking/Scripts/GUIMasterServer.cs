@@ -1,4 +1,4 @@
-using Insight;
+﻿using Insight;
 using UnityEngine;
 using UnityEngine.UI;
 

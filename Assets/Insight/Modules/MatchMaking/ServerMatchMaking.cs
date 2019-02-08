@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Insight
@@ -43,6 +43,8 @@ namespace Insight
         {
             server.RegisterHandler((short)MsgId.StartMatchMaking, HandleStartMatchSearchMsg);
             server.RegisterHandler((short)MsgId.StopMatchMaking, HandleStopMatchSearchMsg);
+            server.RegisterHandler((short)MsgId.MatchList, HandleMatchListMsg);
+            server.RegisterHandler((short)MsgId.JoinMatch, HandleJoinMatchMsg);
         }
 
         void UpdateStuff()
@@ -53,34 +55,53 @@ namespace Insight
 
         private void HandleStartMatchSearchMsg(InsightNetworkMessage netMsg)
         {
-            if (server.logNetworkMessages) { UnityEngine.Debug.Log("[InsightServer] - Player joining MatchMaking."); }
+            if (server.logNetworkMessages) { UnityEngine.Debug.Log("[MatchMaking] - Player joining MatchMaking."); }
 
-            usersInQueue.Add(authModule.GetUserByConnection(netMsg.connectionId));
+            playerQueue.Add(new MatchMakingUser(){ playlistName = "", user = authModule.GetUserByConnection(netMsg.connectionId)});
         }
 
         private void HandleStopMatchSearchMsg(InsightNetworkMessage netMsg)
         {
-            foreach (UserContainer seraching in usersInQueue)
+            foreach (MatchMakingUser seraching in playerQueue)
             {
-                if (seraching.connectionId == netMsg.connectionId)
+                if (seraching.user.connectionId == netMsg.connectionId)
                 {
-                    usersInQueue.Remove(seraching);
+                    playerQueue.Remove(seraching);
                     return;
                 }
             }
         }
 
+        private void HandleMatchListMsg(InsightNetworkMessage netMsg)
+        {
+            if (server.logNetworkMessages) { UnityEngine.Debug.Log("[MatchMaking] - Player Requesting Match list"); }
+
+            netMsg.Reply((short)MsgId.MatchList, new MatchList());
+        }
+
+        private void HandleJoinMatchMsg(InsightNetworkMessage netMsg)
+        {
+            if (server.logNetworkMessages) { UnityEngine.Debug.Log("[MatchMaking] - Player joining Match."); }
+
+            netMsg.Reply((short)MsgId.ChangeServers, new ChangeServers()
+            { 
+                NetworkAddress = "",
+                NetworkPort = 0,
+                SceneName = ""        
+            });
+        }
+
         private void UpdateQueue()
         {
-            if (usersInQueue.Count < MinimumPlayersForGame)
+            if (playerQueue.Count < MinimumPlayersForGame)
             {
-                if (server.logNetworkMessages) { UnityEngine.Debug.Log("[InsightServer] - Minimum players in queue not reached."); }
+                if (server.logNetworkMessages) { UnityEngine.Debug.Log("[MatchMaking] - Minimum players in queue not reached."); }
                 return;
             }
 
             if (masterSpawner.registeredSpawners.Count == 0)
             {
-                if (server.logNetworkMessages) { UnityEngine.Debug.Log("[InsightServer] - No spawners for players in queue."); }
+                if (server.logNetworkMessages) { UnityEngine.Debug.Log("[MatchMaking] - No spawners for players in queue."); }
                 return;
             }
 
@@ -105,10 +126,10 @@ namespace Insight
 
             //This should check to make sure that the max players is not higher than the number in queue
             //Add the players from the queue into this match:
-            for(int i = usersInQueue.Count -1; i >= 0; i--)
+            for(int i = playerQueue.Count -1; i >= 0; i--)
             {
-                matchUsers.Add(usersInQueue[i]);
-                usersInQueue.RemoveAt(i);
+                matchUsers.Add(playerQueue[i].user);
+                playerQueue.RemoveAt(i);
             }
 
             matchList.Add(new MatchContainer(this, requestSpawn, matchUsers));
@@ -127,6 +148,12 @@ namespace Insight
         }
     }
 
+    public struct MatchMakingUser
+    {
+        public string playlistName;
+        public UserContainer user;
+    }
+
     public class MatchContainer
     {
         public ServerMatchMaking matchModule;
@@ -135,6 +162,9 @@ namespace Insight
         public string SceneName;
         public int MaxPlayer;
         public int CurrentPlayers;
+
+        //These two are probably redundant
+        public string playlistName;
         public RequestSpawn matchProperties;
 
         public DateTime matchStartTime;
@@ -194,9 +224,15 @@ namespace Insight
 
             //TODO: Destroy the match process somewhere: MatchServer
 
-            matchModule.usersInQueue.AddRange(matchUsers);
+            //Put the users back in the queue
+            foreach (UserContainer user in matchUsers)
+            {
+                matchModule.playerQueue.Add(new MatchMakingUser() { playlistName = playlistName, user = user});
+            }
             matchUsers.Clear();
-            MatchComplete = true; //Flag to destroy match on next update
+
+            //Flag to destroy match on next update
+            MatchComplete = true;
         }
     }
 }

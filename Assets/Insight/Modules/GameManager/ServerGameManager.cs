@@ -37,6 +37,7 @@ public class ServerGameManager : InsightModule
         registeredGameServers.Add(new GameContainer() {
             connectionId = netMsg.connectionId,
             UniqueId = message.UniqueID,
+            SceneName = message.SceneName,
             NetworkAddress = message.NetworkAddress,
             NetworkPort = message.NetworkPort});
     }

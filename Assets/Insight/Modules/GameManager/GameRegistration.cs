@@ -17,6 +17,7 @@ public class GameRegistration : InsightModule
 
     //Pulled from command line arguments
     public string GameScene;
+    public string NetworkAddress;
     public ushort NetworkPort;
     public string UniqueID;
 
@@ -40,6 +41,12 @@ public class GameRegistration : InsightModule
     private void GatherCmdArgs()
     {
         InsightArgs args = new InsightArgs();
+        if (args.IsProvided("-NetworkAddress"))
+        {
+            Debug.Log("[Args] - NetworkAddress: " + args.NetworkAddress);
+            NetworkAddress = args.NetworkAddress;
+        }
+
         if (args.IsProvided("-NetworkPort"))
         {
             Debug.Log("[Args] - NetworkPort: " + args.NetworkPort);
@@ -67,6 +74,6 @@ public class GameRegistration : InsightModule
     private void SendGameRegistrationToGameManager()
     {
         Debug.Log("[GameRegistration] - registering with master");
-        client.Send((short)MsgId.RegisterGame, new RegisterGameMsg() { UniqueID = UniqueID });
+        client.Send((short)MsgId.RegisterGame, new RegisterGameMsg() { UniqueID = UniqueID, SceneName = GameScene , NetworkPort = NetworkPort, NetworkAddress = NetworkAddress});
     }
 }

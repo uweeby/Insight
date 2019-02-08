@@ -111,6 +111,7 @@ public class ProcessSpawner : InsightModule
                 p.StartInfo.FileName = ProcessPath + process.Path;
                 //Args to pass: Port, Scene, UniqueID...
                 p.StartInfo.Arguments = ArgsString() +
+                    " -NetworkAddress " + SpawnerNetworkAddress + 
                     " -NetworkPort " + (StartingNetworkPort + _portCounter) +
                     " -SceneName " + spawnProperties.SceneName +
                     " -UniqueID " + spawnProperties.UniqueID;

@@ -97,4 +97,13 @@ public class PlayerClientGUI : MonoBehaviour
     {
         matchComp.SendJoinMatch(UniqueID);
     }
+
+    public void HandleCancelButton()
+    {
+        MatchListArea.SetActive(false);
+
+        GetMatchListButton.SetActive(true);
+        StartMatchMakingButton.SetActive(true);
+        StopMatchMakingButton.SetActive(false);
+    }
 }

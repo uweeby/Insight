@@ -891,7 +891,7 @@ Prefab:
     - target: {fileID: 114473571808863406, guid: fb641c96eed9f4776bdfaadb82174b97,
         type: 2}
       propertyPath: processArray.Array.data[0].Path
-      value: MatchedGameServer.exe
+      value: ManagedGameServer.exe
       objectReference: {fileID: 0}
     - target: {fileID: 114473571808863406, guid: fb641c96eed9f4776bdfaadb82174b97,
         type: 2}
@@ -902,6 +902,10 @@ Prefab:
         type: 2}
       propertyPath: StartingNetworkPort
       value: 7777
+      objectReference: {fileID: 0}
+    - target: {fileID: 1406336066766078, guid: fb641c96eed9f4776bdfaadb82174b97, type: 2}
+      propertyPath: m_Name
+      value: LocalSpawner(InsightClient)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fb641c96eed9f4776bdfaadb82174b97, type: 2}

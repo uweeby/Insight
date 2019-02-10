@@ -6,219 +6,95 @@ public class DemoBuildScript
     public static BuildOptions BuildOptions = BuildOptions.Development;
     public static string PrevPath = null;
 
-    #region Windows Builds
-    [MenuItem("Tools/Build/Windows/Build All", false, 999)]
-    public static void WindowsBuildAllMenu()
+    [MenuItem("Tools/Build/MatchMaker", false, 100)]
+    public static void BuildMatchMakerMenu()
     {
         var path = GetPath();
         if (!string.IsNullOrEmpty(path))
         {
-            WindowsBuildBasicGameServer(path);
-            WindowsBuildManagedGameServer(path);
-            WindowsBuildChildSpawner(path);
-            WindowsBuildPlayerClient(path);
+            BuildMatchMaker(path);
         }
     }
 
-    [MenuItem("Tools/Build/Windows/BasicGameServer", false, 999)]
-    public static void WindowsBuildBasicGameServerMenu()
+    [MenuItem("Tools/Build/RemoteSpawner", false, 101)]
+    public static void BuildRemoteSpawnerMenu()
     {
         var path = GetPath();
         if (!string.IsNullOrEmpty(path))
         {
-            WindowsBuildBasicGameServer(path);
+            BuildRemoteSpawner(path);
         }
     }
 
-    [MenuItem("Tools/Build/Windows/ManagedGameServer", false, 999)]
-    public static void WindowsBuildManagedGameServerMenu()
+    [MenuItem("Tools/Build/ManagedGameServer", false, 102)]
+    public static void BuildManagedGameServerMenu()
     {
         var path = GetPath();
         if (!string.IsNullOrEmpty(path))
         {
-            WindowsBuildManagedGameServer(path);
+            BuildManagedGameServer(path);
         }
     }
 
-    [MenuItem("Tools/Build/Windows/ChildSpawner", false, 999)]
-    public static void WindowsBuildChildSpawnerMenu()
+    [MenuItem("Tools/Build/MatchMaking Player", false, 103)]
+    public static void BuildMatchMakingPlayerMenu()
     {
         var path = GetPath();
         if (!string.IsNullOrEmpty(path))
         {
-            WindowsBuildChildSpawner(path);
+            BuildMatchMakingPlayer(path);
         }
     }
 
-    [MenuItem("Tools/Build/Windows/PlayerClient", false, 999)]
-    public static void WindowsBuildPlayerClientMenu()
+    public static void BuildMatchMaker(string path)
     {
-        var path = GetPath();
-        if (!string.IsNullOrEmpty(path))
+        var scenes = new[]
         {
-            WindowsBuildPlayerClient(path);
-        }
-    }
-
-    public static void WindowsBuildBasicGameServer(string path)
-    {
-        BuildTarget TargetPlatform = BuildTarget.StandaloneWindows;
-
-        var gameServerScenes = new[]
-        {
-            ScenesRoot+"BasicGameServer.unity"
+            ScenesRoot+"MatchMaking.unity"
         };
         PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Enabled;
-        PlayerSettings.productName = "BasicGameServer";
-        BuildPipeline.BuildPlayer(gameServerScenes, path + "/BasicGameServer.exe", TargetPlatform, BuildOptions);
+        PlayerSettings.productName = "MatchMaking";
+        BuildPipeline.BuildPlayer(scenes, path + "/MatchMaking.exe", GetBuildTarget(), BuildOptions);
     }
 
-    public static void WindowsBuildManagedGameServer(string path)
+    public static void BuildRemoteSpawner(string path)
     {
-        BuildTarget TargetPlatform = BuildTarget.StandaloneWindows;
-
         var gameServerScenes = new[]
         {
-            ScenesRoot+"ManagedGameServer.unity"
+            ScenesRoot+"RemoteSpawner.unity"
+        };
+        PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Enabled;
+        PlayerSettings.productName = "RemoteSpawner";
+        BuildPipeline.BuildPlayer(gameServerScenes, path + "/RemoteSpawner.exe", GetBuildTarget(), BuildOptions);
+    }
+
+    public static void BuildManagedGameServer(string path)
+    {
+        var gameServerScenes = new[]
+        {
+            ScenesRoot+"ManagedGameServer.unity",
+            //Scene used for MatchMaking Demo
+            ScenesRoot+"SuperAwesomeGame.unity"
         };
         PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Enabled;
         PlayerSettings.productName = "ManagedGameServer";
-        BuildPipeline.BuildPlayer(gameServerScenes, path + "/ManagedGameServer.exe", TargetPlatform, BuildOptions);
+        BuildPipeline.BuildPlayer(gameServerScenes, path + "/ManagedGameServer.exe", GetBuildTarget(), BuildOptions);
     }
 
-    public static void WindowsBuildChildSpawner(string path)
+    public static void BuildMatchMakingPlayer(string path)
     {
-        BuildTarget TargetPlatform = BuildTarget.StandaloneWindows;
-
-        var gameServerScenes = new[]
+        var scenes = new[]
         {
-            ScenesRoot+"ChildSpawner.unity"
+            ScenesRoot+"MatchMakingPlayer.unity",
+            //Add all scenes from game
+            ScenesRoot+"SuperAwesomeGame.unity"
         };
         PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Enabled;
-        PlayerSettings.productName = "ChildSpawner";
-        BuildPipeline.BuildPlayer(gameServerScenes, path + "/ChildSpawner.exe", TargetPlatform, BuildOptions);
+        PlayerSettings.productName = "MatchMakingPlayer";
+        BuildPipeline.BuildPlayer(scenes, path + "/MatchMakingPlayer.exe", GetBuildTarget(), BuildOptions);
     }
 
-    public static void WindowsBuildPlayerClient(string path)
-    {
-        BuildTarget TargetPlatform = BuildTarget.StandaloneWindows;
-
-        var gameServerScenes = new[]
-        {
-            ScenesRoot+"PlayerClient.unity"
-        };
-        PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Enabled;
-        PlayerSettings.productName = "PlayerClient";
-        BuildPipeline.BuildPlayer(gameServerScenes, path + "/PlayerClient.exe", TargetPlatform, BuildOptions);
-    }
-    #endregion
-
-    #region Linux Builds
-    [MenuItem("Tools/Build/Linux/Build All", false, 999)]
-    public static void LinuxBuildAllMenu()
-    {
-        var path = GetPath();
-        if (!string.IsNullOrEmpty(path))
-        {
-            LinuxBuildBasicGameServer(path);
-            LinuxBuildManagedGameServer(path);
-            LinuxBuildChildSpawner(path);
-        }
-    }
-
-    [MenuItem("Tools/Build/Linux/BasicGameServer", false, 999)]
-    public static void LinuxBuildBasicGameServerMenu()
-    {
-        var path = GetPath();
-        if (!string.IsNullOrEmpty(path))
-        {
-            LinuxBuildBasicGameServer(path);
-        }
-    }
-
-    [MenuItem("Tools/Build/Linux/ManagedGameServer", false, 999)]
-    public static void LinuxBuildManagedGameServerMenu()
-    {
-        var path = GetPath();
-        if (!string.IsNullOrEmpty(path))
-        {
-            LinuxBuildManagedGameServer(path);
-        }
-    }
-
-    [MenuItem("Tools/Build/Linux/ChildSpawner", false, 999)]
-    public static void LinuxBuildChildSpawnerMenu()
-    {
-        var path = GetPath();
-        if (!string.IsNullOrEmpty(path))
-        {
-            LinuxBuildChildSpawner(path);
-        }
-    }
-
-    [MenuItem("Tools/Build/Linux/PlayerClient", false, 999)]
-    public static void LinuxBuildPlayerClientMenu()
-    {
-        var path = GetPath();
-        if (!string.IsNullOrEmpty(path))
-        {
-            LinuxBuildPlayerClient(path);
-        }
-    }
-
-    public static void LinuxBuildBasicGameServer(string path)
-    {
-        BuildTarget TargetPlatform = BuildTarget.StandaloneLinux64;
-
-        var gameServerScenes = new[]
-        {
-            ScenesRoot+"BasicGameServer.unity"
-        };
-        PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Enabled;
-        PlayerSettings.productName = "BasicGameServer";
-        BuildPipeline.BuildPlayer(gameServerScenes, path + "Linux/BasicGameServer.x86_64", TargetPlatform, BuildOptions);
-    }
-
-    public static void LinuxBuildManagedGameServer(string path)
-    {
-        BuildTarget TargetPlatform = BuildTarget.StandaloneLinux64;
-
-        var gameServerScenes = new[]
-        {
-            ScenesRoot+"ManagedGameServer.unity"
-        };
-        PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Enabled;
-        PlayerSettings.productName = "ManagedGameServer";
-        BuildPipeline.BuildPlayer(gameServerScenes, path + "/ManagedGameServer.x86_64", TargetPlatform, BuildOptions);
-    }
-
-    public static void LinuxBuildChildSpawner(string path)
-    {
-        BuildTarget TargetPlatform = BuildTarget.StandaloneLinux64;
-
-        var gameServerScenes = new[]
-        {
-            ScenesRoot+"ChildSpawner.unity"
-        };
-        PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Enabled;
-        PlayerSettings.productName = "ChildSpawner";
-        BuildPipeline.BuildPlayer(gameServerScenes, path + "/ChildSpawner.x86_64", TargetPlatform, BuildOptions);
-    }
-
-    public static void LinuxBuildPlayerClient(string path)
-    {
-        BuildTarget TargetPlatform = BuildTarget.StandaloneLinux64;
-
-        var gameServerScenes = new[]
-        {
-            ScenesRoot+"PlayerClient.unity"
-        };
-        PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Enabled;
-        PlayerSettings.productName = "PlayerClient";
-        BuildPipeline.BuildPlayer(gameServerScenes, path + "/PlayerClient.x86_64", TargetPlatform, BuildOptions);
-    }
-    #endregion
-
+    #region Helpers
     public static string GetPath()
     {
         var prevPath = EditorPrefs.GetString("msf.buildPath", "");
@@ -230,4 +106,10 @@ public class DemoBuildScript
         }
         return path;
     }
+
+    public static BuildTarget GetBuildTarget()
+    {
+        return EditorUserBuildSettings.activeBuildTarget;
+    }
+    #endregion
 }

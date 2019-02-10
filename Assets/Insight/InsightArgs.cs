@@ -1,59 +1,59 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
+using System.Linq;
 
-namespace Insight
+public class InsightArgs
 {
-    public static class InsightArgs
+    private readonly string[] _args;
+
+    public ArgNames Names;
+
+    public InsightArgs()
     {
-        private static Dictionary<string, List<string>> startupArgs = new Dictionary<string, List<string>>();
+        _args = Environment.GetCommandLineArgs();
 
-        private static bool _initalized;
+        Names = new ArgNames();
 
-        public static void Initialize()
-        {
-            string[] args = System.Environment.GetCommandLineArgs();
-            string lastParam = string.Empty;
+        NetworkAddress = ExtractValue(Names.NetworkAddress, "localhost");
+        NetworkPort = ExtractValueInt(Names.NetworkPort, 7777);
+        UniqueID = ExtractValue(Names.UniqueID, "");
+        SceneName = ExtractValue(Names.SceneName, "");
+    }
 
-            foreach (string arg in args)
-            {
-                //Cache the param
-                if(arg.StartsWith("-") || arg.StartsWith("--"))
-                {
-                    startupArgs.Add(arg, new List<string>());
-                    lastParam = arg;
-                    continue;
-                }
-                if(lastParam != string.Empty)
-                {
-                    startupArgs[lastParam].Add(arg);
-                }
-            }
+    #region Arguments
+    public string NetworkAddress { get; private set; }
+    public int NetworkPort { get; private set; }
+    public string UniqueID { get; private set; }
+    public string SceneName { get; private set; }
+    #endregion
 
-            //For debug only
-            foreach (KeyValuePair<string, List<string>> kvp in startupArgs)
-            {
-                Debug.Log("key:" + kvp.Key);
+    #region Helper methods
+    public string ExtractValue(string argName, string defaultValue = null)
+    {
+        if (!_args.Contains(argName))
+            return defaultValue;
 
-                foreach (string arg in kvp.Value)
-                {
-                    Debug.Log("key:" + kvp.Key + " value:" + arg);
-                }
-            }
-        }
+        var index = _args.ToList().FindIndex(0, a => a.Equals(argName));
+        return _args[index + 1];
+    }
 
-        public static bool TryGetArgument(string ArgName, out List<string> ArgValue)
-        {
-            if(!_initalized)
-            {
-                _initalized = true;
-                Initialize();
-            }
+    public int ExtractValueInt(string argName, int defaultValue = -1)
+    {
+        var number = ExtractValue(argName, defaultValue.ToString());
+        return Convert.ToInt32(number);
+    }
 
-            ArgValue = new List<string>();
-            if (!startupArgs.ContainsKey(ArgName)) return false;
+    public bool IsProvided(string argName)
+    {
+        return _args.Contains(argName);
+    }
 
-            ArgValue.AddRange(startupArgs[ArgName]);
-            return true;
-        }
+    #endregion
+
+    public class ArgNames
+    {
+        public string NetworkAddress { get { return "-NetworkAddress"; } }
+        public string NetworkPort { get { return "-NetworkPort"; } }
+        public string UniqueID { get { return "-UniqueID"; } }
+        public string SceneName { get { return "-SceneName"; } }
     }
 }

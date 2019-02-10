@@ -6,7 +6,8 @@ public class ChatClient : InsightModule
     InsightClient client;
 
     //Used in Example Scene:
-    public ChatGUI chatGuiComp;
+    [HideInInspector]
+    public string chatLog;
 
     public override void Initialize(InsightClient client, ModuleManager manager)
     {
@@ -25,7 +26,7 @@ public class ChatClient : InsightModule
         if (client.logNetworkMessages) { Debug.Log("[InsightClient] - HandleChatMsg()"); }
 
         ChatMsg message = netMsg.ReadMessage<ChatMsg>();
-        
-        chatGuiComp.textField.text += message.Origin + ": "  + message.Data + "\n";
+
+        chatLog += message.Origin + ": "  + message.Data + "\n";
     }
 }

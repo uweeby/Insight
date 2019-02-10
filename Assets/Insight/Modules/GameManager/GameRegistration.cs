@@ -3,52 +3,77 @@ using Mirror;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameRegistration : InsightModule
 {
     InsightClient client;
     public NetworkManager networkManager;
-    public TelepathyTransport telepathyTransport;
+    public TelepathyTransport networkManagerTelepathyTransport;
+    public TelepathyTransport insightTelepathyTransport;
+
 
     public List<GameContainer> registeredGames = new List<GameContainer>();
+
+    //Pulled from command line arguments
+    public string GameScene;
+    public string NetworkAddress;
+    public ushort NetworkPort;
+    public string UniqueID;
 
     public override void Initialize(InsightClient insight, ModuleManager manager)
     {
         client = insight;
 
-        telepathyTransport.OnClientConnected.AddListener(ClientOnConnectedEventHandler);
+        insightTelepathyTransport.OnClientConnected.AddListener(SendGameRegistrationToGameManager);
 
         RegisterHandlers();
 
         networkManager = NetworkManager.singleton;
+
+        GatherCmdArgs();
     }
 
     void RegisterHandlers()
     {
     }
 
-    private void ClientOnConnectedEventHandler()
+    private void GatherCmdArgs()
     {
-        //Gather Params
-        List<string> portArgs;
-        if(InsightArgs.TryGetArgument("-AssignedPort", out portArgs))
+        InsightArgs args = new InsightArgs();
+        if (args.IsProvided("-NetworkAddress"))
         {
-            Debug.Log("Setting Network Port based on Args provided: " + portArgs[0]);
-            telepathyTransport.port = Convert.ToUInt16(portArgs[0]);
+            Debug.Log("[Args] - NetworkAddress: " + args.NetworkAddress);
+            NetworkAddress = args.NetworkAddress;
         }
 
-        //Apply necessary changes to NetworkManager
+        if (args.IsProvided("-NetworkPort"))
+        {
+            Debug.Log("[Args] - NetworkPort: " + args.NetworkPort);
+            NetworkPort = (ushort)args.NetworkPort;
+            networkManagerTelepathyTransport.port = (ushort)args.NetworkPort;
+        }
+
+        if (args.IsProvided("-SceneName"))
+        {
+            Debug.Log("[Args] - SceneName: " + args.SceneName);
+            GameScene = args.SceneName;
+            SceneManager.LoadScene(args.SceneName);
+        }
+
+        if (args.IsProvided("-UniqueID"))
+        {
+            Debug.Log("[Args] - UniqueID: " + args.UniqueID);
+            UniqueID = args.UniqueID;
+        }
 
         //Start NetworkManager
         networkManager.StartServer();
-
-        //Register back to the GameManager now that the game is running
-        SendGameRegistrationToGameManager();
     }
 
     private void SendGameRegistrationToGameManager()
     {
-        Debug.Log("sending registration msg back to master");
-        client.Send((short)MsgId.RegisterGame, new RegisterGameMsg() { UniqueID = Guid.NewGuid().ToString()}); //The GUID can/should be provided by the spawner for security
+        Debug.Log("[GameRegistration] - registering with master");
+        client.Send((short)MsgId.RegisterGame, new RegisterGameMsg() { UniqueID = UniqueID, SceneName = GameScene , NetworkPort = NetworkPort, NetworkAddress = NetworkAddress});
     }
 }

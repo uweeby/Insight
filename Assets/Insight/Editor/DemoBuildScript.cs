@@ -16,6 +16,7 @@ public class DemoBuildScript
             WindowsBuildBasicGameServer(path);
             WindowsBuildManagedGameServer(path);
             WindowsBuildChildSpawner(path);
+            WindowsBuildPlayerClient(path);
         }
     }
 
@@ -46,6 +47,16 @@ public class DemoBuildScript
         if (!string.IsNullOrEmpty(path))
         {
             WindowsBuildChildSpawner(path);
+        }
+    }
+
+    [MenuItem("Tools/Build/Windows/PlayerClient", false, 999)]
+    public static void WindowsBuildPlayerClientMenu()
+    {
+        var path = GetPath();
+        if (!string.IsNullOrEmpty(path))
+        {
+            WindowsBuildPlayerClient(path);
         }
     }
 
@@ -86,6 +97,19 @@ public class DemoBuildScript
         PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Enabled;
         PlayerSettings.productName = "ChildSpawner";
         BuildPipeline.BuildPlayer(gameServerScenes, path + "/ChildSpawner.exe", TargetPlatform, BuildOptions);
+    }
+
+    public static void WindowsBuildPlayerClient(string path)
+    {
+        BuildTarget TargetPlatform = BuildTarget.StandaloneWindows;
+
+        var gameServerScenes = new[]
+        {
+            ScenesRoot+"PlayerClient.unity"
+        };
+        PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Enabled;
+        PlayerSettings.productName = "PlayerClient";
+        BuildPipeline.BuildPlayer(gameServerScenes, path + "/PlayerClient.exe", TargetPlatform, BuildOptions);
     }
     #endregion
 
@@ -132,6 +156,16 @@ public class DemoBuildScript
         }
     }
 
+    [MenuItem("Tools/Build/Linux/PlayerClient", false, 999)]
+    public static void LinuxBuildPlayerClientMenu()
+    {
+        var path = GetPath();
+        if (!string.IsNullOrEmpty(path))
+        {
+            LinuxBuildPlayerClient(path);
+        }
+    }
+
     public static void LinuxBuildBasicGameServer(string path)
     {
         BuildTarget TargetPlatform = BuildTarget.StandaloneLinux64;
@@ -169,6 +203,19 @@ public class DemoBuildScript
         PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Enabled;
         PlayerSettings.productName = "ChildSpawner";
         BuildPipeline.BuildPlayer(gameServerScenes, path + "/ChildSpawner.x86_64", TargetPlatform, BuildOptions);
+    }
+
+    public static void LinuxBuildPlayerClient(string path)
+    {
+        BuildTarget TargetPlatform = BuildTarget.StandaloneLinux64;
+
+        var gameServerScenes = new[]
+        {
+            ScenesRoot+"PlayerClient.unity"
+        };
+        PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Enabled;
+        PlayerSettings.productName = "PlayerClient";
+        BuildPipeline.BuildPlayer(gameServerScenes, path + "/PlayerClient.x86_64", TargetPlatform, BuildOptions);
     }
     #endregion
 

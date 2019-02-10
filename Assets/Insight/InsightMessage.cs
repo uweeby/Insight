@@ -1,5 +1,4 @@
 using Mirror;
-using UnityEngine;
 
 namespace Insight
 {
@@ -17,7 +16,13 @@ namespace Insight
 
         RequestSpawn,
         RequestGame,
-        RequestMatch,
+        StartMatchMaking,
+        StopMatchMaking,
+        MatchList,
+        JoinMatch,
+
+        ChangeServers,
+        SpawnerStatus,
     }
 
     public class ErrorMsg : MessageBase
@@ -58,19 +63,58 @@ namespace Insight
     public class RegisterSpawnerMsg : MessageBase
     {
         public string UniqueID; //Guid
+        public int MaxThreads;
     }
 
     public class RegisterGameMsg : MessageBase
     {
         public string UniqueID; //Guid
+        public string NetworkAddress;
+        public ushort NetworkPort;
+        public string SceneName;
     }
 
     public class RequestSpawn : MessageBase
     {
-        //public static short MsgId = 1011;
-        public string GameName; //or SceneName
+        public string ProcessAlias;
+        public string SceneName;
+
+        //Only valid in the reply from the spawner. So it should be moved to another message
+        public string UniqueID; //Guid
+        public string NetworkAddress; 
+    }
+
+    public class StartMatchMaking : MessageBase
+    {
+        public string PlayListName;
+    }
+
+    public class StopMatchMaking : MessageBase
+    {
+
+    }
+
+    public class MatchList : MessageBase
+    {
+
+    }
+
+    public class JoinMatch : MessageBase
+    {
         public string UniqueID;
+    }
+
+    //Used to tell a player to connect to a new game server
+    public class ChangeServers : MessageBase
+    {
         public string NetworkAddress;
         public ushort NetworkPort;
+        public string SceneName;
+    }
+
+    //Updates the MasterSpawner with current status
+    public class SpawnerStatus : MessageBase
+    {
+        public int CurrentThreads;
     }
 }

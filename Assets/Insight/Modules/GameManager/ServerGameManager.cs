@@ -7,7 +7,7 @@ public class ServerGameManager : InsightModule
     InsightServer server;
     MasterSpawner masterSpawner;
 
-    public List<GameContainer> registeredGames = new List<GameContainer>();
+    public List<GameContainer> registeredGameServers = new List<GameContainer>();
 
     public void Awake()
     {
@@ -19,12 +19,13 @@ public class ServerGameManager : InsightModule
         server = insight;
         masterSpawner = manager.GetModule<MasterSpawner>();
         RegisterHandlers();
+
+        server.transport.OnServerDisconnected.AddListener(HandleDisconnect);
     }
 
     void RegisterHandlers()
     {
         server.RegisterHandler((short)MsgId.RegisterGame, HandleRegisterGameMsg);
-        server.RegisterHandler((short)MsgId.RequestMatch, HandleRequestMatchMsg);
     }
 
     private void HandleRegisterGameMsg(InsightNetworkMessage netMsg)
@@ -33,50 +34,53 @@ public class ServerGameManager : InsightModule
 
         if (server.logNetworkMessages) { Debug.Log("Received GameRegistration request"); }
 
-        registeredGames.Add(new GameContainer() { connectionId = netMsg.connectionId, uniqueId = message.UniqueID });
+        registeredGameServers.Add(new GameContainer() {
+            connectionId = netMsg.connectionId,
+            UniqueId = message.UniqueID,
+            SceneName = message.SceneName,
+            NetworkAddress = message.NetworkAddress,
+            NetworkPort = message.NetworkPort});
     }
 
-    private void HandleRequestMatchMsg(InsightNetworkMessage netMsg)
+    private void HandleDisconnect(int connectionId)
     {
-        //GamesList message = netMsg.ReadMessage<GamesList>();
-
-        List<GameContainer> gamesMeetingCriteria = new List<GameContainer>();
-
-        //Check the local collection of Registered Games.
-        foreach(GameContainer game in registeredGames)
+        foreach (GameContainer game in registeredGameServers)
         {
-            //if(game.Properties.ContainsKey("GameType").Equals("SomeAwesomeGame"))
-            //{
-            //    gamesMeetingCriteria.Add(game);
-            //}
+            if (game.connectionId == connectionId)
+            {
+                registeredGameServers.Remove(game);
+                return;
+            }
         }
+    }
 
-        //If a game meeting the options criteria is not found. Request a spawn.
-        if(gamesMeetingCriteria.Count == 0)
+    //Take in the options here
+    public void RequestGameSpawn(RequestSpawn requestSpawn)
+    {
+        masterSpawner.InternalSpawnRequest(requestSpawn);
+    }
+
+    public GameContainer GetGameByUniqueID(string uniqueID)
+    {
+        foreach(GameContainer game in registeredGameServers)
         {
-            masterSpawner.RequestGameSpawn(); //Add the options here
-
-            //Should this also be a callback?
-
-            //Somehow the list needs to get populated
+            if (game.UniqueId.Equals(uniqueID))
+            {
+                return game;
+            }
         }
-
-        //Reply to fulfil the callback request.
-        //netMsg.Reply((short)MsgId.FindGame,  { }); //Send gamesMeetingCriteria back to fulfil callback.
+        return null;
     }
 }
 
-public partial class MasterSpawner
+public class GameContainer
 {
-    public void RequestGameSpawn() //Take in the options here
-    {
-
-    }
-}
-
-public struct GameContainer
-{
-    public string uniqueId;
+    public string NetworkAddress;
+    public ushort NetworkPort;
+    public string UniqueId;
     public int connectionId;
-    public Dictionary<string, string> Properties;
+
+    public string SceneName;
+    public int MaxPlayer;
+    public int CurrentPlayers;
 }

@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
 
-public class ClientLogin : InsightModule
+public class ClientAuthentication : InsightModule
 {
     InsightClient client;
 
@@ -11,6 +11,8 @@ public class ClientLogin : InsightModule
 
     [HideInInspector]
     public string loginResponse; //This is put in the GUI. Just for example purposes
+    [HideInInspector]
+    public bool loginSucessful;
 
     public override void Initialize(InsightClient client, ModuleManager manager)
     {
@@ -26,15 +28,23 @@ public class ClientLogin : InsightModule
 
     public void SendLoginMsg(string username, string password)
     {
-        client.Send((short)MsgId.Login, new LoginMsg() { AccountName = username, AccountPassword = Sha256(password) }, (success, reader) =>
+        client.Send((short)MsgId.Login, new LoginMsg() { AccountName = username, AccountPassword = Sha256(password) }, (callbackStatus, reader) =>
         {
-            if (success == CallbackStatus.Ok)
+            if (callbackStatus == CallbackStatus.Ok)
             {
                 StatusMsg msg = reader.ReadMessage<StatusMsg>();
                 loginResponse = msg.Text;
+                loginSucessful = true; //This will always be true for prototyping
                 Debug.Log(msg.Text);
             }
-            else Debug.Log("Callback Error: Login Message was lost or a reply was not sent");
+            if (callbackStatus == CallbackStatus.Error)
+            {
+                Debug.LogError("Callback Error: Login error");
+            }
+            if (callbackStatus == CallbackStatus.Timeout)
+            {
+                Debug.LogError("Callback Error: Login attempt timed out");
+            }
         });
     }
 

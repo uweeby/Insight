@@ -13,6 +13,9 @@ Download this project and open in Unity.
 Download Mirror from one of the two locations listed above.  
 Run the example scenes in editor.  
 
+# More Info:
+Please see the [Wiki](https://github.com/uweenukr/Insight/wiki)
+
 # Notes:  
 -The Spawner example requires the use of the build menu (Under Tools at the top) to have a seperate running Standalone to spawn.  
 -Insight Examples are setup to use Telepathy by default. By convention Insight will use Port 7000 and Mirror (NetworkManager) will use port 7777+.  

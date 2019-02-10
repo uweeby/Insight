@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 114231125312246618}
   - component: {fileID: 114331597634763136}
   m_Layer: 0
-  m_Name: ChildSpawner(InsightClient)
+  m_Name: RemoteSpawner(InsightClient)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -162,6 +162,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8382b135107eaf5458d6471f839dc241, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SpawnerNetworkAddress: localhost
+  StartingNetworkPort: 7777
   EditorPath: C:\Dev\Insight\Builds\
   ProcessPath: .\
   processArray: []

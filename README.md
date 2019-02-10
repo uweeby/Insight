@@ -5,8 +5,8 @@ Insight is a Simple Message Server for Unity based on Mirror. It can operate on 
 This software is currently alpha, and subject to change. Not to be used in production systems.  
 
 ### Notes:    
--Insight uses Telepathy by default for examples. All Mirror capable transports should* work.
--Insight will use Port 7000 and Mirror (NetworkManager) will use port 7777+ for examples.
+-Insight uses Telepathy by default for examples. All Mirror capable transports should* work.  
+-Insight will use Port 7000 and Mirror (NetworkManager) will use port 7777+ for examples.  
 
 ### Requirements:  
 Mirror: https://github.com/vis2k/Mirror   

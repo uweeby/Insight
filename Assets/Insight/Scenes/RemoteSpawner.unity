@@ -229,7 +229,7 @@ GameObject:
   - component: {fileID: 1956574475}
   - component: {fileID: 1956574478}
   m_Layer: 0
-  m_Name: ChildSpawner(InsightClient)
+  m_Name: RemoteSpawner(InsightClient)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -368,15 +368,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8382b135107eaf5458d6471f839dc241, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SpawnerNetworkAddress: localhost
+  StartingNetworkPort: 7777
   EditorPath: C:\Dev\Insight\Builds\
   ProcessPath: .\
-  multiProcessNameStruct:
-  - Alias: WindowsBasicGameServer
-    Path: BasicGameServer.exe
-  - Alias: WindowsManagedGameServer
-    Path: ManagedGameServer.exe
-  - Alias: LinuxBasicGameServer
-    Path: BasicGameServer.x86_64
-  - Alias: LinuxManagedGameServer
-    Path: ManagedGameServer.x86_64
+  processArray: []
   MaximumProcesses: 5

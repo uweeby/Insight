@@ -39,7 +39,7 @@ GameObject:
   - component: {fileID: 4176745978076286}
   - component: {fileID: 114228748929812466}
   m_Layer: 0
-  m_Name: BasicSpawnerModule
+  m_Name: ProcessSpawnerModule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

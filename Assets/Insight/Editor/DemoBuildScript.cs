@@ -26,13 +26,13 @@ public class DemoBuildScript
         }
     }
 
-    [MenuItem("Tools/Build/ManagedGameServer", false, 102)]
-    public static void BuildManagedGameServerMenu()
+    [MenuItem("Tools/Build/GameServer", false, 102)]
+    public static void BuildGameServerMenu()
     {
         var path = GetPath();
         if (!string.IsNullOrEmpty(path))
         {
-            BuildManagedGameServer(path);
+            BuildGameServer(path);
         }
     }
 
@@ -68,17 +68,17 @@ public class DemoBuildScript
         BuildPipeline.BuildPlayer(gameServerScenes, path + "/RemoteSpawner.exe", GetBuildTarget(), BuildOptions);
     }
 
-    public static void BuildManagedGameServer(string path)
+    public static void BuildGameServer(string path)
     {
         var gameServerScenes = new[]
         {
-            ScenesRoot+"ManagedGameServer.unity",
+            ScenesRoot+"GameServer.unity",
             //Scene used for MatchMaking Demo
             ScenesRoot+"SuperAwesomeGame.unity"
         };
         PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Enabled;
-        PlayerSettings.productName = "ManagedGameServer";
-        BuildPipeline.BuildPlayer(gameServerScenes, path + "/ManagedGameServer.exe", GetBuildTarget(), BuildOptions);
+        PlayerSettings.productName = "GameServer";
+        BuildPipeline.BuildPlayer(gameServerScenes, path + "/GameServer.exe", GetBuildTarget(), BuildOptions);
     }
 
     public static void BuildMatchMakingPlayer(string path)

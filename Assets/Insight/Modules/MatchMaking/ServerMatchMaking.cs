@@ -117,7 +117,7 @@ namespace Insight
             //Specify the match details
             RequestSpawn requestSpawn = new RequestSpawn()
             {
-                ProcessAlias = "managedgameserver",
+                ProcessAlias = "gameserver",
                 SceneName = "SuperAwesomeGame",
                 UniqueID = uniqueID
             };

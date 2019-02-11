@@ -11,6 +11,22 @@ Prefab:
   m_SourcePrefab: {fileID: 0}
   m_RootGameObject: {fileID: 1960458110905104}
   m_IsPrefabAsset: 1
+--- !u!1 &1150649977146278
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4597316697760854}
+  - component: {fileID: 114148435680123310}
+  m_Layer: 0
+  m_Name: Chat
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1263022656165422
 GameObject:
   m_ObjectHideFlags: 0
@@ -21,7 +37,7 @@ GameObject:
   - component: {fileID: 4608039947039298}
   - component: {fileID: 114640143313271232}
   m_Layer: 0
-  m_Name: MasterSpawnerModule
+  m_Name: MasterSpawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -37,7 +53,7 @@ GameObject:
   - component: {fileID: 4220234175880404}
   - component: {fileID: 114767974709962960}
   m_Layer: 0
-  m_Name: ServerGameManagerModule
+  m_Name: GameManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -51,9 +67,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4021913724767944}
-  - component: {fileID: 114832192691361872}
+  - component: {fileID: 114810829956139598}
   m_Layer: 0
-  m_Name: ServerMatchMakerModule
+  m_Name: MatchMaker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -77,6 +93,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1976941372257430
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4209522226978800}
+  - component: {fileID: 114818198825535512}
+  m_Layer: 0
+  m_Name: Authentication
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!4 &4021913724767944
 Transform:
   m_ObjectHideFlags: 1
@@ -88,7 +120,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4101674947310800}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4101674947310800
 Transform:
@@ -101,10 +133,25 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4608039947039298}
-  - {fileID: 4220234175880404}
+  - {fileID: 4209522226978800}
+  - {fileID: 4597316697760854}
   - {fileID: 4021913724767944}
+  - {fileID: 4220234175880404}
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4209522226978800
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1976941372257430}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4101674947310800}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4220234175880404
 Transform:
@@ -117,7 +164,20 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4101674947310800}
-  m_RootOrder: 1
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4597316697760854
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1150649977146278}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4101674947310800}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4608039947039298
 Transform:
@@ -146,6 +206,17 @@ MonoBehaviour:
   AutoStart: 1
   logNetworkMessages: 1
   networkAddress: localhost
+--- !u!114 &114148435680123310
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1150649977146278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d104c6a33d48f54a963b3f9ff6df16b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114640143313271232
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -231,7 +302,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7922e2bf913e2e34d80cb5f21a5521d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114832192691361872
+--- !u!114 &114810829956139598
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -242,3 +313,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 166bafde3b95c2a45af8cbd32e9d9896, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  server: {fileID: 0}
+  manager: {fileID: 0}
+  authModule: {fileID: 0}
+  gameManager: {fileID: 0}
+  masterSpawner: {fileID: 0}
+  MinimumPlayersForGame: 1
+  MatchMakingPollRate: 10
+--- !u!114 &114818198825535512
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1976941372257430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ecd18586a6de01439a817b99a266185, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  telepathyTransport: {fileID: 0}

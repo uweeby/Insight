@@ -167,6 +167,6 @@ MonoBehaviour:
   EditorPath: C:\Dev\Insight\Builds\
   ProcessPath: .\
   processArray:
-  - Alias: gamesever
+  - Alias: gameserver
     Path: GameServer.exe
   MaximumProcesses: 5

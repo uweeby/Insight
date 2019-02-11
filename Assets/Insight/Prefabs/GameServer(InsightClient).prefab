@@ -97,7 +97,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   networkManager: {fileID: 0}
   networkManagerTelepathyTransport: {fileID: 0}
-  insightTelepathyTransport: {fileID: 0}
+  insightTelepathyTransport: {fileID: 114262604607040350}
   GameScene: 
   NetworkAddress: 
   NetworkPort: 0

@@ -12,7 +12,7 @@ public class BuildScript
         var path = GetPath();
         if (!string.IsNullOrEmpty(path))
         {
-            BuildMatchMaker(path);
+            BuildMasterServer(path);
             BuildRemoteSpawner(path);
             BuildGameServer(path);
             BuildPlayerClient(path);
@@ -20,12 +20,12 @@ public class BuildScript
     }
 
     [MenuItem("Tools/Build Insight/MatchMaker", false, 100)]
-    public static void BuildMatchMakerMenu()
+    public static void BuildMasterServerMenu()
     {
         var path = GetPath();
         if (!string.IsNullOrEmpty(path))
         {
-            BuildMatchMaker(path);
+            BuildMasterServer(path);
         }
     }
 
@@ -59,15 +59,15 @@ public class BuildScript
         }
     }
 
-    public static void BuildMatchMaker(string path)
+    public static void BuildMasterServer(string path)
     {
         var scenes = new[]
         {
-        ScenesRoot+"MatchMaking.unity"
+        ScenesRoot+"MasterServer.unity"
     };
         PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Enabled;
-        PlayerSettings.productName = "MatchMaking";
-        BuildPipeline.BuildPlayer(scenes, path + "/MatchMaking.exe", GetBuildTarget(), BuildOptions);
+        PlayerSettings.productName = "MasterServer";
+        BuildPipeline.BuildPlayer(scenes, path + "/MasterServer.exe", GetBuildTarget(), BuildOptions);
     }
 
     public static void BuildRemoteSpawner(string path)
@@ -86,7 +86,7 @@ public class BuildScript
         var gameServerScenes = new[]
         {
         ScenesRoot+"GameServer.unity",
-        //Scene used for MatchMaking Demo
+        //Scene used for MasterServer Demo
         ScenesRoot+"SuperAwesomeGame.unity"
     };
         PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Enabled;
@@ -99,7 +99,7 @@ public class BuildScript
         var scenes = new[]
         {
         ScenesRoot+"PlayerClient.unity",
-        //Add all scenes from game
+        //Scene used for MasterServer Demo
         ScenesRoot+"SuperAwesomeGame.unity"
     };
         PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Enabled;

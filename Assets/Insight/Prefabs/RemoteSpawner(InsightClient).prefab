@@ -166,5 +166,7 @@ MonoBehaviour:
   StartingNetworkPort: 7777
   EditorPath: C:\Dev\Insight\Builds\
   ProcessPath: .\
-  processArray: []
+  processArray:
+  - Alias: gamesever
+    Path: GameServer.exe
   MaximumProcesses: 5

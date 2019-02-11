@@ -139,8 +139,8 @@ MonoBehaviour:
   EditorPath: C:\Dev\Insight\Builds\
   ProcessPath: .\
   processArray:
-  - Alias: managedgameserver
-    Path: ManagedGameServer.exe
+  - Alias: gameserver
+    Path: GameServer.exe
   MaximumProcesses: 5
 --- !u!114 &114704565764867490
 MonoBehaviour:

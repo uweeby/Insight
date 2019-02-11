@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 114092492723764628}
   - component: {fileID: 114262604607040350}
   m_Layer: 0
-  m_Name: ManagedGameServer(InsightClient)
+  m_Name: GameServer(InsightClient)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -96,7 +96,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   networkManager: {fileID: 0}
-  telepathyTransport: {fileID: 114262604607040350}
+  networkManagerTelepathyTransport: {fileID: 0}
+  insightTelepathyTransport: {fileID: 0}
+  GameScene: 
+  NetworkAddress: 
+  NetworkPort: 0
+  UniqueID: 
 --- !u!114 &114262604607040350
 MonoBehaviour:
   m_ObjectHideFlags: 1

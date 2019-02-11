@@ -19,7 +19,7 @@ public class BuildScript
         }
     }
 
-    [MenuItem("Tools/Build Insight/MatchMaker", false, 100)]
+    [MenuItem("Tools/Build Insight/MasterServer", false, 100)]
     public static void BuildMasterServerMenu()
     {
         var path = GetPath();

@@ -112,6 +112,11 @@ public class PlayerClientGUI : MonoBehaviour
         StopMatchMakingButton.SetActive(false);
     }
 
+    public void HandleCreateGameButton()
+    {
+        matchComp.SendRequestSpawn();
+    }
+
     public void UpdateGameListUI()
     {
         foreach (GameContainer game in matchComp.gamesList)

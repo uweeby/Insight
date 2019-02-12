@@ -65,6 +65,11 @@ public class ClientMatchMaking : InsightModule
     }
 
     #region Message Senders
+    public void SendRequestSpawn()
+    {
+        client.Send((short)MsgId.RequestSpawn, new RequestSpawnMsg() { SceneName = "SuperAwesomeGame" });
+    }
+
     public void SendStartMatchMaking()
     {
         client.Send((short)MsgId.StartMatchMaking, new StartMatchMakingMsg() { PlayListName = "SuperAwesomeGame"});

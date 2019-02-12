@@ -441,7 +441,7 @@ GameObject:
   m_Component:
   - component: {fileID: 547811547}
   m_Layer: 5
-  m_Name: MatchListArea
+  m_Name: GameListArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -479,7 +479,7 @@ GameObject:
   - component: {fileID: 596783718}
   - component: {fileID: 596783717}
   m_Layer: 5
-  m_Name: GetMatchListButton
+  m_Name: GetGameListButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -544,7 +544,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1365284628}
-        m_MethodName: HandleGetMatchListButton
+        m_MethodName: HandleGetGameListButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1801,8 +1801,8 @@ MonoBehaviour:
   matchComp: {fileID: 650334111}
   StartMatchMakingButton: {fileID: 1635566046}
   StopMatchMakingButton: {fileID: 858910305}
-  GetMatchListButton: {fileID: 596783715}
-  MatchListArea: {fileID: 547811546}
+  GetGameListButton: {fileID: 0}
+  GameListArea: {fileID: 0}
 --- !u!114 &1365284629
 MonoBehaviour:
   m_ObjectHideFlags: 0

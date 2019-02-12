@@ -14,8 +14,8 @@ public class PlayerClientGUI : MonoBehaviour
 
     public GameObject StartMatchMakingButton;
     public GameObject StopMatchMakingButton;
-    public GameObject GetMatchListButton;
-    public GameObject MatchListArea;
+    public GameObject GetGameListButton;
+    public GameObject GameListArea;
 
     private void Start()
     {
@@ -84,25 +84,25 @@ public class PlayerClientGUI : MonoBehaviour
         matchComp.SendStopMatchMaking();
     }
 
-    public void HandleGetMatchListButton()
+    public void HandleGetGameListButton()
     {
-        GetMatchListButton.SetActive(false);
+        GetGameListButton.SetActive(false);
         StartMatchMakingButton.SetActive(false);
         StopMatchMakingButton.SetActive(false);
 
-        MatchListArea.SetActive(true);
+        GameListArea.SetActive(true);
     }
 
-    public void HandleJoinMatchButton(string UniqueID)
+    public void HandleJoinGameButton(string UniqueID)
     {
-        matchComp.SendJoinMatch(UniqueID);
+        matchComp.SendJoinGameMsg(UniqueID);
     }
 
     public void HandleCancelButton()
     {
-        MatchListArea.SetActive(false);
+        GameListArea.SetActive(false);
 
-        GetMatchListButton.SetActive(true);
+        GetGameListButton.SetActive(true);
         StartMatchMakingButton.SetActive(true);
         StopMatchMakingButton.SetActive(false);
     }

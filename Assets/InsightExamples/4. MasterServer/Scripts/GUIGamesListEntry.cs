@@ -7,6 +7,6 @@ public class GUIGamesListEntry : MonoBehaviour
 
     public void HandleSelectButton()
     {
-        clientComp.HandleJoinMatchButton(UniqueID);
+        clientComp.HandleJoinGameButton(UniqueID);
     }
 }

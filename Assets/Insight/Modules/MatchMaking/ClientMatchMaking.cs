@@ -43,8 +43,28 @@ public class ClientMatchMaking : InsightModule
         client.Send((short)MsgId.StopMatchMaking, new StopMatchMaking());
     }
 
-    public void SendJoinMatch(string UniqueID)
+    public void SendJoinGameMsg(string UniqueID)
     {
-        client.Send((short)MsgId.JoinMatch, new JoinMatch());
+        client.Send((short)MsgId.JoinGame, new JoinGamMsg());
+    }
+
+    public void SendGetGameListMsg()
+    {
+        client.Send((short)MsgId.GameList, new GameListMsg(), (callbackStatus, reader) =>
+        {
+            if (callbackStatus == CallbackStatus.Ok)
+            {
+                StatusMsg msg = reader.ReadMessage<StatusMsg>();
+                Debug.Log(msg.Text);
+            }
+            if (callbackStatus == CallbackStatus.Error)
+            {
+                Debug.LogError("Callback Error: Login error");
+            }
+            if (callbackStatus == CallbackStatus.Timeout)
+            {
+                Debug.LogError("Callback Error: Login attempt timed out");
+            }
+        });
     }
 }

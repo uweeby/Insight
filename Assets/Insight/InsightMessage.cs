@@ -128,7 +128,7 @@ namespace Insight
     }
 
     //Used to tell a player to connect to a new game server
-    public class ChangeServersMsg : MessageBase
+    public class ChangeServerMsg : MessageBase
     {
         public string NetworkAddress;
         public ushort NetworkPort;

@@ -35,7 +35,7 @@ public partial class MasterSpawner : InsightModule
     //Instead of handling the msg here we will forward it to an available spawner.
     private void HandleSpawnRequestMsg(InsightNetworkMessage netMsg)
     {
-        RequestSpawn message = netMsg.ReadMessage<RequestSpawn>();
+        RequestSpawnMsg message = netMsg.ReadMessage<RequestSpawnMsg>();
 
         //Get all spawners that have atleast 1 slot free
         List<SpawnerContainer> freeSlotSpawners = new List<SpawnerContainer>();
@@ -53,7 +53,7 @@ public partial class MasterSpawner : InsightModule
         {
             if (callbackStatus == CallbackStatus.Ok)
             {
-                RequestSpawn callbackResponse = reader.ReadMessage<RequestSpawn>();
+                RequestSpawnMsg callbackResponse = reader.ReadMessage<RequestSpawnMsg>();
                 if (server.logNetworkMessages) { Debug.Log("[Spawn Callback] Game Created on Child Spawner: " + callbackResponse.UniqueID); }
 
                 netMsg.Reply((short)MsgId.RequestSpawn, callbackResponse);
@@ -71,7 +71,7 @@ public partial class MasterSpawner : InsightModule
 
     private void HandleSpawnerStatusMsg(InsightNetworkMessage netMsg)
     {
-        SpawnerStatus message = netMsg.ReadMessage<SpawnerStatus>();
+        SpawnerStatusMsg message = netMsg.ReadMessage<SpawnerStatusMsg>();
 
         for(int i = 0; i < registeredSpawners.Count; i++)
         {
@@ -83,7 +83,7 @@ public partial class MasterSpawner : InsightModule
         }
     }
 
-    public void InternalSpawnRequest(RequestSpawn message)
+    public void InternalSpawnRequest(RequestSpawnMsg message)
     {
         //Get all spawners that have atleast 1 slot free
         List<SpawnerContainer> freeSlotSpawners = registeredSpawners.Where(x => (x.CurrentThreads < x.MaxThreads)).ToList();

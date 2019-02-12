@@ -23,7 +23,7 @@ public class ClientMatchMaking : InsightModule
 
     private void HandleChangeServersMsg(InsightNetworkMessage netMsg)
     {
-        ChangeServers message = netMsg.ReadMessage<ChangeServers>();
+        ChangeServerMsg message = netMsg.ReadMessage<ChangeServerMsg>();
 
         if (client.logNetworkMessages) { Debug.Log("[InsightClient] - Connecting to GameServer: " + message.NetworkAddress + ":" + message.NetworkPort + "/" + message.SceneName); }
 
@@ -35,12 +35,12 @@ public class ClientMatchMaking : InsightModule
 
     public void SendStartMatchMaking()
     {
-        client.Send((short)MsgId.StartMatchMaking, new StartMatchMaking() { PlayListName = "SuperAwesomeGame"});
+        client.Send((short)MsgId.StartMatchMaking, new StartMatchMakingMsg() { PlayListName = "SuperAwesomeGame"});
     }
 
     public void SendStopMatchMaking()
     {
-        client.Send((short)MsgId.StopMatchMaking, new StopMatchMaking());
+        client.Send((short)MsgId.StopMatchMaking, new StopMatchMakingMsg());
     }
 
     public void SendJoinGameMsg(string UniqueID)

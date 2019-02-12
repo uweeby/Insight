@@ -74,7 +74,7 @@ public class ServerGameManager : InsightModule
 
         GameContainer game = GetGameByUniqueID(message.UniqueID);
 
-        netMsg.Reply((short)MsgId.ChangeServers, new ChangeServers() {
+        netMsg.Reply((short)MsgId.ChangeServers, new ChangeServerMsg() {
             NetworkAddress = game.NetworkAddress,
             NetworkPort = game.NetworkPort,
             SceneName = game.SceneName
@@ -82,7 +82,7 @@ public class ServerGameManager : InsightModule
     }
 
     //Take in the options here
-    public void RequestGameSpawn(RequestSpawn requestSpawn)
+    public void RequestGameSpawn(RequestSpawnMsg requestSpawn)
     {
         masterSpawner.InternalSpawnRequest(requestSpawn);
     }

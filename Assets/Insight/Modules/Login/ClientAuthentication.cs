@@ -13,6 +13,7 @@ public class ClientAuthentication : InsightModule
     public string loginResponse; //This is put in the GUI. Just for example purposes
     [HideInInspector]
     public bool loginSucessful;
+    public string uniqueID;
 
     public override void Initialize(InsightClient client, ModuleManager manager)
     {
@@ -32,10 +33,17 @@ public class ClientAuthentication : InsightModule
         {
             if (callbackStatus == CallbackStatus.Ok)
             {
-                StatusMsg msg = reader.ReadMessage<StatusMsg>();
-                loginResponse = msg.Text;
-                loginSucessful = true; //This will always be true for prototyping
-                Debug.Log(msg.Text);
+                LoginResponseMsg msg = reader.ReadMessage<LoginResponseMsg>();
+                loginSucessful = msg.Authenticated; //This will always be true for prototyping
+                if(loginSucessful)
+                {
+                    uniqueID = msg.UniqueID;
+                    loginResponse = "Login Successful!";
+                }
+                else
+                {
+                    loginResponse = "Login Failed!";
+                }
             }
             if (callbackStatus == CallbackStatus.Error)
             {

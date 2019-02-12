@@ -10,6 +10,7 @@ namespace Insight
         Status,
 
         Login,
+        LoginResponse,
         Chat,
 
         //GameManager
@@ -56,6 +57,12 @@ namespace Insight
     {
         public string AccountName;
         public string AccountPassword;
+    }
+
+    public class LoginResponseMsg : MessageBase
+    {
+        public bool Authenticated;
+        public string UniqueID;
     }
 
     public class ChatMsg : MessageBase

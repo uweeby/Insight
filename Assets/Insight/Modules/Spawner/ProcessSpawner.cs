@@ -130,6 +130,12 @@ public class ProcessSpawner : InsightModule
             UnityEngine.Debug.LogWarning("[ProcessSpawner] - UniqueID was not provided for spawn. Generating: " + spawnProperties.UniqueID);
         }
 
+        //If not ProcessAlias is provided. Use the 0th entry as default.
+        if(string.IsNullOrEmpty(spawnProperties.ProcessAlias))
+        {
+            spawnProperties.ProcessAlias = processArray[0].Alias;
+        }
+
         bool spawnComplete = false;
         //Find process name from AlaisStruct
         foreach (ProcessStruct process in processArray)

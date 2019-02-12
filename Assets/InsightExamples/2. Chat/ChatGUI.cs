@@ -1,10 +1,9 @@
-﻿using Insight;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class ChatGUI : MonoBehaviour
 {
-    public InsightClient insight;
+    public ChatClient chatComp;
 
     public InputField nameInput;
     public InputField chatInput;
@@ -12,7 +11,7 @@ public class ChatGUI : MonoBehaviour
 
     public void HandleSendChat()
     {
-        insight.Send((short)MsgId.Chat, new ChatMsg() { Origin = nameInput.text, Data = chatInput.text });
+        chatComp.SendChatMsg(nameInput.text, chatInput.text);
 
         chatInput.text = ""; //Clear out the previously entered text from the field
     }

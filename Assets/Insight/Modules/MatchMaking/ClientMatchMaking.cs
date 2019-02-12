@@ -1,5 +1,6 @@
 ﻿using Insight;
 using Mirror;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,6 +9,8 @@ public class ClientMatchMaking : InsightModule
     InsightClient client;
     public NetworkManager networkManager;
     public TelepathyTransport transport;
+
+    public List<GameContainer> gamesList;
 
     public override void Initialize(InsightClient client, ModuleManager manager)
     {
@@ -19,6 +22,7 @@ public class ClientMatchMaking : InsightModule
     void RegisterHandlers()
     {
         client.RegisterHandler((short)MsgId.ChangeServers, HandleChangeServersMsg);
+        client.RegisterHandler((short)MsgId.GameList, HandleGameListMsg);
     }
 
     private void HandleChangeServersMsg(InsightNetworkMessage netMsg)
@@ -33,6 +37,27 @@ public class ClientMatchMaking : InsightModule
         networkManager.StartClient();
     }
 
+    private void HandleGameListMsg(InsightNetworkMessage netMsg)
+    {
+        GameListMsg message = netMsg.ReadMessage<GameListMsg>();
+
+        if (client.logNetworkMessages) { Debug.Log("[InsightClient] - Received Games List"); };
+
+        gamesList.Clear();
+
+        foreach (GameContainer game in message.gamesArray)
+        {
+            gamesList.Add(new GameContainer()
+            {
+                connectionId = game.connectionId,
+                CurrentPlayers = game.CurrentPlayers,
+                MaxPlayers = game.MaxPlayers,
+                MinPlayers = game.MinPlayers
+            });
+        }
+    }
+
+    #region Message Senders
     public void SendStartMatchMaking()
     {
         client.Send((short)MsgId.StartMatchMaking, new StartMatchMakingMsg() { PlayListName = "SuperAwesomeGame"});
@@ -45,26 +70,12 @@ public class ClientMatchMaking : InsightModule
 
     public void SendJoinGameMsg(string UniqueID)
     {
-        client.Send((short)MsgId.JoinGame, new JoinGamMsg());
+        client.Send((short)MsgId.JoinGame, new JoinGamMsg() { UniqueID = UniqueID });
     }
 
     public void SendGetGameListMsg()
     {
-        client.Send((short)MsgId.GameList, new GameListMsg(), (callbackStatus, reader) =>
-        {
-            if (callbackStatus == CallbackStatus.Ok)
-            {
-                StatusMsg msg = reader.ReadMessage<StatusMsg>();
-                Debug.Log(msg.Text);
-            }
-            if (callbackStatus == CallbackStatus.Error)
-            {
-                Debug.LogError("Callback Error: Login error");
-            }
-            if (callbackStatus == CallbackStatus.Timeout)
-            {
-                Debug.LogError("Callback Error: Login attempt timed out");
-            }
-        });
+        client.Send((short)MsgId.GameList, new GameListMsg());
     }
+    #endregion
 }

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public enum PlayerClientGUIState { Login, Main, Game};
 
@@ -6,6 +7,7 @@ public class PlayerClientGUI : MonoBehaviour
 {
     public GameObject RootLoginPanel;
     public GameObject RootMainPanel;
+    public GameObject RootGamePanel;
 
     public PlayerClientGUIState playerGuiState;
 
@@ -16,10 +18,14 @@ public class PlayerClientGUI : MonoBehaviour
     public GameObject StartMatchMakingButton;
     public GameObject StopMatchMakingButton;
     public GameObject GetGameListButton;
+    public GameObject CreateGameButton;
+
     public GameObject GameListArea;
     public GameObject GameListPanel;
 
     public GameObject GameListItemPrefab;
+
+    public Text chatTextField;
 
     private void Start()
     {
@@ -48,28 +54,38 @@ public class PlayerClientGUI : MonoBehaviour
         }
     }
 
+    public void FixedUpdate()
+    {
+        //This is gross. Needs a better design that does not introduce coupling.
+        chatTextField.text = chatComp.chatLog;
+    }
+
     private void SwitchToLogin()
     {
         RootLoginPanel.SetActive(true);
         RootMainPanel.SetActive(false);
+        RootGamePanel.SetActive(false);
     }
 
     private void SwitchToMain()
     {
         RootLoginPanel.SetActive(false);
         RootMainPanel.SetActive(true);
+        RootGamePanel.SetActive(false);
     }
 
     private void SwitchToGamesList()
     {
         RootLoginPanel.SetActive(false);
         RootMainPanel.SetActive(false);
+        RootGamePanel.SetActive(false);
     }
 
     private void SwitchToGame()
     {
         RootLoginPanel.SetActive(false);
         RootMainPanel.SetActive(false);
+        RootGamePanel.SetActive(true);
     }
 
     public void HandleStartMatchMakingButton()
@@ -115,6 +131,7 @@ public class PlayerClientGUI : MonoBehaviour
 
     public void HandleCreateGameButton()
     {
+
         matchComp.SendRequestSpawn();
     }
 

@@ -1108,7 +1108,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &691355882
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2262,6 +2262,7 @@ MonoBehaviour:
   GameListPanel: {fileID: 499142649}
   GameListItemPrefab: {fileID: 1353463964295818, guid: b9f43b640d9cf47909c2cc72fc115ecf,
     type: 2}
+  chatTextField: {fileID: 1959587314}
 --- !u!114 &1365284629
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2628,7 +2629,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1496749888
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3534,7 +3535,7 @@ GameObject:
   - component: {fileID: 1959587315}
   - component: {fileID: 1959587314}
   m_Layer: 5
-  m_Name: TextField
+  m_Name: ChatTextField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3825,7 +3826,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2061953741
 RectTransform:
   m_ObjectHideFlags: 0

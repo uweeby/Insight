@@ -60,7 +60,10 @@ public class ServerGameManager : InsightModule
     {
         if (server.logNetworkMessages) { UnityEngine.Debug.Log("[MatchMaking] - Player Requesting Match list"); }
 
-        netMsg.Reply((short)MsgId.GameList, new GameListMsg());
+        GameListMsg gamesListMsg = new GameListMsg();
+        gamesListMsg.Load(registeredGameServers);
+
+        netMsg.Reply((short)MsgId.GameList, gamesListMsg);
     }
 
     private void HandleJoinGameMsg(InsightNetworkMessage netMsg)

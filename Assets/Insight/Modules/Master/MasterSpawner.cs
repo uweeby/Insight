@@ -60,11 +60,12 @@ public partial class MasterSpawner : InsightModule
             }
             if(callbackStatus == CallbackStatus.Timeout)
             {
-
+                RequestSpawnMsg callbackResponse = reader.ReadMessage<RequestSpawnMsg>();
+                Debug.Log("[Spawn Callback] Createion Timed Out: " + callbackResponse.UniqueID);
             }
             if (callbackStatus == CallbackStatus.Error)
             {
-
+                Debug.Log("[Spawn Callback] Error in SpawnRequest.");
             }
         });
     }

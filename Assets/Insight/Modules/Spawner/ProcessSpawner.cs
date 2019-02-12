@@ -1,5 +1,6 @@
 ﻿using Insight;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
@@ -28,6 +29,8 @@ public class ProcessSpawner : InsightModule
 
     private int _processUsageCounter;
     private bool registrationComplete;
+
+    public List<RunningProcessStruct> spawnerProcesses = new List<RunningProcessStruct>();
 
     public override void Initialize(InsightServer server, ModuleManager manager)
     {
@@ -69,19 +72,23 @@ public class ProcessSpawner : InsightModule
         if (client)
         {
             client.RegisterHandler((short)MsgId.RequestSpawn, HandleSpawnRequest);
+            client.RegisterHandler((short)MsgId.KillSpawn, HandleKillSpawn);
         }
         if (server)
         {
             server.RegisterHandler((short)MsgId.RequestSpawn, HandleSpawnRequest);
+            server.RegisterHandler((short)MsgId.KillSpawn, HandleKillSpawn);
         }
     }
 
     private void HandleSpawnRequest(InsightNetworkMessage netMsg)
     {
-        RequestSpawn message = netMsg.ReadMessage<RequestSpawn>();
+        RequestSpawnMsg message = netMsg.ReadMessage<RequestSpawnMsg>();
 
         if (SpawnThread(message))
         {
+            //This is the reply to the spawn request. Is it even needed?
+
             //netMsg.Reply((short)MsgId.RequestSpawn, new RequestSpawn() {
             //    SceneName = message.SceneName,
             //    NetworkAddress = SpawnerNetworkAddress,
@@ -93,7 +100,21 @@ public class ProcessSpawner : InsightModule
         }
     }
 
-    private bool SpawnThread(RequestSpawn spawnProperties)
+    private void HandleKillSpawn(InsightNetworkMessage netMsg)
+    {
+        KillSpawnMsg message = netMsg.ReadMessage<KillSpawnMsg>();
+
+        foreach(RunningProcessStruct process in spawnerProcesses)
+        {
+            if(process.uniqueID.Equals(message.UniqueID))
+            {
+                process.process.Kill();
+                break;
+            }
+        }
+    }
+
+    private bool SpawnThread(RequestSpawnMsg spawnProperties)
     {
         if(_processUsageCounter >= MaximumProcesses)
         {
@@ -114,7 +135,7 @@ public class ProcessSpawner : InsightModule
                     " -NetworkAddress " + SpawnerNetworkAddress + 
                     " -NetworkPort " + (StartingNetworkPort + _portCounter) +
                     " -SceneName " + spawnProperties.SceneName +
-                    " -UniqueID " + spawnProperties.UniqueID;
+                    " -UniqueID " + spawnProperties.UniqueID; //What to do if the UniqueID or any other value is null??
 
                 if (p.Start())
                 {
@@ -128,8 +149,10 @@ public class ProcessSpawner : InsightModule
                     //If registered to a master. Notify it of the current thread utilization
                     if(client != null)
                     {
-                        client.Send((short)MsgId.SpawnerStatus, new SpawnerStatus() { CurrentThreads = _processUsageCounter });
+                        client.Send((short)MsgId.SpawnerStatus, new SpawnerStatusMsg() { CurrentThreads = _processUsageCounter });
                     }
+
+                    spawnerProcesses.Add(new RunningProcessStruct() { process = p, pid = p.Id, uniqueID = spawnProperties.UniqueID });
                     break;
                 }
                 else
@@ -160,4 +183,12 @@ public struct ProcessStruct
 {
     public string Alias;
     public string Path;
+}
+
+[Serializable]
+public struct RunningProcessStruct
+{
+    public Process process;
+    public int pid;
+    public string uniqueID;
 }

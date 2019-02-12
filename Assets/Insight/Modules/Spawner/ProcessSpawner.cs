@@ -122,6 +122,14 @@ public class ProcessSpawner : InsightModule
             return false;
         }
 
+        if(string.IsNullOrEmpty(spawnProperties.UniqueID))
+        {
+            //If a UniqueID was not provided add one for GameResitration
+            spawnProperties.UniqueID = Guid.NewGuid().ToString();
+
+            UnityEngine.Debug.LogWarning("[ProcessSpawner] - UniqueID was not provided for spawn. Generating: " + spawnProperties.UniqueID);
+        }
+
         bool spawnComplete = false;
         //Find process name from AlaisStruct
         foreach (ProcessStruct process in processArray)

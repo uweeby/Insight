@@ -1540,6 +1540,7 @@ MonoBehaviour:
   loginGuiComp: {fileID: 0}
   loginResponse: 
   loginSucessful: 0
+  uniqueID: 
 --- !u!1 &1021337903
 GameObject:
   m_ObjectHideFlags: 0
@@ -2251,6 +2252,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RootLoginPanel: {fileID: 2061953740}
   RootMainPanel: {fileID: 1496749887}
+  RootGamePanel: {fileID: 691355881}
   playerGuiState: 0
   authComp: {fileID: 972950913}
   chatComp: {fileID: 1750788654}
@@ -2258,6 +2260,7 @@ MonoBehaviour:
   StartMatchMakingButton: {fileID: 1635566046}
   StopMatchMakingButton: {fileID: 858910305}
   GetGameListButton: {fileID: 596783715}
+  CreateGameButton: {fileID: 9236043}
   GameListArea: {fileID: 547811546}
   GameListPanel: {fileID: 499142649}
   GameListItemPrefab: {fileID: 1353463964295818, guid: b9f43b640d9cf47909c2cc72fc115ecf,

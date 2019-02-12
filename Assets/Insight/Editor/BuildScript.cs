@@ -64,7 +64,7 @@ public class BuildScript
         var scenes = new[]
         {
         ScenesRoot+"MasterServer.unity"
-    };
+        };
         PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Enabled;
         PlayerSettings.productName = "MasterServer";
         BuildPipeline.BuildPlayer(scenes, path + "/MasterServer.exe", GetBuildTarget(), BuildOptions);
@@ -75,7 +75,7 @@ public class BuildScript
         var gameServerScenes = new[]
         {
         ScenesRoot+"RemoteSpawner.unity"
-    };
+        };
         PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Enabled;
         PlayerSettings.productName = "RemoteSpawner";
         BuildPipeline.BuildPlayer(gameServerScenes, path + "/RemoteSpawner.exe", GetBuildTarget(), BuildOptions);
@@ -88,7 +88,7 @@ public class BuildScript
         ScenesRoot+"GameServer.unity",
         //Scene used for MasterServer Demo
         ScenesRoot+"SuperAwesomeGame.unity"
-    };
+        };
         PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Enabled;
         PlayerSettings.productName = "GameServer";
         BuildPipeline.BuildPlayer(gameServerScenes, path + "/GameServer.exe", GetBuildTarget(), BuildOptions);
@@ -101,7 +101,7 @@ public class BuildScript
         ScenesRoot+"PlayerClient.unity",
         //Scene used for MasterServer Demo
         ScenesRoot+"SuperAwesomeGame.unity"
-    };
+        };
         PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Enabled;
         PlayerSettings.productName = "PlayerClient";
         BuildPipeline.BuildPlayer(scenes, path + "/PlayerClient.exe", GetBuildTarget(), BuildOptions);

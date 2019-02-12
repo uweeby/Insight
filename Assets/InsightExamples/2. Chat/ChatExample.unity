@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311918, g: 0.38073993, b: 0.35872698, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -478,7 +478,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29c804b61ca132d4b8eabea835f5eab0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  insight: {fileID: 1668111367}
+  chatComp: {fileID: 972950913}
   nameInput: {fileID: 2047760808}
   chatInput: {fileID: 1439904086}
   textField: {fileID: 415185907}
@@ -720,6 +720,7 @@ MonoBehaviour:
   shakeAcceleration: 3
   restrictLogCount: 0
   maxLogCount: 1000
+  autoGenerateHTML: 0
 --- !u!1 &749805673
 GameObject:
   m_ObjectHideFlags: 0
@@ -910,7 +911,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8453ffc53b7982f4b96a6e9456bfcedc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chatGuiComp: {fileID: 432512961}
+  chatLog: 
 --- !u!1 &990614687
 GameObject:
   m_ObjectHideFlags: 0

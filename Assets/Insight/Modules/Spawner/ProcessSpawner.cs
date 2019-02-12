@@ -122,15 +122,15 @@ public class ProcessSpawner : InsightModule
             return false;
         }
 
-        if(string.IsNullOrEmpty(spawnProperties.UniqueID))
+        //If a UniqueID was not provided add one for GameResitration
+        if (string.IsNullOrEmpty(spawnProperties.UniqueID))
         {
-            //If a UniqueID was not provided add one for GameResitration
             spawnProperties.UniqueID = Guid.NewGuid().ToString();
 
             UnityEngine.Debug.LogWarning("[ProcessSpawner] - UniqueID was not provided for spawn. Generating: " + spawnProperties.UniqueID);
         }
 
-        //If not ProcessAlias is provided. Use the 0th entry as default.
+        //If no ProcessAlias is provided. Use the 0th entry as default.
         if(string.IsNullOrEmpty(spawnProperties.ProcessAlias))
         {
             spawnProperties.ProcessAlias = processArray[0].Alias;

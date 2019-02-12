@@ -33,7 +33,12 @@ public class ServerAuthentication : InsightModule
         
         if (server.logNetworkMessages) { Debug.Log("[InsightServer] - Login Received: " + message.AccountName + " / " + message.AccountPassword); }
 
-        registeredUsers.Add(new UserContainer() { username = message.AccountName, uniqueId = Guid.NewGuid().ToString(), connectionId = netMsg.connectionId});
+        registeredUsers.Add(new UserContainer()
+        {
+            username = message.AccountName,
+            uniqueId = Guid.NewGuid().ToString(),
+            connectionId = netMsg.connectionId
+        });
 
         netMsg.Reply((short)MsgId.Status, new StatusMsg() { Text = "Login Sucessful!" });
     }

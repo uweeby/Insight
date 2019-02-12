@@ -29,4 +29,16 @@ public class ChatClient : InsightModule
 
         chatLog += message.Origin + ": "  + message.Data + "\n";
     }
+
+    //Has server control the username (MasterServer Example)
+    public void SendChatMsg(string Origin)
+    {
+        client.Send((short)MsgId.Chat, new ChatMsg() { Origin = Origin});
+    }
+
+    //Allows the user to set their own name (Chat Example)
+    public void SendChatMsg(string Origin, string Data)
+    {
+        client.Send((short)MsgId.Chat, new ChatMsg() { Origin = Origin, Data = Data });
+    }
 }

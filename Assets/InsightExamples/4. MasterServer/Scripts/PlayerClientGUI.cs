@@ -10,6 +10,7 @@ public class PlayerClientGUI : MonoBehaviour
     public PlayerClientGUIState playerGuiState;
 
     public ClientAuthentication authComp;
+    public ChatClient chatComp;
     public ClientMatchMaking matchComp;
 
     public GameObject StartMatchMakingButton;
@@ -115,6 +116,11 @@ public class PlayerClientGUI : MonoBehaviour
     public void HandleCreateGameButton()
     {
         matchComp.SendRequestSpawn();
+    }
+
+    public void HandleSendChatButton(string Data)
+    {
+        chatComp.SendChatMsg(Data);
     }
 
     public void UpdateGameListUI()

@@ -118,6 +118,8 @@ public class PlayerClientGUI : MonoBehaviour
     public void HandleJoinGameButton(string UniqueID)
     {
         matchComp.SendJoinGameMsg(UniqueID);
+
+        playerGuiState = PlayerClientGUIState.Game;
     }
 
     public void HandleCancelButton()

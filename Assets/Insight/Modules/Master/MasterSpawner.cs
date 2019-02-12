@@ -56,7 +56,11 @@ public partial class MasterSpawner : InsightModule
                 RequestSpawnMsg callbackResponse = reader.ReadMessage<RequestSpawnMsg>();
                 if (server.logNetworkMessages) { Debug.Log("[Spawn Callback] Game Created on Child Spawner: " + callbackResponse.UniqueID); }
 
-                netMsg.Reply((short)MsgId.RequestSpawn, callbackResponse);
+                //If callback from original message is present
+                if(netMsg.callbackId != 0)
+                {
+                    netMsg.Reply((short)MsgId.RequestSpawn, callbackResponse);
+                }
             }
             if(callbackStatus == CallbackStatus.Timeout)
             {

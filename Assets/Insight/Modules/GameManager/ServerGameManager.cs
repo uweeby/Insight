@@ -37,11 +37,15 @@ public class ServerGameManager : InsightModule
         if (server.logNetworkMessages) { Debug.Log("Received GameRegistration request"); }
 
         registeredGameServers.Add(new GameContainer() {
-            connectionId = netMsg.connectionId,
+            NetworkAddress = message.NetworkAddress,
+            NetworkPort = message.NetworkPort,
             UniqueId = message.UniqueID,
             SceneName = message.SceneName,
-            NetworkAddress = message.NetworkAddress,
-            NetworkPort = message.NetworkPort});
+            MaxPlayers = message.MaxPlayers,
+            CurrentPlayers = message.CurrentPlayers,
+
+            connectionId = netMsg.connectionId,
+        });
     }
 
     private void HandleDisconnect(int connectionId)
@@ -74,11 +78,20 @@ public class ServerGameManager : InsightModule
 
         GameContainer game = GetGameByUniqueID(message.UniqueID);
 
-        netMsg.Reply((short)MsgId.ChangeServers, new ChangeServerMsg() {
-            NetworkAddress = game.NetworkAddress,
-            NetworkPort = game.NetworkPort,
-            SceneName = game.SceneName
-        });
+        if (game == null)
+        {
+            //Something went wrong
+            //netMsg.Reply((short)MsgId.ChangeServers, new ChangeServerMsg());
+        }
+        else
+        {
+            netMsg.Reply((short)MsgId.ChangeServers, new ChangeServerMsg()
+            {
+                NetworkAddress = game.NetworkAddress,
+                NetworkPort = game.NetworkPort,
+                SceneName = game.SceneName
+            });
+        }
     }
 
     //Used by MatchMaker to request a GameServer for a new Match

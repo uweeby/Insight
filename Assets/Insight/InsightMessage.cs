@@ -77,6 +77,8 @@ namespace Insight
         public string NetworkAddress;
         public ushort NetworkPort;
         public string SceneName;
+        public int MaxPlayers;
+        public int CurrentPlayers;
     }
 
     public class RequestSpawnMsg : MessageBase

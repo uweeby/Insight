@@ -81,7 +81,7 @@ public class ServerGameManager : InsightModule
         });
     }
 
-    //Take in the options here
+    //Used by MatchMaker to request a GameServer for a new Match
     public void RequestGameSpawn(RequestSpawnMsg requestSpawn)
     {
         masterSpawner.InternalSpawnRequest(requestSpawn);

@@ -61,7 +61,7 @@ namespace Insight
     public class ChatMsg : MessageBase
     {
         public string Data;
-        public string Origin;
+        public string Origin; //This could be controlled by the server.
         public string Target; //Used for private chat
     }
 

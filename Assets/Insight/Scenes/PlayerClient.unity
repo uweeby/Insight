@@ -1801,8 +1801,8 @@ MonoBehaviour:
   matchComp: {fileID: 650334111}
   StartMatchMakingButton: {fileID: 1635566046}
   StopMatchMakingButton: {fileID: 858910305}
-  GetGameListButton: {fileID: 0}
-  GameListArea: {fileID: 0}
+  GetGameListButton: {fileID: 596783715}
+  GameListArea: {fileID: 547811546}
 --- !u!114 &1365284629
 MonoBehaviour:
   m_ObjectHideFlags: 0

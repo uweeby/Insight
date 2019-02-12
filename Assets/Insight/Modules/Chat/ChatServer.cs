@@ -35,7 +35,12 @@ public class ChatServer : InsightModule
 
         if (authModule != null)
         {
-            Debug.LogWarning("Using Auth Module for chat");
+            //Find the user
+            UserContainer user = authModule.GetUserByConnection(netMsg.connectionId);
+
+            //Inject the username into the message
+            message.Origin = user.username;
+
             server.SendToAll((short)MsgId.Chat, message);
         }
 

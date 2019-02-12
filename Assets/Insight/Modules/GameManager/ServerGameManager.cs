@@ -26,6 +26,8 @@ public class ServerGameManager : InsightModule
     void RegisterHandlers()
     {
         server.RegisterHandler((short)MsgId.RegisterGame, HandleRegisterGameMsg);
+        server.RegisterHandler((short)MsgId.JoinGame, HandleJoinGameMsg);
+        server.RegisterHandler((short)MsgId.GameList, HandleGameListMsgMsg);
     }
 
     private void HandleRegisterGameMsg(InsightNetworkMessage netMsg)
@@ -52,6 +54,28 @@ public class ServerGameManager : InsightModule
                 return;
             }
         }
+    }
+
+    private void HandleGameListMsgMsg(InsightNetworkMessage netMsg)
+    {
+        if (server.logNetworkMessages) { UnityEngine.Debug.Log("[MatchMaking] - Player Requesting Match list"); }
+
+        netMsg.Reply((short)MsgId.GameList, new GameListMsg());
+    }
+
+    private void HandleJoinGameMsg(InsightNetworkMessage netMsg)
+    {
+        JoinGamMsg message = netMsg.ReadMessage<JoinGamMsg>();
+
+        if (server.logNetworkMessages) { UnityEngine.Debug.Log("[MatchMaking] - Player joining Match."); }
+
+        GameContainer game = GetGameByUniqueID(message.UniqueID);
+
+        netMsg.Reply((short)MsgId.ChangeServers, new ChangeServers() {
+            NetworkAddress = game.NetworkAddress,
+            NetworkPort = game.NetworkPort,
+            SceneName = game.SceneName
+        });
     }
 
     //Take in the options here
@@ -81,6 +105,7 @@ public class GameContainer
     public int connectionId;
 
     public string SceneName;
-    public int MaxPlayer;
+    public int MaxPlayers;
+    public int MinPlayers;
     public int CurrentPlayers;
 }

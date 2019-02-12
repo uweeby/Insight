@@ -1,4 +1,5 @@
 using Mirror;
+using System.Collections.Generic;
 
 namespace Insight
 {
@@ -19,7 +20,7 @@ namespace Insight
 
         //ProcessSpawner
         RequestSpawn,
-        RequestGame,
+        KillSpawn,
 
         //MatchMaking
         StartMatchMaking,
@@ -78,7 +79,7 @@ namespace Insight
         public string SceneName;
     }
 
-    public class RequestSpawn : MessageBase
+    public class RequestSpawnMsg : MessageBase
     {
         public string ProcessAlias;
         public string SceneName;
@@ -88,18 +89,30 @@ namespace Insight
         public string NetworkAddress; 
     }
 
-    public class StartMatchMaking : MessageBase
+    public class KillSpawnMsg : MessageBase
+    {
+        public string UniqueID; //Guid
+    }
+
+    public class StartMatchMakingMsg : MessageBase
     {
         public string PlayListName;
     }
 
-    public class StopMatchMaking : MessageBase
+    public class StopMatchMakingMsg : MessageBase
     {
 
     }
 
     public class GameListMsg : MessageBase
     {
+        public GameContainer[] gamesArray;
+
+        public void Load(List<GameContainer> gamesList)
+        {
+            gamesArray = gamesList.ToArray();
+        }
+
         public struct GameListStruct
         {
             public string SceneName;
@@ -107,8 +120,6 @@ namespace Insight
             public int CurrentPlayers;
             public string UniqueID;
         }
-
-
     }
 
     public class JoinGamMsg : MessageBase
@@ -117,7 +128,7 @@ namespace Insight
     }
 
     //Used to tell a player to connect to a new game server
-    public class ChangeServers : MessageBase
+    public class ChangeServersMsg : MessageBase
     {
         public string NetworkAddress;
         public ushort NetworkPort;
@@ -125,7 +136,7 @@ namespace Insight
     }
 
     //Updates the MasterSpawner with current status
-    public class SpawnerStatus : MessageBase
+    public class SpawnerStatusMsg : MessageBase
     {
         public int CurrentThreads;
     }

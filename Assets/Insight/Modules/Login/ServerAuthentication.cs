@@ -40,7 +40,10 @@ public class ServerAuthentication : InsightModule
             connectionId = netMsg.connectionId
         });
 
-        netMsg.Reply((short)MsgId.Status, new StatusMsg() { Text = "Login Sucessful!" });
+        netMsg.Reply((short)MsgId.Status, new StatusMsg()
+        {
+            Text = "Login Sucessful!"
+        });
     }
 
     private void HandleDisconnect(int connectionId)

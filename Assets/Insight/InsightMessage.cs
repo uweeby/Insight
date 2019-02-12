@@ -11,16 +11,20 @@ namespace Insight
         Login,
         Chat,
 
+        //GameManager
         RegisterSpawner,
         RegisterGame,
+        GameList,
+        JoinGame,
 
+        //ProcessSpawner
         RequestSpawn,
         RequestGame,
+
+        //MatchMaking
         StartMatchMaking,
         StopMatchMaking,
-        MatchList,
-        JoinMatch,
-
+        
         ChangeServers,
         SpawnerStatus,
     }
@@ -94,12 +98,20 @@ namespace Insight
 
     }
 
-    public class MatchList : MessageBase
+    public class GameListMsg : MessageBase
     {
+        public struct GameListStruct
+        {
+            public string SceneName;
+            public int MaxPlayers;
+            public int CurrentPlayers;
+            public string UniqueID;
+        }
+
 
     }
 
-    public class JoinMatch : MessageBase
+    public class JoinGamMsg : MessageBase
     {
         public string UniqueID;
     }

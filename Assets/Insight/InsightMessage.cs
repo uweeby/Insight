@@ -112,14 +112,6 @@ namespace Insight
         {
             gamesArray = gamesList.ToArray();
         }
-
-        public struct GameListStruct
-        {
-            public string SceneName;
-            public int MaxPlayers;
-            public int CurrentPlayers;
-            public string UniqueID;
-        }
     }
 
     public class JoinGamMsg : MessageBase

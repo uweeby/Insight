@@ -10,7 +10,9 @@ public class ClientMatchMaking : InsightModule
     public NetworkManager networkManager;
     public TelepathyTransport transport;
 
-    public List<GameContainer> gamesList;
+    public PlayerClientGUI playerGUI;
+
+    public List<GameContainer> gamesList = new List<GameContainer>();
 
     public override void Initialize(InsightClient client, ModuleManager manager)
     {
@@ -47,14 +49,19 @@ public class ClientMatchMaking : InsightModule
 
         foreach (GameContainer game in message.gamesArray)
         {
+            Debug.Log(game.SceneName);
+
             gamesList.Add(new GameContainer()
             {
-                connectionId = game.connectionId,
+                UniqueId = game.UniqueId,
+                SceneName = game.SceneName,
                 CurrentPlayers = game.CurrentPlayers,
                 MaxPlayers = game.MaxPlayers,
                 MinPlayers = game.MinPlayers
             });
         }
+
+        playerGUI.UpdateGameListUI();
     }
 
     #region Message Senders

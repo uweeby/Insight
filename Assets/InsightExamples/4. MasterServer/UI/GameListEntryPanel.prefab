@@ -40,7 +40,7 @@ GameObject:
   - component: {fileID: 222708173611217884}
   - component: {fileID: 114792394046074002}
   m_Layer: 5
-  m_Name: GameNameText
+  m_Name: SceneNameText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -56,6 +56,7 @@ GameObject:
   - component: {fileID: 224676967658052936}
   - component: {fileID: 222004706240203236}
   - component: {fileID: 114383002891953566}
+  - component: {fileID: 114155077548539878}
   m_Layer: 5
   m_Name: GameListEntryPanel
   m_TagString: Untagged
@@ -91,12 +92,30 @@ GameObject:
   - component: {fileID: 222764480228402598}
   - component: {fileID: 114271380832568344}
   m_Layer: 5
-  m_Name: SlotsText
+  m_Name: PlayerSlotsText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &114155077548539878
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1353463964295818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f4273f6642baa4489ef6afd40cb1c5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clientComp: {fileID: 0}
+  SceneNameText: {fileID: 114792394046074002}
+  PlayerCountText: {fileID: 114271380832568344}
+  UniqueID: 
+  SceneName: 
+  CurrentPlayers: 0
+  MaxPlayers: 0
 --- !u!114 &114271380832568344
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -195,7 +214,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 114635874429760236}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 114155077548539878}
+        m_MethodName: HandleSelectButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &114635874429760236

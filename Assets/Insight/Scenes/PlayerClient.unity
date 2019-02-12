@@ -352,7 +352,7 @@ GameObject:
   - component: {fileID: 499142652}
   - component: {fileID: 499142651}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: GameListPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -748,6 +748,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   networkManager: {fileID: 1115168652}
   transport: {fileID: 1115168651}
+  playerGUI: {fileID: 1365284628}
 --- !u!1 &730002462
 GameObject:
   m_ObjectHideFlags: 0
@@ -1803,6 +1804,9 @@ MonoBehaviour:
   StopMatchMakingButton: {fileID: 858910305}
   GetGameListButton: {fileID: 596783715}
   GameListArea: {fileID: 547811546}
+  GameListPanel: {fileID: 499142649}
+  GameListItemPrefab: {fileID: 1353463964295818, guid: b9f43b640d9cf47909c2cc72fc115ecf,
+    type: 2}
 --- !u!114 &1365284629
 MonoBehaviour:
   m_ObjectHideFlags: 0

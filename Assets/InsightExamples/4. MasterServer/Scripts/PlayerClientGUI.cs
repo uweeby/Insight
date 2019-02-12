@@ -16,6 +16,9 @@ public class PlayerClientGUI : MonoBehaviour
     public GameObject StopMatchMakingButton;
     public GameObject GetGameListButton;
     public GameObject GameListArea;
+    public GameObject GameListPanel;
+
+    public GameObject GameListItemPrefab;
 
     private void Start()
     {
@@ -86,6 +89,8 @@ public class PlayerClientGUI : MonoBehaviour
 
     public void HandleGetGameListButton()
     {
+        matchComp.SendGetGameListMsg();
+
         GetGameListButton.SetActive(false);
         StartMatchMakingButton.SetActive(false);
         StopMatchMakingButton.SetActive(false);
@@ -105,5 +110,20 @@ public class PlayerClientGUI : MonoBehaviour
         GetGameListButton.SetActive(true);
         StartMatchMakingButton.SetActive(true);
         StopMatchMakingButton.SetActive(false);
+    }
+
+    public void UpdateGameListUI()
+    {
+        foreach (GameContainer game in matchComp.gamesList)
+        {
+            GameObject instance = Instantiate(GameListItemPrefab);
+            instance.transform.parent = GameListPanel.transform;
+            GUIGamesListEntry comp = instance.GetComponent<GUIGamesListEntry>();
+            comp.clientComp = this;
+            comp.UniqueID = game.UniqueId;
+            comp.CurrentPlayers = game.CurrentPlayers;
+            comp.MaxPlayers = game.MaxPlayers;
+            comp.SceneName = game.SceneName;
+        }
     }
 }

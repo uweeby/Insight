@@ -4,10 +4,20 @@ using UnityEngine;
 public class ChatServer : InsightModule
 {
     InsightServer server;
+    ServerAuthentication authModule;
 
+    public void Awake()
+    {
+        AddOptionalDependency<ServerAuthentication>();
+    }
     public override void Initialize(InsightServer server, ModuleManager manager)
     {
         this.server = server;
+
+        if(manager.GetModule<ServerAuthentication>() != null)
+        {
+            authModule = manager.GetModule<ServerAuthentication>();
+        }
 
         RegisterHandlers();
     }
@@ -23,6 +33,17 @@ public class ChatServer : InsightModule
 
         ChatMsg message = netMsg.ReadMessage<ChatMsg>();
 
-        server.SendToAll((short)MsgId.Chat, message); //Broadcast back to all other clients
+        if (authModule != null)
+        {
+            Debug.LogWarning("Using Auth Module for chat");
+            server.SendToAll((short)MsgId.Chat, message);
+        }
+
+        //No Authentication Module. Simple Echo
+        else
+        {
+            //Broadcast back to all other clients
+            server.SendToAll((short)MsgId.Chat, message);
+        }
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public partial class MasterSpawner : InsightModule
 {
-    InsightServer server;
+    public InsightServer server;
 
     public List<SpawnerContainer> registeredSpawners = new List<SpawnerContainer>();
 
@@ -27,7 +27,12 @@ public partial class MasterSpawner : InsightModule
         RegisterSpawnerMsg message = netMsg.ReadMessage<RegisterSpawnerMsg>();
 
         //Add the new child spawner to the list of spawners
-        registeredSpawners.Add(new SpawnerContainer() { uniqueId = message.UniqueID, connectionId = netMsg.connectionId, MaxThreads = message.MaxThreads });
+        registeredSpawners.Add(new SpawnerContainer()
+        {
+            uniqueId = message.UniqueID,
+            connectionId = netMsg.connectionId,
+            MaxThreads = message.MaxThreads
+        });
 
         if (server.logNetworkMessages) { Debug.Log("[MasterSpawner] - New Process Spawner Regsitered"); }
     }

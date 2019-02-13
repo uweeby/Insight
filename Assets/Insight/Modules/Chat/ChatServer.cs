@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class ChatServer : InsightModule
 {
-    InsightServer server;
-    ServerAuthentication authModule;
+    public InsightServer server;
+    public ServerAuthentication authModule;
 
     public void Awake()
     {

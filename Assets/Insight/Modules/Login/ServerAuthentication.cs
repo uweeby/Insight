@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class ServerAuthentication : InsightModule
 {
-    InsightServer server;
+    public InsightServer server;
     public TelepathyTransport telepathyTransport;
 
     public List<UserContainer> registeredUsers = new List<UserContainer>();

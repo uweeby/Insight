@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class ClientMatchMaking : InsightModule
 {
-    InsightClient client;
+    public InsightClient client;
     public NetworkManager networkManager;
     public TelepathyTransport transport;
 

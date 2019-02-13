@@ -3,11 +3,10 @@ using UnityEngine;
 
 public class ChatClient : InsightModule
 {
-    InsightClient client;
+    public InsightClient client;
 
     //Used in Example Scene:
-    [HideInInspector]
-    public string chatLog;
+    [HideInInspector] public string chatLog;
 
     public override void Initialize(InsightClient client, ModuleManager manager)
     {
@@ -39,6 +38,10 @@ public class ChatClient : InsightModule
     //Allows the user to set their own name (Chat Example)
     public void SendChatMsg(string Origin, string Data)
     {
-        client.Send((short)MsgId.Chat, new ChatMsg() { Origin = Origin, Data = Data });
+        client.Send((short)MsgId.Chat, new ChatMsg()
+        {
+            Origin = Origin,
+            Data = Data
+        });
     }
 }

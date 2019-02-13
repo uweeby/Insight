@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class ServerGameManager : InsightModule
 {
-    InsightServer server;
-    MasterSpawner masterSpawner;
+    public InsightServer server;
+    public MasterSpawner masterSpawner;
 
     public List<GameContainer> registeredGameServers = new List<GameContainer>();
 

@@ -5,15 +5,15 @@ using UnityEngine;
 
 public class ClientAuthentication : InsightModule
 {
-    InsightClient client;
+    public InsightClient client;
 
     public LoginGUI loginGuiComp;
 
-    [HideInInspector]
-    public string loginResponse; //This is put in the GUI. Just for example purposes
-    [HideInInspector]
-    public bool loginSucessful;
     public string uniqueID;
+
+    //This is put in the GUI. Just for example purposes
+    [HideInInspector] public string loginResponse; 
+    [HideInInspector] public bool loginSucessful;
 
     public override void Initialize(InsightClient client, ModuleManager manager)
     {

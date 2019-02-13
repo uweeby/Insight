@@ -6,11 +6,10 @@ using UnityEngine.SceneManagement;
 
 public class GameRegistration : InsightModule
 {
-    InsightClient client;
+    public InsightClient client;
     public NetworkManager networkManager;
     public TelepathyTransport networkManagerTelepathyTransport;
     public TelepathyTransport insightTelepathyTransport;
-
 
     public List<GameContainer> registeredGames = new List<GameContainer>();
 
@@ -37,9 +36,7 @@ public class GameRegistration : InsightModule
         GatherCmdArgs();
     }
 
-    void RegisterHandlers()
-    {
-    }
+    void RegisterHandlers(){}
 
     private void GatherCmdArgs()
     {

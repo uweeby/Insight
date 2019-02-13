@@ -7,8 +7,8 @@ using UnityEngine;
 
 public class ProcessSpawner : InsightModule
 {
-    InsightServer server;
-    InsightClient client;
+    public InsightServer server;
+    public InsightClient client;
 
     [Header("Network")]
     [Tooltip("NetworkAddress that spawned processes will use")]

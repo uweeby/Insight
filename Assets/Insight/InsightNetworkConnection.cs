@@ -58,17 +58,6 @@ namespace Insight
         public void Disconnect()
         {
             isReady = false;
-
-            //// client? then stop transport
-            //if (NetworkManager.singleton.transport.ClientConnected())
-            //{
-            //    NetworkManager.singleton.transport.ClientDisconnect();
-            //}
-            //// server? then disconnect that client
-            //else if (NetworkManager.singleton.transport.ServerActive())
-            //{
-            //    NetworkManager.singleton.transport.ServerDisconnect(connectionId);
-            //}
         }
 
         internal void SetHandlers(Dictionary<short, InsightNetworkMessageDelegate> handlers)
@@ -88,7 +77,6 @@ namespace Insight
             {
                 InsightNetworkMessage message = new InsightNetworkMessage();
                 message.msgType = msgType;
-                //message.conn = this;
                 message.reader = reader;
 
                 msgDelegate(message);
@@ -149,43 +137,8 @@ namespace Insight
             return TransportSend(bytes, out error);
         }
 
-        // handle this message
-        // note: original HLAPI HandleBytes function handled >1 message in a while loop, but this wasn't necessary
-        //       anymore because NetworkServer/NetworkClient.Update both use while loops to handle >1 data events per
-        //       frame already.
-        //       -> in other words, we always receive 1 message per Receive call, never two.
-        //       -> can be tested easily with a 1000ms send delay and then logging amount received in while loops here
-        //          and in NetworkServer/Client Update. HandleBytes already takes exactly one.
-        //protected void HandleBytes(byte[] buffer)
-        //{
-        //    // unpack message
-        //    var reader = new NetworkReader(buffer);
-
-        //    short msgType = reader.ReadInt16();
-        //    int callbackId = reader.ReadInt32();
-
-        //    InsightNetworkMessageDelegate msgDelegate;
-        //    if (m_MessageHandlers.TryGetValue(msgType, out msgDelegate))
-        //    {
-        //        // create message here instead of caching it. so we can add it to queue more easily.
-        //        InsightNetworkMessage msg = new InsightNetworkMessage(this, callbackId);
-        //        msg.msgType = msgType;
-        //        msg.reader = reader;
-
-        //        msgDelegate(msg);
-        //        lastMessageTime = Time.time;
-        //    }
-        //    else
-        //    {
-        //        //NOTE: this throws away the rest of the buffer. Need moar error codes
-        //        Debug.LogError("Unknown message ID " + msgType + " connId:" + connectionId);
-        //    }
-        //}
-
         public virtual void TransportReceive(byte[] bytes)
         {
-            //HandleBytes(bytes);
-
             // unpack message
             var reader = new NetworkReader(bytes);
 

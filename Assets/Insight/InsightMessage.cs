@@ -11,13 +11,18 @@ namespace Insight
 
         Login,
         LoginResponse,
+
+        //Chat
         Chat,
+        JoinChatChannel,
+        LeaveChatChannel,
 
         //GameManager
         RegisterSpawner,
         RegisterGame,
         GameList,
         JoinGame,
+        LeaveGame,
 
         //ProcessSpawner
         RequestSpawn,
@@ -28,6 +33,8 @@ namespace Insight
         StopMatchMaking,
         
         ChangeServers,
+        
+        //Health Management Msgs
         SpawnerStatus,
     }
 
@@ -67,9 +74,21 @@ namespace Insight
 
     public class ChatMsg : MessageBase
     {
-        public string Data;
+        public short Channel; //0 for global
         public string Origin; //This could be controlled by the server.
         public string Target; //Used for private chat
+        public string Data;
+    }
+
+    public class JoinChatChannelMsg : MessageBase
+    {
+        public short Channel;
+        public string ChannelPassword;
+    }
+
+    public class LeaveChatChannelMsg : MessageBase
+    {
+        public short Channel;
     }
 
     public class RegisterSpawnerMsg : MessageBase

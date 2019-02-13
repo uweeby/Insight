@@ -7,7 +7,7 @@ namespace Insight
 {
     public class ServerAuthentication : InsightModule
     {
-        public InsightServer server;
+        [HideInInspector] public InsightServer server;
         public TelepathyTransport telepathyTransport;
 
         public List<UserContainer> registeredUsers = new List<UserContainer>();

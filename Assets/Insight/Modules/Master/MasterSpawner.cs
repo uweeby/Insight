@@ -6,7 +6,7 @@ namespace Insight
 {
     public partial class MasterSpawner : InsightModule
     {
-        public InsightServer server;
+        [HideInInspector] public InsightServer server;
 
         public List<SpawnerContainer> registeredSpawners = new List<SpawnerContainer>();
 

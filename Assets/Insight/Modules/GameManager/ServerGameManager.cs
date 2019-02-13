@@ -5,7 +5,7 @@ namespace Insight
 {
     public class ServerGameManager : InsightModule
     {
-        public InsightServer server;
+        [HideInInspector] public InsightServer server;
         public MasterSpawner masterSpawner;
 
         public List<GameContainer> registeredGameServers = new List<GameContainer>();

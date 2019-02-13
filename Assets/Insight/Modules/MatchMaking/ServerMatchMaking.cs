@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 //TODO: Remove the example specific code from module
 
@@ -7,8 +8,8 @@ namespace Insight
 {
     public class ServerMatchMaking : InsightModule
     {
-        public InsightServer server;
-        public ModuleManager manager;
+        [HideInInspector] public InsightServer server;
+        [HideInInspector] public ModuleManager manager;
         public ServerAuthentication authModule;
         public ServerGameManager gameManager;
         public MasterSpawner masterSpawner;

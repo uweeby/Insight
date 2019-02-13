@@ -9,7 +9,7 @@ namespace Insight
 {
     public class ClientMatchMaking : InsightModule
     {
-        public InsightClient client;
+        [HideInInspector] public InsightClient client;
         public NetworkManager networkManager;
         public TelepathyTransport transport;
 

@@ -7,7 +7,7 @@ namespace Insight
 {
     public class GameRegistration : InsightModule
     {
-        public InsightClient client;
+        [HideInInspector] public InsightClient client;
         public NetworkManager networkManager;
         public TelepathyTransport networkManagerTelepathyTransport;
         public TelepathyTransport insightTelepathyTransport;

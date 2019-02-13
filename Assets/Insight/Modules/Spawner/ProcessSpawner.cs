@@ -8,8 +8,8 @@ namespace Insight
 {
     public class ProcessSpawner : InsightModule
     {
-        public InsightServer server;
-        public InsightClient client;
+        [HideInInspector] public InsightServer server;
+        [HideInInspector] public InsightClient client;
 
         [Header("Network")]
         [Tooltip("NetworkAddress that spawned processes will use")]

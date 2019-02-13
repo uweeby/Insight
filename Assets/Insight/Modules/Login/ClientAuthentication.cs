@@ -6,7 +6,7 @@ namespace Insight
 {
     public class ClientAuthentication : InsightModule
     {
-        public InsightClient client;
+        [HideInInspector] public InsightClient client;
 
         public LoginGUI loginGuiComp;
 

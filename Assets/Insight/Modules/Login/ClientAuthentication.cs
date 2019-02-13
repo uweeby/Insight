@@ -1,6 +1,4 @@
-﻿using Insight;
-using System.Security.Cryptography;
-using System.Text;
+using Insight;
 using UnityEngine;
 
 public class ClientAuthentication : InsightModule
@@ -29,7 +27,7 @@ public class ClientAuthentication : InsightModule
 
     public void SendLoginMsg(string username, string password)
     {
-        client.Send((short)MsgId.Login, new LoginMsg() { AccountName = username, AccountPassword = Sha256(password) }, (callbackStatus, reader) =>
+        client.Send((short)MsgId.Login, new LoginMsg() { AccountName = username, AccountPassword = password }, (callbackStatus, reader) =>
         {
             if (callbackStatus == CallbackStatus.Ok)
             {
@@ -54,17 +52,5 @@ public class ClientAuthentication : InsightModule
                 Debug.LogError("Callback Error: Login attempt timed out");
             }
         });
-    }
-
-    private string Sha256(string input)
-    {
-        var crypt = new SHA256Managed();
-        var hash = new StringBuilder();
-        byte[] crypto = crypt.ComputeHash(Encoding.UTF8.GetBytes(input));
-        foreach (byte theByte in crypto)
-        {
-            hash.Append(theByte.ToString("x2"));
-        }
-        return hash.ToString();
     }
 }

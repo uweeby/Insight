@@ -13,7 +13,7 @@ namespace Insight
         public NetworkManager networkManager;
         public TelepathyTransport transport;
 
-        public PlayerClientGUI playerGUI;
+        public PlayerClientGUI playerGUI; //FIXME: Error when Examples are removed
 
         public List<GameContainer> gamesList = new List<GameContainer>();
 

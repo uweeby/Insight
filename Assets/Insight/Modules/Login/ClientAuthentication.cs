@@ -8,7 +8,7 @@ namespace Insight
     {
         [HideInInspector] public InsightClient client;
 
-        public LoginGUI loginGuiComp;
+        public LoginGUI loginGuiComp; //FIXME: Error when Examples are removed
 
         public string uniqueID;
 

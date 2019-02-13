@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 //TODO: Remove the example specific code from module
+
 namespace Insight
 {
     public class ClientMatchMaking : InsightModule

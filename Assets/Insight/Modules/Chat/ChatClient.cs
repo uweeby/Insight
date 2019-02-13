@@ -1,6 +1,8 @@
 ﻿using Insight;
 using UnityEngine;
 
+//TODO: Remove the example specific code from module
+
 public class ChatClient : InsightModule
 {
     public InsightClient client;

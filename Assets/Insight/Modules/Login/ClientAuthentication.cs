@@ -1,5 +1,7 @@
-using Insight;
+﻿using Insight;
 using UnityEngine;
+
+//TODO: Remove the example specific code from module
 
 public class ClientAuthentication : InsightModule
 {

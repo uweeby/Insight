@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+//TODO: Remove the example specific code from module
+
 namespace Insight
 {
     public class ServerMatchMaking : InsightModule

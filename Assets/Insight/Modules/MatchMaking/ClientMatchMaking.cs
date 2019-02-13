@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+//TODO: Remove the example specific code from module
+
 public class ClientMatchMaking : InsightModule
 {
     public InsightClient client;

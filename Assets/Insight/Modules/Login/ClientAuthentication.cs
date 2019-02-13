@@ -1,58 +1,60 @@
-﻿using Insight;
-using UnityEngine;
+﻿using UnityEngine;
 
 //TODO: Remove the example specific code from module
 
-public class ClientAuthentication : InsightModule
+namespace Insight
 {
-    public InsightClient client;
-
-    public LoginGUI loginGuiComp;
-
-    public string uniqueID;
-
-    //This is put in the GUI. Just for example purposes
-    [HideInInspector] public string loginResponse; 
-    [HideInInspector] public bool loginSucessful;
-
-    public override void Initialize(InsightClient client, ModuleManager manager)
+    public class ClientAuthentication : InsightModule
     {
-        this.client = client;
+        public InsightClient client;
 
-        RegisterHandlers();
-    }
+        public LoginGUI loginGuiComp;
 
-    void RegisterHandlers()
-    {
+        public string uniqueID;
 
-    }
+        //This is put in the GUI. Just for example purposes
+        [HideInInspector] public string loginResponse;
+        [HideInInspector] public bool loginSucessful;
 
-    public void SendLoginMsg(string username, string password)
-    {
-        client.Send((short)MsgId.Login, new LoginMsg() { AccountName = username, AccountPassword = password }, (callbackStatus, reader) =>
+        public override void Initialize(InsightClient client, ModuleManager manager)
         {
-            if (callbackStatus == CallbackStatus.Ok)
+            this.client = client;
+
+            RegisterHandlers();
+        }
+
+        void RegisterHandlers()
+        {
+
+        }
+
+        public void SendLoginMsg(string username, string password)
+        {
+            client.Send((short)MsgId.Login, new LoginMsg() { AccountName = username, AccountPassword = password }, (callbackStatus, reader) =>
             {
-                LoginResponseMsg msg = reader.ReadMessage<LoginResponseMsg>();
-                loginSucessful = msg.Authenticated; //This will always be true for prototyping
-                if(loginSucessful)
+                if (callbackStatus == CallbackStatus.Ok)
                 {
-                    uniqueID = msg.UniqueID;
-                    loginResponse = "Login Successful!";
+                    LoginResponseMsg msg = reader.ReadMessage<LoginResponseMsg>();
+                    loginSucessful = msg.Authenticated; //This will always be true for prototyping
+                if (loginSucessful)
+                    {
+                        uniqueID = msg.UniqueID;
+                        loginResponse = "Login Successful!";
+                    }
+                    else
+                    {
+                        loginResponse = "Login Failed!";
+                    }
                 }
-                else
+                if (callbackStatus == CallbackStatus.Error)
                 {
-                    loginResponse = "Login Failed!";
+                    Debug.LogError("Callback Error: Login error");
                 }
-            }
-            if (callbackStatus == CallbackStatus.Error)
-            {
-                Debug.LogError("Callback Error: Login error");
-            }
-            if (callbackStatus == CallbackStatus.Timeout)
-            {
-                Debug.LogError("Callback Error: Login attempt timed out");
-            }
-        });
+                if (callbackStatus == CallbackStatus.Timeout)
+                {
+                    Debug.LogError("Callback Error: Login attempt timed out");
+                }
+            });
+        }
     }
 }

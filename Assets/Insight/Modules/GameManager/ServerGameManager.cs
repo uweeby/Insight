@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Insight
@@ -6,7 +7,7 @@ namespace Insight
     public class ServerGameManager : InsightModule
     {
         [HideInInspector] public InsightServer server;
-        public MasterSpawner masterSpawner;
+        [HideInInspector] public MasterSpawner masterSpawner;
 
         public List<GameContainer> registeredGameServers = new List<GameContainer>();
 
@@ -115,6 +116,7 @@ namespace Insight
         }
     }
 
+    [Serializable]
     public class GameContainer
     {
         public string NetworkAddress;

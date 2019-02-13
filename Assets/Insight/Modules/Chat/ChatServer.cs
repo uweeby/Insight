@@ -4,8 +4,8 @@ namespace Insight
 {
     public class ChatServer : InsightModule
     {
-        public InsightServer server;
-        public ServerAuthentication authModule;
+        [HideInInspector] public InsightServer server;
+        [HideInInspector] public ServerAuthentication authModule;
 
         public void Awake()
         {

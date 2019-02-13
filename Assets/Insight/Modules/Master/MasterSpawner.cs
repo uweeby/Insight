@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 namespace Insight
 {
-    public partial class MasterSpawner : InsightModule
+    public class MasterSpawner : InsightModule
     {
         [HideInInspector] public InsightServer server;
 

@@ -29,7 +29,7 @@ public class ChatServer : InsightModule
 
     private void HandleChatMsg(InsightNetworkMessage netMsg)
     {
-        if(server.logNetworkMessages) { Debug.Log("[InsightServer] - HandleChatMsg()"); }
+        if(server.logNetworkMessages) { Debug.Log("[ChatServer] - Received Chat Message."); }
 
         ChatMsg message = netMsg.ReadMessage<ChatMsg>();
 

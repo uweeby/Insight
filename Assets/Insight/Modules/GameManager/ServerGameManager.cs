@@ -34,7 +34,7 @@ public class ServerGameManager : InsightModule
     {
         RegisterGameMsg message = netMsg.ReadMessage<RegisterGameMsg>();
 
-        if (server.logNetworkMessages) { Debug.Log("Received GameRegistration request"); }
+        if (server.logNetworkMessages) { Debug.Log("[GameManager] - Received GameRegistration request"); }
 
         registeredGameServers.Add(new GameContainer() {
             NetworkAddress = message.NetworkAddress,

@@ -31,7 +31,7 @@ public class ServerAuthentication : InsightModule
     {
         LoginMsg message = netMsg.ReadMessage<LoginMsg>();
         
-        if (server.logNetworkMessages) { Debug.Log("[InsightServer] - Login Received: " + message.AccountName + " / " + message.AccountPassword); }
+        if (server.logNetworkMessages) { Debug.Log("[Authentication] - Login Received: " + message.AccountName + " / " + message.AccountPassword); }
 
         //Login Sucessful
         if(true) //Put your DB logic here

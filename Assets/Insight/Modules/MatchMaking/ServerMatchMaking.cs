@@ -130,6 +130,7 @@ namespace Insight
         }
     }
 
+    [Serializable]
     public class MatchContainer
     {
         public ServerMatchMaking matchModule;

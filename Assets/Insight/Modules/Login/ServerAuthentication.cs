@@ -88,6 +88,7 @@ namespace Insight
         }
     }
 
+    [Serializable]
     public class UserContainer
     {
         public string uniqueId;

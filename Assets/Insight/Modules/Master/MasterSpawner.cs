@@ -1,3 +1,4 @@
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -113,6 +114,7 @@ namespace Insight
         }
     }
 
+    [Serializable]
     public struct SpawnerContainer
     {
         public string uniqueId;

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Insight;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class LoginGUI : MonoBehaviour

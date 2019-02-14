@@ -2,7 +2,7 @@
 
 public class BuildScript
 {
-    public static string ScenesRoot = "Assets/Insight/Scenes/";
+    public static string ScenesRoot = "Assets/InsightExamples/4. MasterServer/Scenes/";
     public static BuildOptions BuildOptions = BuildOptions.Development;
     public static string PrevPath = null;
 

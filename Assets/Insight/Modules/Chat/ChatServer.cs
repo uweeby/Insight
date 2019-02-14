@@ -1,54 +1,56 @@
-﻿using Insight;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class ChatServer : InsightModule
+namespace Insight
 {
-    InsightServer server;
-    ServerAuthentication authModule;
-
-    public void Awake()
+    public class ChatServer : InsightModule
     {
-        AddOptionalDependency<ServerAuthentication>();
-    }
-    public override void Initialize(InsightServer server, ModuleManager manager)
-    {
-        this.server = server;
+        [HideInInspector] public InsightServer server;
+        [HideInInspector] public ServerAuthentication authModule;
 
-        if(manager.GetModule<ServerAuthentication>() != null)
+        public void Awake()
         {
-            authModule = manager.GetModule<ServerAuthentication>();
+            AddOptionalDependency<ServerAuthentication>();
+        }
+        public override void Initialize(InsightServer server, ModuleManager manager)
+        {
+            this.server = server;
+
+            if (manager.GetModule<ServerAuthentication>() != null)
+            {
+                authModule = manager.GetModule<ServerAuthentication>();
+            }
+
+            RegisterHandlers();
         }
 
-        RegisterHandlers();
-    }
-
-    void RegisterHandlers()
-    {
-        server.RegisterHandler((short)MsgId.Chat, HandleChatMsg);
-    }
-
-    private void HandleChatMsg(InsightNetworkMessage netMsg)
-    {
-        if(server.logNetworkMessages) { Debug.Log("[InsightServer] - HandleChatMsg()"); }
-
-        ChatMsg message = netMsg.ReadMessage<ChatMsg>();
-
-        if (authModule != null)
+        void RegisterHandlers()
         {
-            //Find the user
-            UserContainer user = authModule.GetUserByConnection(netMsg.connectionId);
-
-            //Inject the username into the message
-            message.Origin = user.username;
-
-            server.SendToAll((short)MsgId.Chat, message);
+            server.RegisterHandler((short)MsgId.Chat, HandleChatMsg);
         }
 
-        //No Authentication Module. Simple Echo
-        else
+        private void HandleChatMsg(InsightNetworkMessage netMsg)
         {
-            //Broadcast back to all other clients
-            server.SendToAll((short)MsgId.Chat, message);
+            if (server.logNetworkMessages) { Debug.Log("[ChatServer] - Received Chat Message."); }
+
+            ChatMsg message = netMsg.ReadMessage<ChatMsg>();
+
+            if (authModule != null)
+            {
+                //Find the user
+                UserContainer user = authModule.GetUserByConnection(netMsg.connectionId);
+
+                //Inject the username into the message
+                message.Origin = user.username;
+
+                server.SendToAll((short)MsgId.Chat, message);
+            }
+
+            //No Authentication Module. Simple Echo
+            else
+            {
+                //Broadcast back to all other clients
+                server.SendToAll((short)MsgId.Chat, message);
+            }
         }
     }
 }

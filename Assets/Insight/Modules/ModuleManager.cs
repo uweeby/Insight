@@ -8,7 +8,7 @@ namespace Insight
     [RequireComponent(typeof(InsightCommon))]
     public class ModuleManager : MonoBehaviour
     {
-        InsightClient client; //Reference to the Insight objec that will be used with this module
+        InsightClient client;
         InsightServer server;
 
         public bool SearchChildrenForModule = true;

@@ -1,196 +1,205 @@
-﻿using Insight;
-using Mirror;
+﻿using Mirror;
 using System;
 using UnityEngine;
-using UnityEngine.Events;
 
-public class InsightClient : InsightCommon
+namespace Insight
 {
-    public bool AutoReconnect = true;
-    protected int clientID = -1; //-1 = never connected, 0 = disconnected, 1 = connected
-    protected int connectionID = 0;
-
-    InsightNetworkConnection insightNetworkConnection;
-
-    Transport _transport;
-    public virtual Transport transport
+    public class InsightClient : InsightCommon
     {
-        get
+        public bool AutoReconnect = true;
+        protected int clientID = -1; //-1 = never connected, 0 = disconnected, 1 = connected
+        protected int connectionID = 0;
+
+        InsightNetworkConnection insightNetworkConnection;
+
+        Transport _transport;
+        public virtual Transport transport
         {
-            _transport = _transport ?? GetComponent<Transport>();
-            if (_transport == null)
-                Debug.LogWarning("InsightClient has no Transport component. Networking won't work without a Transport");
-            return _transport;
-        }
-    }
-
-    public float ReconnectDelayInSeconds = 5f;
-    private float _reconnectTimer;
-
-    public virtual void Start()
-    {
-        DontDestroyOnLoad(gameObject);
-        Application.runInBackground = true;
-
-        if (AutoStart)
-        {
-            StartInsight();
-        }
-    }
-
-    public virtual void Update()
-    {
-        CheckConnection();
-
-        CheckCallbackTimeouts();
-    }
-
-    public void StartInsight(string Address)
-    {
-        networkAddress = Address;
-
-        StartInsight();
-    }
-
-    public override void StartInsight()
-    {
-        transport.ClientConnect(networkAddress);
-        clientID = 0;
-        insightNetworkConnection = new InsightNetworkConnection();
-        insightNetworkConnection.Initialize(this, networkAddress, clientID, connectionID);
-        insightNetworkConnection.SetHandlers(messageHandlers);
-
-        transport.OnClientConnected.AddListener(OnConnected);
-        transport.OnClientDataReceived.AddListener(HandleBytes);
-        transport.OnClientDisconnected.AddListener(OnDisconnected);
-        transport.OnClientError.AddListener(OnError);
-
-        OnStartInsight();
-
-        _reconnectTimer = Time.realtimeSinceStartup + ReconnectDelayInSeconds;
-    }
-
-    public override void StopInsight()
-    {
-        transport.ClientDisconnect();
-        OnStopInsight();
-    }
-
-    private void CheckConnection()
-    {
-        if (AutoReconnect)
-        {
-            if (!isConnected && (_reconnectTimer < Time.time))
+            get
             {
-                if (logNetworkMessages) { Debug.Log("[InsightClient] - Trying to reconnect..."); }
-                _reconnectTimer = Time.realtimeSinceStartup + ReconnectDelayInSeconds;
+                _transport = _transport ?? GetComponent<Transport>();
+                if (_transport == null)
+                    Debug.LogWarning("InsightClient has no Transport component. Networking won't work without a Transport");
+                return _transport;
+            }
+        }
+
+        public float ReconnectDelayInSeconds = 5f;
+        private float _reconnectTimer;
+
+        public virtual void Start()
+        {
+            DontDestroyOnLoad(gameObject);
+            Application.runInBackground = true;
+
+            if (AutoStart)
+            {
                 StartInsight();
             }
         }
-    }
 
-    public void Send(byte[] data)
-    {
-        transport.ClientSend(0, data);
-    }
-
-    public void Send(short msgType, MessageBase msg)
-    {
-        Send(msgType, msg, null);
-    }
-
-    public void Send(short msgType, MessageBase msg, CallbackHandler callback)
-    {
-        if (!transport.ClientConnected())
+        public virtual void Update()
         {
-            Debug.LogError("[InsightClient] - Client not connected!");
-            return;
+            CheckConnection();
+
+            CheckCallbackTimeouts();
         }
 
-        NetworkWriter writer = new NetworkWriter();
-        writer.Write(msgType);
-
-        int callbackId = 0;
-        if (callback != null)
+        public void StartInsight(string Address)
         {
-            callbackId = ++callbackIdIndex; // pre-increment to ensure that id 0 is never used.
-            callbacks.Add(callbackId, new CallbackData() { callback = callback, timeout = Time.realtimeSinceStartup + callbackTimeout });
+            networkAddress = Address;
+
+            StartInsight();
         }
 
-        writer.Write(callbackId);
-
-        msg.Serialize(writer);
-        transport.ClientSend(0, writer.ToArray());
-    }
-
-    void HandleCallbackHandler(CallbackStatus status, NetworkReader reader)
-    {
-    }
-
-    void OnConnected()
-    {
-        if (insightNetworkConnection != null)
+        public override void StartInsight()
         {
-            if (logNetworkMessages) { Debug.Log("[InsightClient] - Connected to Insight Server"); }
-            connectState = ConnectState.Connected;
+            transport.ClientConnect(networkAddress);
+            clientID = 0;
+            insightNetworkConnection = new InsightNetworkConnection();
+            insightNetworkConnection.Initialize(this, networkAddress, clientID, connectionID);
+            insightNetworkConnection.SetHandlers(messageHandlers);
+
+            transport.OnClientConnected.AddListener(OnConnected);
+            transport.OnClientDataReceived.AddListener(HandleBytes);
+            transport.OnClientDisconnected.AddListener(OnDisconnected);
+            transport.OnClientError.AddListener(OnError);
+
+            OnStartInsight();
+
+            _reconnectTimer = Time.realtimeSinceStartup + ReconnectDelayInSeconds;
         }
-        else Debug.LogError("Skipped Connect message handling because m_Connection is null.");
-    }
 
-    void OnDisconnected()
-    {
-        connectState = ConnectState.Disconnected;
-
-        if (insightNetworkConnection != null)
+        public override void StopInsight()
         {
-            insightNetworkConnection.InvokeHandlerNoData((short)MsgType.Disconnect);
+            transport.ClientDisconnect();
+            OnStopInsight();
         }
-    }
 
-    protected void HandleBytes(byte[] buffer)
-    {
-        InsightNetworkMessageDelegate msgDelegate;
-        NetworkReader reader = new NetworkReader(buffer);
-        var msgType = reader.ReadInt16();
-        var callbackId = reader.ReadInt32();
-        var msg = new InsightNetworkMessage(insightNetworkConnection, callbackId) { msgType = msgType, reader = reader };
-
-        if (callbacks.ContainsKey(callbackId))
+        private void CheckConnection()
         {
-            callbacks[callbackId].callback.Invoke(CallbackStatus.Ok, msg);
-            callbacks.Remove(callbackId);
+            if (AutoReconnect)
+            {
+                if (!isConnected && (_reconnectTimer < Time.time))
+                {
+                    if (logNetworkMessages) { Debug.Log("[InsightClient] - Trying to reconnect..."); }
+                    _reconnectTimer = Time.realtimeSinceStartup + ReconnectDelayInSeconds;
+                    StartInsight();
+                }
+            }
         }
-        else if (messageHandlers.TryGetValue(msgType, out msgDelegate))
+
+        public void Send(byte[] data)
         {
-            msgDelegate(msg);
+            transport.ClientSend(0, data);
         }
-        else
+
+        public void Send(short msgType, MessageBase msg)
         {
-            //NOTE: this throws away the rest of the buffer. Need moar error codes
-            Debug.LogError("Unknown message ID " + msgType);// + " connId:" + connectionId);
+            Send(msgType, msg, null);
         }
-    }
 
-    private static void OnError(Exception exception)
-    {
-        // TODO Let's discuss how we will handle errors
-        Debug.LogException(exception);
-    }
+        public void Send(short msgType, MessageBase msg, CallbackHandler callback)
+        {
+            if (!transport.ClientConnected())
+            {
+                Debug.LogError("[InsightClient] - Client not connected!");
+                return;
+            }
 
-    private void OnApplicationQuit()
-    {
-        if (logNetworkMessages) { Debug.Log("[InsightClient] Stopping Client"); }
-        StopInsight();
-    }
+            NetworkWriter writer = new NetworkWriter();
+            writer.Write(msgType);
 
-    ////------------Virtual Handlers-------------
-    public virtual void OnStartInsight()
-    {
-        if (logNetworkMessages) { Debug.Log("[InsightClient] - Connecting to Insight Server: " + networkAddress); }
-    }
+            int callbackId = 0;
+            if (callback != null)
+            {
+                callbackId = ++callbackIdIndex; // pre-increment to ensure that id 0 is never used.
+                callbacks.Add(callbackId, new CallbackData()
+                {
+                    callback = callback,
+                    timeout = Time.realtimeSinceStartup + callbackTimeout
+                });
+            }
 
-    public virtual void OnStopInsight()
-    {
-        if (logNetworkMessages) { Debug.Log("[InsightClient] - Disconnecting from Insight Server"); }
+            writer.Write(callbackId);
+
+            msg.Serialize(writer);
+            transport.ClientSend(0, writer.ToArray());
+        }
+
+        void HandleCallbackHandler(CallbackStatus status, NetworkReader reader)
+        {
+        }
+
+        void OnConnected()
+        {
+            if (insightNetworkConnection != null)
+            {
+                if (logNetworkMessages) { Debug.Log("[InsightClient] - Connected to Insight Server"); }
+                connectState = ConnectState.Connected;
+            }
+            else Debug.LogError("Skipped Connect message handling because m_Connection is null.");
+        }
+
+        void OnDisconnected()
+        {
+            connectState = ConnectState.Disconnected;
+
+            if (insightNetworkConnection != null)
+            {
+                insightNetworkConnection.InvokeHandlerNoData((short)MsgType.Disconnect);
+            }
+        }
+
+        protected void HandleBytes(byte[] buffer)
+        {
+            InsightNetworkMessageDelegate msgDelegate;
+            NetworkReader reader = new NetworkReader(buffer);
+            var msgType = reader.ReadInt16();
+            var callbackId = reader.ReadInt32();
+            var msg = new InsightNetworkMessage(insightNetworkConnection, callbackId)
+            {
+                msgType = msgType,
+                reader = reader
+            };
+
+            if (callbacks.ContainsKey(callbackId))
+            {
+                callbacks[callbackId].callback.Invoke(CallbackStatus.Ok, msg);
+                callbacks.Remove(callbackId);
+            }
+            else if (messageHandlers.TryGetValue(msgType, out msgDelegate))
+            {
+                msgDelegate(msg);
+            }
+            else
+            {
+                //NOTE: this throws away the rest of the buffer. Need moar error codes
+                Debug.LogError("Unknown message ID " + msgType);// + " connId:" + connectionId);
+            }
+        }
+
+        private static void OnError(Exception exception)
+        {
+            // TODO Let's discuss how we will handle errors
+            Debug.LogException(exception);
+        }
+
+        private void OnApplicationQuit()
+        {
+            if (logNetworkMessages) { Debug.Log("[InsightClient] Stopping Client"); }
+            StopInsight();
+        }
+
+        ////------------Virtual Handlers-------------
+        public virtual void OnStartInsight()
+        {
+            if (logNetworkMessages) { Debug.Log("[InsightClient] - Connecting to Insight Server: " + networkAddress); }
+        }
+
+        public virtual void OnStopInsight()
+        {
+            if (logNetworkMessages) { Debug.Log("[InsightClient] - Disconnecting from Insight Server"); }
+        }
     }
 }

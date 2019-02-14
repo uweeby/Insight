@@ -9,9 +9,6 @@ namespace Insight
         IEnumerable<Type> Dependencies { get; }
         IEnumerable<Type> OptionalDependencies { get; }
 
-        //InsightCommon Insight { get; set; }
-        //ModuleManager ModuleManager { get; set; }
-
         void Initialize(InsightServer server, ModuleManager manager);
         void Initialize(InsightClient client, ModuleManager manager);
     }
@@ -35,10 +32,6 @@ namespace Insight
         {
             get { return _optionalDependencies; }
         }
-
-        //public abstract InsightCommon Insight { get; set; }
-
-        //public abstract ModuleManager ModuleManager { get; set; }
 
         /// <summary>
         ///     Called by master server, when module should be started

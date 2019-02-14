@@ -1,59 +1,62 @@
 ﻿using System;
 using System.Linq;
 
-public class InsightArgs
+namespace Insight
 {
-    private readonly string[] _args;
-
-    public ArgNames Names;
-
-    public InsightArgs()
+    public class InsightArgs
     {
-        _args = Environment.GetCommandLineArgs();
+        private readonly string[] _args;
 
-        Names = new ArgNames();
+        public ArgNames Names;
 
-        NetworkAddress = ExtractValue(Names.NetworkAddress, "localhost");
-        NetworkPort = ExtractValueInt(Names.NetworkPort, 7777);
-        UniqueID = ExtractValue(Names.UniqueID, "");
-        SceneName = ExtractValue(Names.SceneName, "");
-    }
+        public InsightArgs()
+        {
+            _args = Environment.GetCommandLineArgs();
 
-    #region Arguments
-    public string NetworkAddress { get; private set; }
-    public int NetworkPort { get; private set; }
-    public string UniqueID { get; private set; }
-    public string SceneName { get; private set; }
-    #endregion
+            Names = new ArgNames();
 
-    #region Helper methods
-    public string ExtractValue(string argName, string defaultValue = null)
-    {
-        if (!_args.Contains(argName))
-            return defaultValue;
+            NetworkAddress = ExtractValue(Names.NetworkAddress, "localhost");
+            NetworkPort = ExtractValueInt(Names.NetworkPort, 7777);
+            UniqueID = ExtractValue(Names.UniqueID, "");
+            SceneName = ExtractValue(Names.SceneName, "");
+        }
 
-        var index = _args.ToList().FindIndex(0, a => a.Equals(argName));
-        return _args[index + 1];
-    }
+        #region Arguments
+        public string NetworkAddress { get; private set; }
+        public int NetworkPort { get; private set; }
+        public string UniqueID { get; private set; }
+        public string SceneName { get; private set; }
+        #endregion
 
-    public int ExtractValueInt(string argName, int defaultValue = -1)
-    {
-        var number = ExtractValue(argName, defaultValue.ToString());
-        return Convert.ToInt32(number);
-    }
+        #region Helper methods
+        public string ExtractValue(string argName, string defaultValue = null)
+        {
+            if (!_args.Contains(argName))
+                return defaultValue;
 
-    public bool IsProvided(string argName)
-    {
-        return _args.Contains(argName);
-    }
+            var index = _args.ToList().FindIndex(0, a => a.Equals(argName));
+            return _args[index + 1];
+        }
 
-    #endregion
+        public int ExtractValueInt(string argName, int defaultValue = -1)
+        {
+            var number = ExtractValue(argName, defaultValue.ToString());
+            return Convert.ToInt32(number);
+        }
 
-    public class ArgNames
-    {
-        public string NetworkAddress { get { return "-NetworkAddress"; } }
-        public string NetworkPort { get { return "-NetworkPort"; } }
-        public string UniqueID { get { return "-UniqueID"; } }
-        public string SceneName { get { return "-SceneName"; } }
+        public bool IsProvided(string argName)
+        {
+            return _args.Contains(argName);
+        }
+
+        #endregion
+
+        public class ArgNames
+        {
+            public string NetworkAddress { get { return "-NetworkAddress"; } }
+            public string NetworkPort { get { return "-NetworkPort"; } }
+            public string UniqueID { get { return "-UniqueID"; } }
+            public string SceneName { get { return "-SceneName"; } }
+        }
     }
 }

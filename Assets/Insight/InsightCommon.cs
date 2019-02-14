@@ -78,14 +78,14 @@ namespace Insight
 
         public struct CallbackData
         {
-            public InsightClient.CallbackHandler callback;
+            public CallbackHandler callback;
             public float timeout;
         }
 
         [System.Serializable]
         public class SendToAllFinishedCallbackData
         {
-            public InsightClient.SendToAllFinishedCallbackHandler callback;
+            public SendToAllFinishedCallbackHandler callback;
             public HashSet<int> requiredCallbackIds;
             public int callbacks;
             public float timeout;

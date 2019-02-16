@@ -28,7 +28,6 @@ namespace Insight
         [Header("Threads")]
         public int MaximumProcesses = 5;
 
-        private int _processUsageCounter;
         private bool registrationComplete;
 
         public List<RunningProcessStruct> spawnerProcesses = new List<RunningProcessStruct>();
@@ -68,6 +67,8 @@ namespace Insight
                     registrationComplete = true;
                 }
             }
+
+            CheckSpawnedProcessHealth();
         }
 
         void RegisterHandlers()
@@ -88,7 +89,12 @@ namespace Insight
         {
             RequestSpawnMsg message = netMsg.ReadMessage<RequestSpawnMsg>();
 
-            if (SpawnThread(message))
+            if (!SpawnThread(message))
+            {
+                netMsg.Reply((short)MsgId.Error, new ErrorMsg() { Text = "[ProcessSpawner] - Spawn failed" });
+            }
+
+            if (netMsg.callbackId != 0)
             {
                 netMsg.Reply((short)MsgId.RequestSpawn, new RequestSpawnMsg()
                 {
@@ -100,9 +106,19 @@ namespace Insight
                     UniqueID = message.UniqueID
                 });
             }
-            else
+        }
+
+        private void CheckSpawnedProcessHealth()
+        {
+            //Check to see if a previously running process exited without warning
+            foreach (RunningProcessStruct item in spawnerProcesses)
             {
-                netMsg.Reply((short)MsgId.Error, new ErrorMsg() { Text = "[ProcessSpawner] - Spawn failed" });
+                if (item.process.HasExited)
+                {
+                    UnityEngine.Debug.Log("Removing process that has exited");
+                    spawnerProcesses.Remove(item);
+                    return;
+                }
             }
         }
 
@@ -115,6 +131,7 @@ namespace Insight
                 if (process.uniqueID.Equals(message.UniqueID))
                 {
                     process.process.Kill();
+                    spawnerProcesses.Remove(process);
                     break;
                 }
             }
@@ -122,7 +139,7 @@ namespace Insight
 
         private bool SpawnThread(RequestSpawnMsg spawnProperties)
         {
-            if (_processUsageCounter >= MaximumProcesses)
+            if (spawnerProcesses.Count >= MaximumProcesses)
             {
                 UnityEngine.Debug.LogError("[ProcessSpawner] - Maximum Process Count Reached");
                 return false;
@@ -162,14 +179,13 @@ namespace Insight
                         spawnComplete = true;
                         print("[ProcessSpawner]: spawning: " + p.StartInfo.FileName + "; args=" + p.StartInfo.Arguments);
 
-                        //Increment current port and process counter after sucessful spawn.
+                        //Increment port after sucessful spawn.
                         _portCounter++;
-                        _processUsageCounter++;
 
                         //If registered to a master. Notify it of the current thread utilization
                         if (client != null)
                         {
-                            client.Send((short)MsgId.SpawnerStatus, new SpawnerStatusMsg() { CurrentThreads = _processUsageCounter });
+                            client.Send((short)MsgId.SpawnerStatus, new SpawnerStatusMsg() { CurrentThreads = spawnerProcesses.Count });
                         }
 
                         spawnerProcesses.Add(new RunningProcessStruct() { process = p, pid = p.Id, uniqueID = spawnProperties.UniqueID });

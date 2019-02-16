@@ -141,8 +141,10 @@ namespace Insight
         public string playlistName;
         public RequestSpawnMsg matchProperties;
 
+        //How long to wait for the server to start before cancelling the match and returning the players to the queue
+        //-1 or 0 will disable timeout
+        public float MatchTimeoutInSeconds = 30f;
         public DateTime matchStartTime;
-        public float MatchTimeoutInSeconds = 30f; //How long to wait for the server to start before cancelling the match and returning the players to the queue
 
         public bool InitMatch;
         public bool MatchComplete;
@@ -160,35 +162,42 @@ namespace Insight
         {
             if(!InitMatch)
             {
-                //Check to see if the server is up
-                if (matchModule.gameManager.GetGameByUniqueID(matchProperties.UniqueID) == null)
-                {
-                    //Server spawn timeout check
-                    if(matchStartTime.AddSeconds(MatchTimeoutInSeconds) < DateTime.UtcNow)
-                    {
-                        CancelMatch();
-                    }
-
-                    UnityEngine.Debug.Log("Server not active at this time");
-                    return;
-                }
-                //Server is registered and active
-                else
+                if(IsSpawnServerActive())
                 {
                     InitMatch = true;
                     MatchServer = matchModule.gameManager.GetGameByUniqueID(matchProperties.UniqueID);
 
-                    //Move players to server
-                    foreach (UserContainer user in matchUsers)
-                    {
-                        matchModule.server.SendToClient(user.connectionId, (short)MsgId.ChangeServers, new ChangeServerMsg()
-                        {
-                            NetworkAddress = MatchServer.NetworkAddress,
-                            NetworkPort = MatchServer.NetworkPort,
-                            SceneName = MatchServer.SceneName
-                        });
-                    }
+                    MovePlayersToServer();
                 }
+            }
+        }
+
+        private bool IsSpawnServerActive()
+        {
+            if (matchModule.gameManager.GetGameByUniqueID(matchProperties.UniqueID) == null)
+            {
+                //Server spawn timeout check
+                if (MatchTimeoutInSeconds > 0 && matchStartTime.AddSeconds(MatchTimeoutInSeconds) < DateTime.UtcNow)
+                {
+                    CancelMatch();
+                }
+
+                UnityEngine.Debug.Log("Server not active at this time");
+                return false;
+            }
+            return true;
+        }
+
+        private void MovePlayersToServer()
+        {
+            foreach (UserContainer user in matchUsers)
+            {
+                matchModule.server.SendToClient(user.connectionId, (short)MsgId.ChangeServers, new ChangeServerMsg()
+                {
+                    NetworkAddress = MatchServer.NetworkAddress,
+                    NetworkPort = MatchServer.NetworkPort,
+                    SceneName = MatchServer.SceneName
+                });
             }
         }
 

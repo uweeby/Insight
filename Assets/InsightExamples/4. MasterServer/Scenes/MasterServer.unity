@@ -788,11 +788,6 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 114473571808863406, guid: fb641c96eed9f4776bdfaadb82174b97,
-        type: 2}
-      propertyPath: spawnerProcesses.Array.size
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4178253004730460, guid: fb641c96eed9f4776bdfaadb82174b97, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0

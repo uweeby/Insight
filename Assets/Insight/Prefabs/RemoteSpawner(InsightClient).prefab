@@ -162,11 +162,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8382b135107eaf5458d6471f839dc241, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  server: {fileID: 0}
+  client: {fileID: 0}
   SpawnerNetworkAddress: localhost
   StartingNetworkPort: 7777
   EditorPath: C:\Dev\Insight\Builds\
   ProcessPath: .\
-  processArray:
-  - Alias: gameserver
-    Path: GameServer.exe
+  ProcessName: GameServer.exe
   MaximumProcesses: 5
+  spawnerProcesses: []

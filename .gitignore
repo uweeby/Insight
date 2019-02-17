@@ -11,14 +11,11 @@ Builds
 /JenkinsBuild.bat
 /UnityPackageManager
 /Packages
-/ProjectSettings
-
-Assets/Mirror/
-
-Assets/Mirror\.meta
 
 \.vscode/settings\.json
 
-Assets/Ignorance/
+Assets/Mirror/
+Assets/Mirror\.meta
 
+Assets/Ignorance/
 Assets/Ignorance\.meta

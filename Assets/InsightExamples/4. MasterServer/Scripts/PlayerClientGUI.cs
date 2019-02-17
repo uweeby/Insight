@@ -162,7 +162,7 @@ public class PlayerClientGUI : MonoBehaviour
 
         if (gameComp.gamesList.Count > 0)
         {
-            gamesList = gameComp.gamesList;
+            gamesList.AddRange(gameComp.gamesList);
             gameComp.gamesList.Clear();
             UpdateGameListUI();
         }

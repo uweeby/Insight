@@ -68,14 +68,14 @@ namespace Insight
         }
 
         #region Message Senders
-        public void SendRequestSpawn()
+        public void SendRequestSpawn(RequestSpawnMsg requestSpawnMsg)
         {
-            client.Send((short)MsgId.RequestSpawn, new RequestSpawnMsg() { SceneName = "SuperAwesomeGame" });
+            client.Send((short)MsgId.RequestSpawn, requestSpawnMsg);
         }
 
-        public void SendStartMatchMaking()
+        public void SendStartMatchMaking(StartMatchMakingMsg startMatchMakingMsg)
         {
-            client.Send((short)MsgId.StartMatchMaking, new StartMatchMakingMsg() { PlayListName = "SuperAwesomeGame" });
+            client.Send((short)MsgId.StartMatchMaking, startMatchMakingMsg);
         }
 
         public void SendStopMatchMaking()

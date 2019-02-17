@@ -94,7 +94,7 @@ public class PlayerClientGUI : MonoBehaviour
         StartMatchMakingButton.SetActive(false);
         StopMatchMakingButton.SetActive(true);
 
-        matchComp.SendStartMatchMaking();
+        matchComp.SendStartMatchMaking(new StartMatchMakingMsg() { PlayListName = "SuperAwesomeGame" });
     }
 
     public void HandleStopMatchMakingButton()
@@ -134,8 +134,7 @@ public class PlayerClientGUI : MonoBehaviour
 
     public void HandleCreateGameButton()
     {
-
-        matchComp.SendRequestSpawn();
+        matchComp.SendRequestSpawn(new RequestSpawnMsg() { SceneName = "SuperAwesomeGame" });
     }
 
     public void HandleSendChatButton(string Data)

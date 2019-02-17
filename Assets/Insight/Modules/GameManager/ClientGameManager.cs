@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-//TODO: Remove the example specific code from module
-
 namespace Insight
 {
     public class ClientGameManager : InsightModule
@@ -12,8 +10,6 @@ namespace Insight
         [HideInInspector] public InsightClient client;
         public NetworkManager networkManager;
         public TelepathyTransport transport;
-
-        public PlayerClientGUI playerGUI; //FIXME: Error when Examples are removed
 
         public List<GameContainer> gamesList = new List<GameContainer>();
 
@@ -63,8 +59,6 @@ namespace Insight
                     MinPlayers = game.MinPlayers
                 });
             }
-
-            //playerGUI.UpdateGameListUI();
         }
 
         #region Message Senders

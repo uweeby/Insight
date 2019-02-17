@@ -2300,7 +2300,7 @@ MonoBehaviour:
   playerGuiState: 0
   authComp: {fileID: 972950913}
   chatComp: {fileID: 1750788654}
-  gameComp: {fileID: 0}
+  gameComp: {fileID: 831476772}
   matchComp: {fileID: 650334111}
   StartMatchMakingButton: {fileID: 1635566046}
   StopMatchMakingButton: {fileID: 858910305}
@@ -2311,6 +2311,7 @@ MonoBehaviour:
   GameListItemPrefab: {fileID: 1353463964295818, guid: b9f43b640d9cf47909c2cc72fc115ecf,
     type: 2}
   chatTextField: {fileID: 1959587314}
+  gamesList: []
   GameName: SuperAwesomeGame
 --- !u!114 &1365284629
 MonoBehaviour:

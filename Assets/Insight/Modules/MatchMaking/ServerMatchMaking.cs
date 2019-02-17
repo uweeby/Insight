@@ -99,7 +99,6 @@ namespace Insight
             RequestSpawnMsg requestSpawn = new RequestSpawnMsg()
             {
                 //This should not be hard coded. Where should it go?
-                ProcessAlias = "gameserver",
                 SceneName = "SuperAwesomeGame",
                 UniqueID = uniqueID
             };

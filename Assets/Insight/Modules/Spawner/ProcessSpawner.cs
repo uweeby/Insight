@@ -21,9 +21,7 @@ namespace Insight
         [Header("Paths")]
         public string EditorPath;
         public string ProcessPath;
-
-        [Header("Standalone")]
-        public ProcessStruct[] processArray;
+        public string ProcessName;
 
         [Header("Threads")]
         public int MaximumProcesses = 5;
@@ -153,58 +151,36 @@ namespace Insight
                 UnityEngine.Debug.LogWarning("[ProcessSpawner] - UniqueID was not provided for spawn. Generating: " + spawnProperties.UniqueID);
             }
 
-            //If no ProcessAlias is provided. Use the 0th entry as default.
-            if (string.IsNullOrEmpty(spawnProperties.ProcessAlias))
-            {
-                spawnProperties.ProcessAlias = processArray[0].Alias;
-            }
+            Process p = new Process();
+            p.StartInfo.FileName = ProcessPath + ProcessName;
+            //Args to pass: Port, Scene, UniqueID...
+            p.StartInfo.Arguments = ArgsString() +
+                " -NetworkAddress " + SpawnerNetworkAddress +
+                " -NetworkPort " + (StartingNetworkPort + _portCounter) +
+                " -SceneName " + spawnProperties.SceneName +
+                " -UniqueID " + spawnProperties.UniqueID; //What to do if the UniqueID or any other value is null??
 
-            bool spawnComplete = false;
-            //Find process name from AlaisStruct
-            foreach (ProcessStruct process in processArray)
+            if (p.Start())
             {
-                if (process.Alias.Equals(spawnProperties.ProcessAlias))
+                print("[ProcessSpawner]: spawning: " + p.StartInfo.FileName + "; args=" + p.StartInfo.Arguments);
+
+                //Increment port after sucessful spawn.
+                _portCounter++;
+
+                //If registered to a master. Notify it of the current thread utilization
+                if (client != null)
                 {
-                    Process p = new Process();
-                    p.StartInfo.FileName = ProcessPath + process.Path;
-                    //Args to pass: Port, Scene, UniqueID...
-                    p.StartInfo.Arguments = ArgsString() +
-                        " -NetworkAddress " + SpawnerNetworkAddress +
-                        " -NetworkPort " + (StartingNetworkPort + _portCounter) +
-                        " -SceneName " + spawnProperties.SceneName +
-                        " -UniqueID " + spawnProperties.UniqueID; //What to do if the UniqueID or any other value is null??
-
-                    if (p.Start())
-                    {
-                        spawnComplete = true;
-                        print("[ProcessSpawner]: spawning: " + p.StartInfo.FileName + "; args=" + p.StartInfo.Arguments);
-
-                        //Increment port after sucessful spawn.
-                        _portCounter++;
-
-                        //If registered to a master. Notify it of the current thread utilization
-                        if (client != null)
-                        {
-                            client.Send((short)MsgId.SpawnerStatus, new SpawnerStatusMsg() { CurrentThreads = spawnerProcesses.Count });
-                        }
-
-                        spawnerProcesses.Add(new RunningProcessStruct() { process = p, pid = p.Id, uniqueID = spawnProperties.UniqueID });
-                        break;
-                    }
-                    else
-                    {
-                        UnityEngine.Debug.LogError("[ProcessSpawner] - Process Createion Failed.");
-                        return false;
-                    }
+                    client.Send((short)MsgId.SpawnerStatus, new SpawnerStatusMsg() { CurrentThreads = spawnerProcesses.Count });
                 }
-            }
 
-            if (!spawnComplete)
+                spawnerProcesses.Add(new RunningProcessStruct() { process = p, pid = p.Id, uniqueID = spawnProperties.UniqueID });
+                return true;
+            }
+            else
             {
-                UnityEngine.Debug.LogError("Process Alias not found");
+                UnityEngine.Debug.LogError("[ProcessSpawner] - Process Createion Failed.");
                 return false;
             }
-            return true;
         }
 
         private static string ArgsString()
@@ -212,13 +188,6 @@ namespace Insight
             string[] args = System.Environment.GetCommandLineArgs();
             return args != null ? string.Join(" ", args.Skip(1).ToArray()) : "";
         }
-    }
-
-    [Serializable]
-    public struct ProcessStruct
-    {
-        public string Alias;
-        public string Path;
     }
 
     [Serializable]

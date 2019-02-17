@@ -109,7 +109,6 @@ namespace Insight
 
     public class RequestSpawnMsg : MessageBase
     {
-        public string ProcessAlias;
         public string SceneName;
 
         //Only valid in the reply from the spawner. So it should be moved to another message

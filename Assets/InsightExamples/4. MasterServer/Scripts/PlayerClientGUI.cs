@@ -124,6 +124,7 @@ public class PlayerClientGUI : MonoBehaviour
         GetGameListButton.SetActive(false);
         StartMatchMakingButton.SetActive(false);
         StopMatchMakingButton.SetActive(false);
+        CreateGameButton.SetActive(false);
 
         GameListArea.SetActive(true);
     }
@@ -142,6 +143,7 @@ public class PlayerClientGUI : MonoBehaviour
         GetGameListButton.SetActive(true);
         StartMatchMakingButton.SetActive(true);
         StopMatchMakingButton.SetActive(false);
+        CreateGameButton.SetActive(true);
     }
 
     public void HandleCreateGameButton()
@@ -156,7 +158,9 @@ public class PlayerClientGUI : MonoBehaviour
     
     private void CheckGamesList()
     {
-        if(gameComp.gamesList.Count > 0)
+        gamesList.Clear();
+
+        if (gameComp.gamesList.Count > 0)
         {
             gamesList = gameComp.gamesList;
             gameComp.gamesList.Clear();

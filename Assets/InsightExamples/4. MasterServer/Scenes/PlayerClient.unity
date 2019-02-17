@@ -1003,7 +1003,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1668111368}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &650334111
 MonoBehaviour:
@@ -1016,9 +1016,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2aaaa45661eb0ef48870aa372813121b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  networkManager: {fileID: 1115168652}
-  transport: {fileID: 1115168651}
-  playerGUI: {fileID: 1365284628}
+  client: {fileID: 0}
 --- !u!1 &657041963
 GameObject:
   m_ObjectHideFlags: 0
@@ -1374,6 +1372,51 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 768617412}
   m_CullTransparentMesh: 0
+--- !u!1 &831476770
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 831476771}
+  - component: {fileID: 831476772}
+  m_Layer: 0
+  m_Name: ClientGameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &831476771
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 831476770}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1668111368}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &831476772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 831476770}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db76fd5d613c6b44ea218eb1c4c6acde, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  client: {fileID: 0}
+  networkManager: {fileID: 1115168652}
+  transport: {fileID: 1668111369}
+  playerGUI: {fileID: 1365284628}
+  gamesList: []
 --- !u!1 &858910305
 GameObject:
   m_ObjectHideFlags: 0
@@ -1537,10 +1580,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52177ee09860c8448a212612763e4406, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loginGuiComp: {fileID: 0}
+  client: {fileID: 0}
+  uniqueID: 
   loginResponse: 
   loginSucessful: 0
-  uniqueID: 
 --- !u!1 &1021337903
 GameObject:
   m_ObjectHideFlags: 0
@@ -2257,6 +2300,7 @@ MonoBehaviour:
   playerGuiState: 0
   authComp: {fileID: 972950913}
   chatComp: {fileID: 1750788654}
+  gameComp: {fileID: 0}
   matchComp: {fileID: 650334111}
   StartMatchMakingButton: {fileID: 1635566046}
   StopMatchMakingButton: {fileID: 858910305}
@@ -2267,6 +2311,7 @@ MonoBehaviour:
   GameListItemPrefab: {fileID: 1353463964295818, guid: b9f43b640d9cf47909c2cc72fc115ecf,
     type: 2}
   chatTextField: {fileID: 1959587314}
+  GameName: SuperAwesomeGame
 --- !u!114 &1365284629
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2970,6 +3015,7 @@ Transform:
   m_Children:
   - {fileID: 972950912}
   - {fileID: 1750788653}
+  - {fileID: 831476771}
   - {fileID: 650334110}
   m_Father: {fileID: 0}
   m_RootOrder: 1
@@ -3065,6 +3111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8453ffc53b7982f4b96a6e9456bfcedc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  client: {fileID: 0}
   chatLog: 
 --- !u!1 &1780392465
 GameObject:

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -29,7 +29,7 @@ namespace Insight
         {
             server.RegisterHandler((short)MsgId.RegisterGame, HandleRegisterGameMsg);
             server.RegisterHandler((short)MsgId.JoinGame, HandleJoinGameMsg);
-            server.RegisterHandler((short)MsgId.GameList, HandleGameListMsgMsg);
+            server.RegisterHandler((short)MsgId.GameList, HandleGameListMsg);
         }
 
         private void HandleRegisterGameMsg(InsightNetworkMessage netMsg)
@@ -63,7 +63,7 @@ namespace Insight
             }
         }
 
-        private void HandleGameListMsgMsg(InsightNetworkMessage netMsg)
+        private void HandleGameListMsg(InsightNetworkMessage netMsg)
         {
             if (server.logNetworkMessages) { UnityEngine.Debug.Log("[MatchMaking] - Player Requesting Match list"); }
 

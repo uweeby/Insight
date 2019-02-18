@@ -1,5 +1,4 @@
-﻿using Mirror;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,7 +7,6 @@ namespace Insight
     public class ServerAuthentication : InsightModule
     {
         [HideInInspector] public InsightServer server;
-        public TelepathyTransport telepathyTransport;
 
         public List<UserContainer> registeredUsers = new List<UserContainer>();
 

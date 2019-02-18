@@ -123,7 +123,7 @@ namespace Insight
 
     public class StartMatchMakingMsg : MessageBase
     {
-        public string PlayListName;
+        public string SceneName;
     }
 
     public class StopMatchMakingMsg : MessageBase

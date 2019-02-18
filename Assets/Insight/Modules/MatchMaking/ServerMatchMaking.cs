@@ -10,9 +10,9 @@ namespace Insight
     {
         [HideInInspector] public InsightServer server;
         [HideInInspector] public ModuleManager manager;
-        public ServerAuthentication authModule;
-        public ServerGameManager gameManager;
-        public MasterSpawner masterSpawner;
+        [HideInInspector] public ServerAuthentication authModule;
+        [HideInInspector] public ServerGameManager gameManager;
+        [HideInInspector] public MasterSpawner masterSpawner;
 
         public int MinimumPlayersForGame = 1;
         public float MatchMakingPollRate = 10f;

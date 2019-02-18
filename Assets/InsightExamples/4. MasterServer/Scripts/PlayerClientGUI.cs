@@ -106,7 +106,7 @@ public class PlayerClientGUI : MonoBehaviour
         StartMatchMakingButton.SetActive(false);
         StopMatchMakingButton.SetActive(true);
 
-        matchComp.SendStartMatchMaking(new StartMatchMakingMsg() { PlayListName = GameName });
+        matchComp.SendStartMatchMaking(new StartMatchMakingMsg() { SceneName = GameName });
     }
 
     public void HandleStopMatchMakingButton()

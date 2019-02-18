@@ -127,7 +127,7 @@ namespace Insight
 
         public string GetConnectionInfo(int connectionId)
         {
-            return transport.ServerGetClientAddress(connectionId);;
+            return transport.ServerGetClientAddress(connectionId);
         }
 
         public bool AddConnection(InsightNetworkConnection conn)

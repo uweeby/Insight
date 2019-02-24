@@ -62,9 +62,9 @@ namespace Insight
         }
 
         #region Message Senders
-        public void SendRequestSpawn(RequestSpawnMsg requestSpawnMsg)
+        public void SendRequestSpawnStart(RequestSpawnStartMsg requestSpawnStartMsg)
         {
-            client.Send((short)MsgId.RequestSpawn, requestSpawnMsg);
+            client.Send((short)MsgId.RequestSpawnStart, requestSpawnStartMsg);
         }
 
         public void SendJoinGameMsg(string UniqueID)

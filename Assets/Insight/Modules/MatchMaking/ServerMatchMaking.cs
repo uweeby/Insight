@@ -96,7 +96,7 @@ namespace Insight
             string uniqueID = Guid.NewGuid().ToString();
 
             //Specify the match details
-            RequestSpawnMsg requestSpawn = new RequestSpawnMsg()
+            RequestSpawnStartMsg requestSpawnStart = new RequestSpawnStartMsg()
             {
                 //This should not be hard coded. Where should it go?
                 SceneName = "SuperAwesomeGame",
@@ -113,7 +113,7 @@ namespace Insight
                 playerQueue.RemoveAt(i);
             }
 
-            matchList.Add(new MatchContainer(this, requestSpawn, matchUsers));
+            matchList.Add(new MatchContainer(this, requestSpawnStart, matchUsers));
         }
 
         private void UpdateMatches()
@@ -138,7 +138,7 @@ namespace Insight
 
         //These two are probably redundant
         public string playlistName;
-        public RequestSpawnMsg matchProperties;
+        public RequestSpawnStartMsg matchProperties;
 
         //How long to wait for the server to start before cancelling the match and returning the players to the queue
         //-1 or 0 will disable timeout
@@ -148,11 +148,11 @@ namespace Insight
         public bool InitMatch;
         public bool MatchComplete;
 
-        public MatchContainer(ServerMatchMaking MatchModule, RequestSpawnMsg MatchProperties, List<UserContainer> MatchUsers)
+        public MatchContainer(ServerMatchMaking MatchModule, RequestSpawnStartMsg MatchProperties, List<UserContainer> MatchUsers)
         {
             matchModule = MatchModule;
             matchProperties = MatchProperties;
-            matchModule.gameManager.RequestGameSpawn(matchProperties);
+            matchModule.gameManager.RequestGameSpawnStart(matchProperties);
             matchUsers = MatchUsers;
             matchStartTime = DateTime.UtcNow;
         }

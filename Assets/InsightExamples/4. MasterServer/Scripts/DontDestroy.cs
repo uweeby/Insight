@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 
-public class DontDestroy : MonoBehaviour
+namespace Insight.Examples.MasterServer
 {
-	// Use this for initialization
-	void Start ()
+    public class DontDestroy : MonoBehaviour
     {
-        DontDestroyOnLoad(this);
-	}
+        // Use this for initialization
+        void Start()
+        {
+            DontDestroyOnLoad(this);
+        }
+    }
 }

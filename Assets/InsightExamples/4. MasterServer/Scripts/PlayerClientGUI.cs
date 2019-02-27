@@ -3,183 +3,186 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum PlayerClientGUIState { Login, Main, Game};
-
-public class PlayerClientGUI : MonoBehaviour
+namespace Insight.Examples.MasterServer
 {
-    [Header("Root UI Panels")]
-    public GameObject RootLoginPanel;
-    public GameObject RootMainPanel;
-    public GameObject RootGamePanel;
+    public enum PlayerClientGUIState { Login, Main, Game };
 
-    [HideInInspector] public PlayerClientGUIState playerGuiState;
-
-    [Header("Insight Modules")]
-    public ClientAuthentication authComp;
-    public ChatClient chatComp;
-    public ClientGameManager gameComp;
-    public ClientMatchMaking matchComp;
-
-    [Header("UI Buttons")]
-    public GameObject StartMatchMakingButton;
-    public GameObject StopMatchMakingButton;
-    public GameObject GetGameListButton;
-    public GameObject CreateGameButton;
-
-    [Header("Game List UI Panels")]
-    public GameObject GameListArea;
-    public GameObject GameListPanel;
-
-    public GameObject GameListItemPrefab;
-
-    public Text chatTextField;
-
-    public List<GameContainer> gamesList = new List<GameContainer>();
-
-    [Header("Playlist/Game Name")]
-    public string GameName = "SuperAwesomeGame";
-
-    private void Start()
+    public class PlayerClientGUI : MonoBehaviour
     {
-        SwitchToLogin();
-    }
+        [Header("Root UI Panels")]
+        public GameObject RootLoginPanel;
+        public GameObject RootMainPanel;
+        public GameObject RootGamePanel;
 
-    void Update()
-    {
-        switch (playerGuiState)
+        [HideInInspector] public PlayerClientGUIState playerGuiState;
+
+        [Header("Insight Modules")]
+        public ClientAuthentication authComp;
+        public ChatClient chatComp;
+        public ClientGameManager gameComp;
+        public ClientMatchMaking matchComp;
+
+        [Header("UI Buttons")]
+        public GameObject StartMatchMakingButton;
+        public GameObject StopMatchMakingButton;
+        public GameObject GetGameListButton;
+        public GameObject CreateGameButton;
+
+        [Header("Game List UI Panels")]
+        public GameObject GameListArea;
+        public GameObject GameListPanel;
+
+        public GameObject GameListItemPrefab;
+
+        public Text chatTextField;
+
+        public List<GameContainer> gamesList = new List<GameContainer>();
+
+        [Header("Playlist/Game Name")]
+        public string GameName = "SuperAwesomeGame";
+
+        private void Start()
         {
-            case PlayerClientGUIState.Login:
-                SwitchToLogin();
-
-                if(authComp.loginSucessful)
-                {
-                    playerGuiState = PlayerClientGUIState.Main;
-                    return;
-                }
-                break;
-            case PlayerClientGUIState.Main:
-                SwitchToMain();
-                CheckGamesList();
-                break;
-            case PlayerClientGUIState.Game:
-                SwitchToGame();
-                break;
+            SwitchToLogin();
         }
-    }
 
-    public void FixedUpdate()
-    {
-        //This is gross. Needs a better design that does not introduce coupling.
-        chatTextField.text = chatComp.chatLog;
-    }
-
-    private void SwitchToLogin()
-    {
-        RootLoginPanel.SetActive(true);
-        RootMainPanel.SetActive(false);
-        RootGamePanel.SetActive(false);
-    }
-
-    private void SwitchToMain()
-    {
-        RootLoginPanel.SetActive(false);
-        RootMainPanel.SetActive(true);
-        RootGamePanel.SetActive(false);
-    }
-
-    private void SwitchToGamesList()
-    {
-        RootLoginPanel.SetActive(false);
-        RootMainPanel.SetActive(false);
-        RootGamePanel.SetActive(false);
-    }
-
-    private void SwitchToGame()
-    {
-        RootLoginPanel.SetActive(false);
-        RootMainPanel.SetActive(false);
-        RootGamePanel.SetActive(true);
-    }
-
-    public void HandleStartMatchMakingButton()
-    {
-        StartMatchMakingButton.SetActive(false);
-        StopMatchMakingButton.SetActive(true);
-
-        matchComp.SendStartMatchMaking(new StartMatchMakingMsg() { SceneName = GameName });
-    }
-
-    public void HandleStopMatchMakingButton()
-    {
-        StartMatchMakingButton.SetActive(true);
-        StopMatchMakingButton.SetActive(false);
-
-        matchComp.SendStopMatchMaking();
-    }
-
-    public void HandleGetGameListButton()
-    {
-        gameComp.SendGetGameListMsg();
-
-        GetGameListButton.SetActive(false);
-        StartMatchMakingButton.SetActive(false);
-        StopMatchMakingButton.SetActive(false);
-        CreateGameButton.SetActive(false);
-
-        GameListArea.SetActive(true);
-    }
-
-    public void HandleJoinGameButton(string UniqueID)
-    {
-        gameComp.SendJoinGameMsg(UniqueID);
-
-        playerGuiState = PlayerClientGUIState.Game;
-    }
-
-    public void HandleCancelButton()
-    {
-        GameListArea.SetActive(false);
-
-        GetGameListButton.SetActive(true);
-        StartMatchMakingButton.SetActive(true);
-        StopMatchMakingButton.SetActive(false);
-        CreateGameButton.SetActive(true);
-    }
-
-    public void HandleCreateGameButton()
-    {
-        gameComp.SendRequestSpawnStart(new RequestSpawnStartMsg() { SceneName = GameName });
-    }
-
-    public void HandleSendChatButton(string Data)
-    {
-        chatComp.SendChatMsg(Data);
-    }
-    
-    private void CheckGamesList()
-    {
-        gamesList.Clear();
-
-        if (gameComp.gamesList.Count > 0)
+        void Update()
         {
-            gamesList.AddRange(gameComp.gamesList);
-            gameComp.gamesList.Clear();
-            UpdateGameListUI();
+            switch (playerGuiState)
+            {
+                case PlayerClientGUIState.Login:
+                    SwitchToLogin();
+
+                    if (authComp.loginSucessful)
+                    {
+                        playerGuiState = PlayerClientGUIState.Main;
+                        return;
+                    }
+                    break;
+                case PlayerClientGUIState.Main:
+                    SwitchToMain();
+                    CheckGamesList();
+                    break;
+                case PlayerClientGUIState.Game:
+                    SwitchToGame();
+                    break;
+            }
         }
-    }
 
-    public void UpdateGameListUI()
-    {
-        foreach (GameContainer game in gamesList)
+        public void FixedUpdate()
         {
-            GameObject instance = Instantiate(GameListItemPrefab);
-            instance.transform.parent = GameListPanel.transform;
-            GUIGamesListEntry comp = instance.GetComponent<GUIGamesListEntry>();
-            comp.clientComp = this;
-            comp.UniqueID = game.UniqueId;
-            comp.CurrentPlayers = game.CurrentPlayers;
-            comp.MaxPlayers = game.MaxPlayers;
-            comp.SceneName = game.SceneName;
+            //This is gross. Needs a better design that does not introduce coupling.
+            chatTextField.text = chatComp.chatLog;
+        }
+
+        private void SwitchToLogin()
+        {
+            RootLoginPanel.SetActive(true);
+            RootMainPanel.SetActive(false);
+            RootGamePanel.SetActive(false);
+        }
+
+        private void SwitchToMain()
+        {
+            RootLoginPanel.SetActive(false);
+            RootMainPanel.SetActive(true);
+            RootGamePanel.SetActive(false);
+        }
+
+        private void SwitchToGamesList()
+        {
+            RootLoginPanel.SetActive(false);
+            RootMainPanel.SetActive(false);
+            RootGamePanel.SetActive(false);
+        }
+
+        private void SwitchToGame()
+        {
+            RootLoginPanel.SetActive(false);
+            RootMainPanel.SetActive(false);
+            RootGamePanel.SetActive(true);
+        }
+
+        public void HandleStartMatchMakingButton()
+        {
+            StartMatchMakingButton.SetActive(false);
+            StopMatchMakingButton.SetActive(true);
+
+            matchComp.SendStartMatchMaking(new StartMatchMakingMsg() {SceneName = GameName});
+        }
+
+        public void HandleStopMatchMakingButton()
+        {
+            StartMatchMakingButton.SetActive(true);
+            StopMatchMakingButton.SetActive(false);
+
+            matchComp.SendStopMatchMaking();
+        }
+
+        public void HandleGetGameListButton()
+        {
+            gameComp.SendGetGameListMsg();
+
+            GetGameListButton.SetActive(false);
+            StartMatchMakingButton.SetActive(false);
+            StopMatchMakingButton.SetActive(false);
+            CreateGameButton.SetActive(false);
+
+            GameListArea.SetActive(true);
+        }
+
+        public void HandleJoinGameButton(string UniqueID)
+        {
+            gameComp.SendJoinGameMsg(UniqueID);
+
+            playerGuiState = PlayerClientGUIState.Game;
+        }
+
+        public void HandleCancelButton()
+        {
+            GameListArea.SetActive(false);
+
+            GetGameListButton.SetActive(true);
+            StartMatchMakingButton.SetActive(true);
+            StopMatchMakingButton.SetActive(false);
+            CreateGameButton.SetActive(true);
+        }
+
+        public void HandleCreateGameButton()
+        {
+            gameComp.SendRequestSpawnStart(new RequestSpawnStartMsg() {SceneName = GameName});
+        }
+
+        public void HandleSendChatButton(string Data)
+        {
+            chatComp.SendChatMsg(Data);
+        }
+
+        private void CheckGamesList()
+        {
+            gamesList.Clear();
+
+            if (gameComp.gamesList.Count > 0)
+            {
+                gamesList.AddRange(gameComp.gamesList);
+                gameComp.gamesList.Clear();
+                UpdateGameListUI();
+            }
+        }
+
+        public void UpdateGameListUI()
+        {
+            foreach (GameContainer game in gamesList)
+            {
+                GameObject instance = Instantiate(GameListItemPrefab);
+                instance.transform.parent = GameListPanel.transform;
+                GUIGamesListEntry comp = instance.GetComponent<GUIGamesListEntry>();
+                comp.clientComp = this;
+                comp.UniqueID = game.UniqueId;
+                comp.CurrentPlayers = game.CurrentPlayers;
+                comp.MaxPlayers = game.MaxPlayers;
+                comp.SceneName = game.SceneName;
+            }
         }
     }
 }

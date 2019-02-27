@@ -1,24 +1,27 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class ChatGUI : MonoBehaviour
+namespace Insight.Examples.Chat
 {
-    public ChatClient chatComp;
-
-    public InputField nameInput;
-    public InputField chatInput;
-    public Text textField;
-
-    public void FixedUpdate()
+    public class ChatGUI : MonoBehaviour
     {
-        //This is gross. Needs a better design that does not introduce coupling.
-        textField.text = chatComp.chatLog;
-    }
+        public ChatClient chatComp;
 
-    public void HandleSendChat()
-    {
-        chatComp.SendChatMsg(nameInput.text, chatInput.text);
+        public InputField nameInput;
+        public InputField chatInput;
+        public Text textField;
 
-        chatInput.text = ""; //Clear out the previously entered text from the field
+        public void FixedUpdate()
+        {
+            //This is gross. Needs a better design that does not introduce coupling.
+            textField.text = chatComp.chatLog;
+        }
+
+        public void HandleSendChat()
+        {
+            chatComp.SendChatMsg(nameInput.text, chatInput.text);
+
+            chatInput.text = ""; //Clear out the previously entered text from the field
+        }
     }
 }

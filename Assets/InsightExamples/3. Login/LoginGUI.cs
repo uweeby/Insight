@@ -2,23 +2,26 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LoginGUI : MonoBehaviour
+namespace Insight.Examples.Login
 {
-    public ClientAuthentication clientAuthentication;
-
-    public InputField usernameField;
-    public InputField passwordField;
-
-    public Text statusText;
-
-    private void Update()
+    public class LoginGUI : MonoBehaviour
     {
-        statusText.text = clientAuthentication.loginResponse;
-    }
+        public ClientAuthentication clientAuthentication;
 
-    //MsgSender
-    public void SendLoginMsg()
-    {
-        clientAuthentication.SendLoginMsg(usernameField.text, passwordField.text);
+        public InputField usernameField;
+        public InputField passwordField;
+
+        public Text statusText;
+
+        private void Update()
+        {
+            statusText.text = clientAuthentication.loginResponse;
+        }
+
+        //MsgSender
+        public void SendLoginMsg()
+        {
+            clientAuthentication.SendLoginMsg(usernameField.text, passwordField.text);
+        }
     }
 }

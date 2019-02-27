@@ -1,33 +1,36 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class GUIGamesListEntry : MonoBehaviour
+namespace Insight.Examples.MasterServer
 {
-    public PlayerClientGUI clientComp;
-
-    public Text SceneNameText;
-    public Text PlayerCountText;
-
-    public string UniqueID;
-    public string SceneName;
-    public int CurrentPlayers;
-    public int MaxPlayers;
-
-    private bool Init;
-
-    private void LateUpdate()
+    public class GUIGamesListEntry : MonoBehaviour
     {
-        if(!Init)
+        public PlayerClientGUI clientComp;
+
+        public Text SceneNameText;
+        public Text PlayerCountText;
+
+        public string UniqueID;
+        public string SceneName;
+        public int CurrentPlayers;
+        public int MaxPlayers;
+
+        private bool Init;
+
+        private void LateUpdate()
         {
-            Init = true;
+            if (!Init)
+            {
+                Init = true;
 
-            SceneNameText.text = SceneName;
-            PlayerCountText.text = CurrentPlayers + "/" + MaxPlayers;
+                SceneNameText.text = SceneName;
+                PlayerCountText.text = CurrentPlayers + "/" + MaxPlayers;
+            }
         }
-    }
 
-    public void HandleSelectButton()
-    {
-        clientComp.HandleJoinGameButton(UniqueID);
+        public void HandleSelectButton()
+        {
+            clientComp.HandleJoinGameButton(UniqueID);
+        }
     }
 }

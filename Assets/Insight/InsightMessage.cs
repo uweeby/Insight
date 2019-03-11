@@ -25,7 +25,8 @@ namespace Insight
         LeaveGame,
 
         //ProcessSpawner
-        RequestSpawn,
+        RequestSpawnStart,
+        RequestSpawnStop,
         KillSpawn,
 
         //MatchMaking
@@ -91,12 +92,16 @@ namespace Insight
         public short Channel;
     }
 
+    //Sent from a new Spawner after it connects to a master.
+    //Used to register it to the MasterSpawner
     public class RegisterSpawnerMsg : MessageBase
     {
         public string UniqueID; //Guid
         public int MaxThreads;
     }
 
+    //Sent from a new GameServer after it connects to a Master.
+    //Used to register it to the ServerGameManager
     public class RegisterGameMsg : MessageBase
     {
         public string UniqueID; //Guid
@@ -107,7 +112,8 @@ namespace Insight
         public int CurrentPlayers;
     }
 
-    public class RequestSpawnMsg : MessageBase
+    //Sent when requesting a new GameServer to be created running the provided scene.
+    public class RequestSpawnStartMsg : MessageBase
     {
         public string SceneName;
 
@@ -116,21 +122,31 @@ namespace Insight
         public string NetworkAddress; 
     }
 
+    //Asks the server to gracefully stop
+    public class RequestSpawnStopMsg : MessageBase
+    {
+        public string UniqueID; //Guid
+    }
+
+    //Force kill the server. Used if the server is not responding to normal msgs.
     public class KillSpawnMsg : MessageBase
     {
         public string UniqueID; //Guid
     }
 
+    //Sent from a player client when they wants to join a matchmaking playlist
     public class StartMatchMakingMsg : MessageBase
     {
         public string SceneName;
     }
 
+    //Sent from a player client when they want to quit matchmaking
     public class StopMatchMakingMsg : MessageBase
     {
 
     }
 
+    //Sent from a player client requesting the list of currently active games.
     public class GameListMsg : MessageBase
     {
         public GameContainer[] gamesArray;
@@ -141,20 +157,23 @@ namespace Insight
         }
     }
 
+    //Sent from a palyer client when they want to join a game by its UniqueID
     public class JoinGamMsg : MessageBase
     {
         public string UniqueID;
     }
 
-    //Used to tell a player to connect to a new game server
+    //Sent from the MasterServer to a player client teling them to join the listed server.
     public class ChangeServerMsg : MessageBase
     {
+        //This is msg would not support all transports in its current configuration.
         public string NetworkAddress;
         public ushort NetworkPort;
         public string SceneName;
     }
 
-    //Updates the MasterSpawner with current status
+    //Updates the MasterSpawner with current status of the spawner
+    //Used as a bacis load/health tracker.
     public class SpawnerStatusMsg : MessageBase
     {
         public int CurrentThreads;

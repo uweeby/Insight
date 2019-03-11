@@ -148,7 +148,7 @@ public class PlayerClientGUI : MonoBehaviour
 
     public void HandleCreateGameButton()
     {
-        gameComp.SendRequestSpawn(new RequestSpawnMsg() { SceneName = GameName });
+        gameComp.SendRequestSpawnStart(new RequestSpawnStartMsg() { SceneName = GameName });
     }
 
     public void HandleSendChatButton(string Data)

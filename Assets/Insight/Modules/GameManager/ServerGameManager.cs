@@ -98,7 +98,7 @@ namespace Insight
         }
 
         //Used by MatchMaker to request a GameServer for a new Match
-        public void RequestGameSpawn(RequestSpawnMsg requestSpawn)
+        public void RequestGameSpawnStart(RequestSpawnStartMsg requestSpawn)
         {
             masterSpawner.InternalSpawnRequest(requestSpawn);
         }

@@ -6,6 +6,7 @@ namespace Insight
 {
     public class InsightClient : InsightCommon
     {
+        public bool DontDestroy; //Sets DontDestroyOnLoad for this object
         public bool AutoReconnect = true;
         protected int clientID = -1; //-1 = never connected, 0 = disconnected, 1 = connected
         protected int connectionID = 0;
@@ -29,7 +30,11 @@ namespace Insight
 
         public virtual void Start()
         {
-            DontDestroyOnLoad(gameObject);
+            if(DontDestroy)
+            {
+                DontDestroyOnLoad(this);
+            }
+
             Application.runInBackground = true;
 
             if (AutoStart)

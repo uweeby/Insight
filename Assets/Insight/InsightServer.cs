@@ -7,7 +7,6 @@ namespace Insight
 {
     public class InsightServer : InsightCommon
     {
-        public bool DontDestroy; //Sets DontDestroyOnLoad for this object
         protected int serverHostId = -1; //-1 = never connected, 0 = disconnected, 1 = connected
         protected Dictionary<int, InsightNetworkConnection> connections = new Dictionary<int, InsightNetworkConnection>();
         protected List<SendToAllFinishedCallbackData> sendToAllFinishedCallbacks = new List<SendToAllFinishedCallbackData>();

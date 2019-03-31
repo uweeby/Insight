@@ -8,6 +8,7 @@ namespace Insight
         Error = -1,
         Empty,
         Status,
+        Disconnect,
 
         Login,
         LoginResponse,

@@ -151,7 +151,7 @@ namespace Insight
 
             if (insightNetworkConnection != null)
             {
-                insightNetworkConnection.InvokeHandlerNoData((short)MsgType.Disconnect);
+                insightNetworkConnection.InvokeHandlerNoData((short)MsgId.Disconnect);
             }
         }
 

@@ -50,7 +50,7 @@ namespace Insight
             {
                 _initializeComplete = true;
 
-                var modules = SearchChildrenForModule ? GetComponentsInChildren<InsightModule>() : FindObjectsOfType<InsightModule>();
+                InsightModule[] modules = SearchChildrenForModule ? GetComponentsInChildren<InsightModule>() : FindObjectsOfType<InsightModule>();
 
                 // Add modules
                 foreach (var module in modules)
@@ -95,12 +95,12 @@ namespace Insight
 
         public bool InitializeModules(InsightClient client, InsightServer server)
         {
-            var checkOptional = true;
+            bool checkOptional = true;
 
             // Initialize modules
             while (true)
             {
-                var changed = false;
+                bool changed = false;
                 foreach (var entry in _modules)
                 {
                     // Module is already initialized

@@ -159,9 +159,9 @@ namespace Insight
         {
             InsightNetworkMessageDelegate msgDelegate;
             NetworkReader reader = new NetworkReader(buffer);
-            var msgType = reader.ReadInt16();
-            var callbackId = reader.ReadInt32();
-            var msg = new InsightNetworkMessage(insightNetworkConnection, callbackId)
+            short msgType = reader.ReadInt16();
+            int callbackId = reader.ReadInt32();
+            InsightNetworkMessage msg = new InsightNetworkMessage(insightNetworkConnection, callbackId)
             {
                 msgType = msgType,
                 reader = reader

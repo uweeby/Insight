@@ -140,7 +140,7 @@ namespace Insight
         public virtual void TransportReceive(byte[] bytes)
         {
             // unpack message
-            var reader = new NetworkReader(bytes);
+            NetworkReader reader = new NetworkReader(bytes);
 
             short msgType = reader.ReadInt16();
             int callbackId = reader.ReadInt32();
@@ -206,7 +206,7 @@ namespace Insight
 
         public TMsg ReadMessage<TMsg>() where TMsg : MessageBase, new()
         {
-            var msg = new TMsg();
+            TMsg msg = new TMsg();
             msg.Deserialize(reader);
             return msg;
         }

@@ -9,7 +9,7 @@ public class BuildScript
     [MenuItem("Tools/Build Insight/Build All", false, 0)]
     public static void BuildAllMenu()
     {
-        var path = GetPath();
+        string path = GetPath();
         if (!string.IsNullOrEmpty(path))
         {
             BuildMasterServer(path);
@@ -22,7 +22,7 @@ public class BuildScript
     [MenuItem("Tools/Build Insight/MasterServer", false, 100)]
     public static void BuildMasterServerMenu()
     {
-        var path = GetPath();
+        string path = GetPath();
         if (!string.IsNullOrEmpty(path))
         {
             BuildMasterServer(path);
@@ -32,7 +32,7 @@ public class BuildScript
     [MenuItem("Tools/Build Insight/RemoteSpawner", false, 101)]
     public static void BuildRemoteSpawnerMenu()
     {
-        var path = GetPath();
+        string path = GetPath();
         if (!string.IsNullOrEmpty(path))
         {
             BuildRemoteSpawner(path);
@@ -42,7 +42,7 @@ public class BuildScript
     [MenuItem("Tools/Build Insight/GameServer", false, 102)]
     public static void BuildGameServerMenu()
     {
-        var path = GetPath();
+        string path = GetPath();
         if (!string.IsNullOrEmpty(path))
         {
             BuildGameServer(path);
@@ -52,7 +52,7 @@ public class BuildScript
     [MenuItem("Tools/Build Insight/PlayerClient", false, 103)]
     public static void BuildPlayerClientMenu()
     {
-        var path = GetPath();
+        string path = GetPath();
         if (!string.IsNullOrEmpty(path))
         {
             BuildPlayerClient(path);
@@ -61,7 +61,7 @@ public class BuildScript
 
     public static void BuildMasterServer(string path)
     {
-        var scenes = new[]
+        string[] scenes = new[]
         {
         ScenesRoot+"MasterServer.unity"
         };
@@ -72,7 +72,7 @@ public class BuildScript
 
     public static void BuildRemoteSpawner(string path)
     {
-        var gameServerScenes = new[]
+        string[] gameServerScenes = new[]
         {
         ScenesRoot+"RemoteSpawner.unity"
         };
@@ -83,7 +83,7 @@ public class BuildScript
 
     public static void BuildGameServer(string path)
     {
-        var gameServerScenes = new[]
+        string[] gameServerScenes = new[]
         {
         ScenesRoot+"GameServer.unity",
         //Scene used for MasterServer Demo
@@ -96,7 +96,7 @@ public class BuildScript
 
     public static void BuildPlayerClient(string path)
     {
-        var scenes = new[]
+        string[] scenes = new[]
         {
         ScenesRoot+"PlayerClient.unity",
         //Scene used for MasterServer Demo
@@ -110,7 +110,7 @@ public class BuildScript
     #region Helpers
     public static string GetPath()
     {
-        var prevPath = EditorPrefs.GetString("msf.buildPath", "");
+        string prevPath = EditorPrefs.GetString("msf.buildPath", "");
         string path = EditorUtility.SaveFolderPanel("Choose Location for binaries", prevPath, "");
 
         if (!string.IsNullOrEmpty(path))

@@ -57,7 +57,7 @@ namespace Insight
 
         protected virtual void CheckCallbackTimeouts()
         {
-            foreach (var callback in callbacks)
+            foreach (KeyValuePair<int, CallbackData> callback in callbacks)
             {
                 if (callback.Value.timeout < Time.realtimeSinceStartup)
                 {

@@ -34,7 +34,7 @@ namespace Insight
             if (!_args.Contains(argName))
                 return defaultValue;
 
-            var index = _args.ToList().FindIndex(0, a => a.Equals(argName));
+            int index = _args.ToList().FindIndex(0, a => a.Equals(argName));
             return _args[index + 1];
         }
 

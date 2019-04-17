@@ -100,8 +100,8 @@ namespace Insight
         private void HandleData(int connectionId, byte[] data)
         {
             NetworkReader reader = new NetworkReader(data);
-            var msgType = reader.ReadInt16();
-            var callbackId = reader.ReadInt32();
+            short msgType = reader.ReadInt16();
+            int callbackId = reader.ReadInt32();
             InsightNetworkConnection insightNetworkConnection;
             if (!connections.TryGetValue(connectionId, out insightNetworkConnection))
             {
@@ -111,7 +111,7 @@ namespace Insight
 
             if (callbacks.ContainsKey(callbackId))
             {
-                var msg = new InsightNetworkMessage(insightNetworkConnection, callbackId) { msgType = msgType, reader = reader };
+                InsightNetworkMessage msg = new InsightNetworkMessage(insightNetworkConnection, callbackId) { msgType = msgType, reader = reader };
                 callbacks[callbackId].callback.Invoke(CallbackStatus.Ok, msg);
                 callbacks.Remove(callbackId);
 

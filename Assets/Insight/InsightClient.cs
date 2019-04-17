@@ -40,6 +40,16 @@ namespace Insight
             {
                 StartInsight();
             }
+
+            clientID = 0;
+            insightNetworkConnection = new InsightNetworkConnection();
+            insightNetworkConnection.Initialize(this, networkAddress, clientID, connectionID);
+            insightNetworkConnection.SetHandlers(messageHandlers);
+
+            transport.OnClientConnected.AddListener(OnConnected);
+            transport.OnClientDataReceived.AddListener(HandleBytes);
+            transport.OnClientDisconnected.AddListener(OnDisconnected);
+            transport.OnClientError.AddListener(OnError);
         }
 
         public virtual void Update()
@@ -59,15 +69,6 @@ namespace Insight
         public override void StartInsight()
         {
             transport.ClientConnect(networkAddress);
-            clientID = 0;
-            insightNetworkConnection = new InsightNetworkConnection();
-            insightNetworkConnection.Initialize(this, networkAddress, clientID, connectionID);
-            insightNetworkConnection.SetHandlers(messageHandlers);
-
-            transport.OnClientConnected.AddListener(OnConnected);
-            transport.OnClientDataReceived.AddListener(HandleBytes);
-            transport.OnClientDisconnected.AddListener(OnDisconnected);
-            transport.OnClientError.AddListener(OnError);
 
             OnStartInsight();
 

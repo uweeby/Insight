@@ -137,10 +137,10 @@ namespace Insight
             return TransportSend(bytes, out error);
         }
 
-        public virtual void TransportReceive(byte[] bytes)
+        public virtual void TransportReceive(ArraySegment<byte> data)
         {
             // unpack message
-            NetworkReader reader = new NetworkReader(bytes);
+            NetworkReader reader = new NetworkReader(data);
 
             short msgType = reader.ReadInt16();
             int callbackId = reader.ReadInt32();

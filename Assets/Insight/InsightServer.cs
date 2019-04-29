@@ -97,7 +97,7 @@ namespace Insight
             }
         }
 
-        private void HandleData(int connectionId, byte[] data)
+        private void HandleData(int connectionId, ArraySegment<byte> data)
         {
             NetworkReader reader = new NetworkReader(data);
             short msgType = reader.ReadInt16();

@@ -156,10 +156,10 @@ namespace Insight
             }
         }
 
-        protected void HandleBytes(byte[] buffer)
+        protected void HandleBytes(ArraySegment<byte> data)
         {
             InsightNetworkMessageDelegate msgDelegate;
-            NetworkReader reader = new NetworkReader(buffer);
+            NetworkReader reader = new NetworkReader(data);
             short msgType = reader.ReadInt16();
             int callbackId = reader.ReadInt32();
             InsightNetworkMessage msg = new InsightNetworkMessage(insightNetworkConnection, callbackId)

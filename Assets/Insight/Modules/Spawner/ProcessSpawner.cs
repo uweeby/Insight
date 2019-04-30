@@ -25,7 +25,7 @@ namespace Insight
 
         [Header("Threads")]
         public int MaximumProcesses = 5;
-
+        public int HealthCheckPollRate = 5; //In Seconds
         bool registrationComplete;
 
         public List<RunningProcessStruct> spawnerProcesses = new List<RunningProcessStruct>();
@@ -47,13 +47,13 @@ namespace Insight
 #if UNITY_EDITOR
             ProcessPath = EditorPath;
 #endif
+
+            InvokeRepeating("CheckSpawnedProcessHealth", HealthCheckPollRate, HealthCheckPollRate);
         }
 
         void FixedUpdate()
         {
             RegisterToMaster();
-
-            CheckSpawnedProcessHealth();
         }
 
         void RegisterHandlers()

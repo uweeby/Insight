@@ -16,7 +16,7 @@ namespace Insight
         public string SpawnerNetworkAddress = "localhost";
         [Tooltip("Port that will be used by the NetworkManager in the spawned game")]
         public int StartingNetworkPort = 7777; //Default port of the NetworkManager. 
-        private int _portCounter;
+        int _portCounter;
 
         [Header("Paths")]
         public string EditorPath;
@@ -26,7 +26,7 @@ namespace Insight
         [Header("Threads")]
         public int MaximumProcesses = 5;
 
-        private bool registrationComplete;
+        bool registrationComplete;
 
         public List<RunningProcessStruct> spawnerProcesses = new List<RunningProcessStruct>();
 
@@ -49,22 +49,9 @@ namespace Insight
 #endif
         }
 
-        void Update()
+        void FixedUpdate()
         {
-            //Used only if acting as a ChildSpawner under a MasterServer
-            if (client && !registrationComplete)
-            {
-                if (client.isConnected)
-                {
-                    UnityEngine.Debug.LogWarning("[ProcessSpawner] - Registering to Master");
-                    client.Send((short)MsgId.RegisterSpawner, new RegisterSpawnerMsg()
-                    {
-                        UniqueID = "",
-                        MaxThreads = MaximumProcesses
-                    }); //Can provide a password to authenticate to the master as a trusted spawner
-                    registrationComplete = true;
-                }
-            }
+            RegisterToMaster();
 
             CheckSpawnedProcessHealth();
         }
@@ -83,7 +70,7 @@ namespace Insight
             }
         }
 
-        private void HandleRequestSpawnStart(InsightNetworkMessage netMsg)
+        void HandleRequestSpawnStart(InsightNetworkMessage netMsg)
         {
             RequestSpawnStartMsg message = netMsg.ReadMessage<RequestSpawnStartMsg>();
 
@@ -107,7 +94,25 @@ namespace Insight
             }
         }
 
-        private void CheckSpawnedProcessHealth()
+        void RegisterToMaster()
+        {
+            //Used only if acting as a ChildSpawner under a MasterServer
+            if (client && !registrationComplete)
+            {
+                if (client.isConnected)
+                {
+                    UnityEngine.Debug.LogWarning("[ProcessSpawner] - Registering to Master");
+                    client.Send((short)MsgId.RegisterSpawner, new RegisterSpawnerMsg()
+                    {
+                        UniqueID = "", //Can provide a password to authenticate to the master as a trusted spawner
+                        MaxThreads = MaximumProcesses
+                    });
+                    registrationComplete = true;
+                }
+            }
+        }
+
+        void CheckSpawnedProcessHealth()
         {
             //Check to see if a previously running process exited without warning
             foreach (RunningProcessStruct item in spawnerProcesses)
@@ -121,7 +126,7 @@ namespace Insight
             }
         }
 
-        private void HandleKillSpawn(InsightNetworkMessage netMsg)
+        void HandleKillSpawn(InsightNetworkMessage netMsg)
         {
             KillSpawnMsg message = netMsg.ReadMessage<KillSpawnMsg>();
 
@@ -136,7 +141,7 @@ namespace Insight
             }
         }
 
-        private bool InternalStartNewProcess(RequestSpawnStartMsg spawnProperties)
+        bool InternalStartNewProcess(RequestSpawnStartMsg spawnProperties)
         {
             if (spawnerProcesses.Count >= MaximumProcesses)
             {
@@ -184,7 +189,7 @@ namespace Insight
             }
         }
 
-        private static string ArgsString()
+        static string ArgsString()
         {
             string[] args = System.Environment.GetCommandLineArgs();
             return args != null ? string.Join(" ", args.Skip(1).ToArray()) : "";

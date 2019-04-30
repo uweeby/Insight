@@ -72,7 +72,7 @@ namespace Insight
             OnStopInsight();
         }
 
-        private void HandleConnect(int connectionId)
+        void HandleConnect(int connectionId)
         {
             if (logNetworkMessages) { Debug.Log("[InsightServer] - Client connected connectionID: " + connectionId, this); }
 
@@ -85,7 +85,7 @@ namespace Insight
             AddConnection(conn);
         }
 
-        private void HandleDisconnect(int connectionId)
+        void HandleDisconnect(int connectionId)
         {
             if (logNetworkMessages) { Debug.Log("[InsightServer] - Client disconnected connectionID: " + connectionId, this); }
 
@@ -97,7 +97,7 @@ namespace Insight
             }
         }
 
-        private void HandleData(int connectionId, ArraySegment<byte> data)
+        void HandleData(int connectionId, ArraySegment<byte> data)
         {
             NetworkReader reader = new NetworkReader(data);
             short msgType = reader.ReadInt16();
@@ -123,7 +123,7 @@ namespace Insight
             }
         }
 
-        private void OnError(int connectionId, Exception exception)
+        void OnError(int connectionId, Exception exception)
         {
             // TODO Let's discuss how we will handle errors
             Debug.LogException(exception);
@@ -242,13 +242,13 @@ namespace Insight
             return false;
         }
 
-        private void OnApplicationQuit()
+        void OnApplicationQuit()
         {
             if (logNetworkMessages) { Debug.Log("[InsightServer] Stopping Server"); }
             transport.ServerStop();
         }
 
-        private void CheckForFinishedCallback(int callbackId)
+        void CheckForFinishedCallback(int callbackId)
         {
             foreach (var item in sendToAllFinishedCallbacks)
             {

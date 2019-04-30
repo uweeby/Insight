@@ -25,7 +25,7 @@ namespace Insight
         }
 
         public float ReconnectDelayInSeconds = 5f;
-        private float _reconnectTimer;
+        float _reconnectTimer;
 
         public virtual void Start()
         {
@@ -184,13 +184,13 @@ namespace Insight
             }
         }
 
-        private static void OnError(Exception exception)
+        static void OnError(Exception exception)
         {
             // TODO Let's discuss how we will handle errors
             Debug.LogException(exception);
         }
 
-        private void OnApplicationQuit()
+        void OnApplicationQuit()
         {
             if (logNetworkMessages) { Debug.Log("[InsightClient] Stopping Client"); }
             StopInsight();

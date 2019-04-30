@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ChatClient : InsightModule
 {
-    [HideInInspector] public InsightClient client;
+    InsightClient client;
 
     //Used in Example Scene:
     [HideInInspector] public string chatLog;

@@ -4,7 +4,7 @@ namespace Insight
 {
     public class ClientMatchMaking : InsightModule
     {
-        [HideInInspector] public InsightClient client;
+        InsightClient client;
 
         public override void Initialize(InsightClient client, ModuleManager manager)
         {

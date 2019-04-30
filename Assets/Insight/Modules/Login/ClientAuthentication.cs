@@ -6,7 +6,7 @@ namespace Insight
 {
     public class ClientAuthentication : InsightModule
     {
-        [HideInInspector] public InsightClient client;
+        InsightClient client;
 
         public string uniqueID;
 

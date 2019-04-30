@@ -7,10 +7,10 @@ namespace Insight
 {
     public class GameRegistration : InsightModule
     {
-        [HideInInspector] public InsightClient client;
-        public NetworkManager networkManager;
-        public TelepathyTransport networkManagerTelepathyTransport;
-        public TelepathyTransport insightTelepathyTransport;
+        InsightClient client;
+        [SerializeField] NetworkManager networkManager;
+        [SerializeField] TelepathyTransport networkManagerTelepathyTransport;
+        [SerializeField] TelepathyTransport insightTelepathyTransport;
 
         public List<GameContainer> registeredGames = new List<GameContainer>();
 

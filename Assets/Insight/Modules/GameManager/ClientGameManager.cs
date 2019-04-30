@@ -7,9 +7,9 @@ namespace Insight
 {
     public class ClientGameManager : InsightModule
     {
-        [HideInInspector] public InsightClient client;
-        public NetworkManager networkManager;
-        public TelepathyTransport transport;
+        InsightClient client;
+        [SerializeField] NetworkManager networkManager;
+        [SerializeField] TelepathyTransport transport;
 
         public List<GameContainer> gamesList = new List<GameContainer>();
 

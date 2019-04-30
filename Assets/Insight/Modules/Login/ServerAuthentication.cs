@@ -6,7 +6,7 @@ namespace Insight
 {
     public class ServerAuthentication : InsightModule
     {
-        [HideInInspector] public InsightServer server;
+        InsightServer server;
 
         public List<UserContainer> registeredUsers = new List<UserContainer>();
 

@@ -39,7 +39,7 @@ namespace Insight
 
         void RegisterHandlers() { }
 
-        private void GatherCmdArgs()
+        void GatherCmdArgs()
         {
             InsightArgs args = new InsightArgs();
             if (args.IsProvided("-NetworkAddress"))
@@ -72,7 +72,7 @@ namespace Insight
             networkManager.StartServer();
         }
 
-        private void SendGameRegistrationToGameManager()
+        void SendGameRegistrationToGameManager()
         {
             Debug.Log("[GameRegistration] - registering with master");
             client.Send((short)MsgId.RegisterGame, new RegisterGameMsg()

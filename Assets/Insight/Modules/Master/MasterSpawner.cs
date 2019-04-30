@@ -24,7 +24,7 @@ namespace Insight
             server.RegisterHandler((short)MsgId.SpawnerStatus, HandleSpawnerStatusMsg);
         }
 
-        private void HandleRegisterSpawnerMsg(InsightNetworkMessage netMsg)
+        void HandleRegisterSpawnerMsg(InsightNetworkMessage netMsg)
         {
             RegisterSpawnerMsg message = netMsg.ReadMessage<RegisterSpawnerMsg>();
 
@@ -40,7 +40,7 @@ namespace Insight
         }
 
         //Instead of handling the msg here we will forward it to an available spawner.
-        private void HandleSpawnRequestMsg(InsightNetworkMessage netMsg)
+        void HandleSpawnRequestMsg(InsightNetworkMessage netMsg)
         {
             RequestSpawnStartMsg message = netMsg.ReadMessage<RequestSpawnStartMsg>();
 
@@ -81,7 +81,7 @@ namespace Insight
             });
         }
 
-        private void HandleSpawnerStatusMsg(InsightNetworkMessage netMsg)
+        void HandleSpawnerStatusMsg(InsightNetworkMessage netMsg)
         {
             SpawnerStatusMsg message = netMsg.ReadMessage<SpawnerStatusMsg>();
 

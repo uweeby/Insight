@@ -26,7 +26,7 @@ namespace Insight
             client.RegisterHandler((short)MsgId.GameList, HandleGameListMsg);
         }
 
-        private void HandleChangeServersMsg(InsightNetworkMessage netMsg)
+        void HandleChangeServersMsg(InsightNetworkMessage netMsg)
         {
             ChangeServerMsg message = netMsg.ReadMessage<ChangeServerMsg>();
 
@@ -38,7 +38,7 @@ namespace Insight
             networkManager.StartClient();
         }
 
-        private void HandleGameListMsg(InsightNetworkMessage netMsg)
+        void HandleGameListMsg(InsightNetworkMessage netMsg)
         {
             GameListMsg message = netMsg.ReadMessage<GameListMsg>();
 

@@ -20,7 +20,7 @@ namespace Insight
         public List<UserContainer> playerQueue = new List<UserContainer>();
         public List<MatchContainer> matchList = new List<MatchContainer>();
 
-        private bool _spawnInProgress;
+        bool _spawnInProgress;
 
         public void Awake()
         {
@@ -39,7 +39,7 @@ namespace Insight
 
             RegisterHandlers();
 
-            InvokeRepeating("UpdateStuff", MatchMakingPollRate, MatchMakingPollRate);
+            InvokeRepeating("InvokedUpdate", MatchMakingPollRate, MatchMakingPollRate);
         }
 
         void RegisterHandlers()
@@ -48,20 +48,20 @@ namespace Insight
             server.RegisterHandler((short)MsgId.StopMatchMaking, HandleStopMatchSearchMsg);
         }
 
-        void UpdateStuff()
+        void InvokedUpdate()
         {
             UpdateQueue();
             UpdateMatches();
         }
 
-        private void HandleStartMatchSearchMsg(InsightNetworkMessage netMsg)
+        void HandleStartMatchSearchMsg(InsightNetworkMessage netMsg)
         {
             if (server.logNetworkMessages) { UnityEngine.Debug.Log("[MatchMaking] - Player joining MatchMaking."); }
 
             playerQueue.Add(authModule.GetUserByConnection(netMsg.connectionId));
         }
 
-        private void HandleStopMatchSearchMsg(InsightNetworkMessage netMsg)
+        void HandleStopMatchSearchMsg(InsightNetworkMessage netMsg)
         {
             foreach (UserContainer seraching in playerQueue)
             {
@@ -73,7 +73,7 @@ namespace Insight
             }
         }
 
-        private void UpdateQueue()
+        void UpdateQueue()
         {
             if (playerQueue.Count < MinimumPlayersForGame)
             {
@@ -90,7 +90,7 @@ namespace Insight
             CreateMatch();
         }
 
-        private void CreateMatch()
+        void CreateMatch()
         {
             //Used to track completion of requested spawn
             string uniqueID = Guid.NewGuid().ToString();
@@ -116,7 +116,7 @@ namespace Insight
             matchList.Add(new MatchContainer(this, requestSpawnStart, matchUsers));
         }
 
-        private void UpdateMatches()
+        void UpdateMatches()
         {
             foreach (MatchContainer match in matchList)
             {
@@ -171,7 +171,7 @@ namespace Insight
             }
         }
 
-        private bool IsSpawnServerActive()
+        bool IsSpawnServerActive()
         {
             if (matchModule.gameManager.GetGameByUniqueID(matchProperties.UniqueID) == null)
             {
@@ -181,13 +181,13 @@ namespace Insight
                     CancelMatch();
                 }
 
-                UnityEngine.Debug.Log("Server not active at this time");
+                Debug.Log("Server not active at this time");
                 return false;
             }
             return true;
         }
 
-        private void MovePlayersToServer()
+        void MovePlayersToServer()
         {
             foreach (UserContainer user in matchUsers)
             {
@@ -200,9 +200,9 @@ namespace Insight
             }
         }
 
-        private void CancelMatch()
+        void CancelMatch()
         {
-            UnityEngine.Debug.LogError("Server failed to start within timoue period. Cancelling match.");
+            Debug.LogError("Server failed to start within timoue period. Cancelling match.");
 
             //TODO: Destroy the match process somewhere: MatchServer
 

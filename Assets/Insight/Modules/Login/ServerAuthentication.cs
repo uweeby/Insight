@@ -26,7 +26,7 @@ namespace Insight
 
         //This is just an example. No actual authentication happens.
         //You would need to replace with your own logic. Perhaps with a DB connection.
-        private void HandleLoginMsg(InsightNetworkMessage netMsg)
+        void HandleLoginMsg(InsightNetworkMessage netMsg)
         {
             LoginMsg message = netMsg.ReadMessage<LoginMsg>();
 
@@ -61,7 +61,7 @@ namespace Insight
             //}
         }
 
-        private void HandleDisconnect(int connectionId)
+        void HandleDisconnect(int connectionId)
         {
             foreach (UserContainer user in registeredUsers)
             {

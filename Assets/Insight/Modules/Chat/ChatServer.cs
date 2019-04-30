@@ -28,7 +28,7 @@ namespace Insight
             server.RegisterHandler((short)MsgId.Chat, HandleChatMsg);
         }
 
-        private void HandleChatMsg(InsightNetworkMessage netMsg)
+        void HandleChatMsg(InsightNetworkMessage netMsg)
         {
             if (server.logNetworkMessages) { Debug.Log("[ChatServer] - Received Chat Message."); }
 

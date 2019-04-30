@@ -32,7 +32,7 @@ namespace Insight
             server.RegisterHandler((short)MsgId.GameList, HandleGameListMsg);
         }
 
-        private void HandleRegisterGameMsg(InsightNetworkMessage netMsg)
+        void HandleRegisterGameMsg(InsightNetworkMessage netMsg)
         {
             RegisterGameMsg message = netMsg.ReadMessage<RegisterGameMsg>();
 
@@ -51,7 +51,7 @@ namespace Insight
             });
         }
 
-        private void HandleDisconnect(int connectionId)
+        void HandleDisconnect(int connectionId)
         {
             foreach (GameContainer game in registeredGameServers)
             {
@@ -63,7 +63,7 @@ namespace Insight
             }
         }
 
-        private void HandleGameListMsg(InsightNetworkMessage netMsg)
+        void HandleGameListMsg(InsightNetworkMessage netMsg)
         {
             if (server.logNetworkMessages) { UnityEngine.Debug.Log("[MatchMaking] - Player Requesting Match list"); }
 
@@ -73,7 +73,7 @@ namespace Insight
             netMsg.Reply((short)MsgId.GameList, gamesListMsg);
         }
 
-        private void HandleJoinGameMsg(InsightNetworkMessage netMsg)
+        void HandleJoinGameMsg(InsightNetworkMessage netMsg)
         {
             JoinGamMsg message = netMsg.ReadMessage<JoinGamMsg>();
 

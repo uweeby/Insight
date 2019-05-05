@@ -1,4 +1,5 @@
 ﻿using Insight;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,11 +19,11 @@ public class GUIMasterServer : MonoBehaviour
     public Text gameCountText;
     public Text userCountText;
     public Text playersInQueueCountText;
-    public Text activeMatchesCountText;
+    public Text activeGamesText;
 
-    private bool Init;
+    bool Init;
 
-    private void Update()
+    void FixedUpdate()
     {
         if(!Init)
         {
@@ -43,6 +44,14 @@ public class GUIMasterServer : MonoBehaviour
         gameCountText.text = gameModule.registeredGameServers.Count.ToString();
         userCountText.text = authModule.registeredUsers.Count.ToString();
         playersInQueueCountText.text = matchModule.playerQueue.Count.ToString();
-        activeMatchesCountText.text = matchModule.matchList.Count.ToString();
+
+        //Clear previous values
+        activeGamesText.text = "";
+
+        //Game Status
+        foreach (GameContainer game in gameModule.registeredGameServers)
+        {
+            activeGamesText.text += game.UniqueId + " - " + game.NetworkAddress + ":" + game.NetworkPort + " - " + game.SceneName + " - " + game.CurrentPlayers + "/" + game.MaxPlayers + Environment.NewLine;
+        }
     }
 }

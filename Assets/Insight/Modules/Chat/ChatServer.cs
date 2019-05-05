@@ -36,13 +36,13 @@ namespace Insight
 
             if (authModule != null)
             {
-                //Find the user
-                UserContainer user = authModule.GetUserByConnection(netMsg.connectionId);
-
                 //Inject the username into the message
-                message.Origin = user.username;
+                message.Origin = authModule.GetUserByConnection(netMsg.connectionId).username;
 
-                server.SendToAll((short)MsgId.Chat, message);
+                foreach(UserContainer user in authModule.registeredUsers)
+                {
+                    server.SendToClient(user.connectionId, (short)MsgId.Chat, message);
+                }
             }
 
             //No Authentication Module. Simple Echo

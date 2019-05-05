@@ -67,6 +67,8 @@ namespace Insight
                 UniqueID = args.UniqueID;
             }
 
+            MaxPlayers = networkManager.maxConnections;
+
             //Start NetworkManager
             networkManager.StartServer();
         }

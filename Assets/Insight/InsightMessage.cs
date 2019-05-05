@@ -21,6 +21,7 @@ namespace Insight
         //GameManager
         RegisterSpawner,
         RegisterGame,
+        GameStatus,
         GameList,
         JoinGame,
         LeaveGame,
@@ -110,6 +111,12 @@ namespace Insight
         public ushort NetworkPort;
         public string SceneName;
         public int MaxPlayers;
+        public int CurrentPlayers;
+    }
+
+    public class GameStatusMsg : MessageBase
+    {
+        public string UniqueID; //Guid
         public int CurrentPlayers;
     }
 

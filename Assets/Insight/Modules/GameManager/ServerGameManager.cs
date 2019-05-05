@@ -28,6 +28,7 @@ namespace Insight
         void RegisterHandlers()
         {
             server.RegisterHandler((short)MsgId.RegisterGame, HandleRegisterGameMsg);
+            server.RegisterHandler((short)MsgId.GameStatus, HandleGameStatusMsg);
             server.RegisterHandler((short)MsgId.JoinGame, HandleJoinGameMsg);
             server.RegisterHandler((short)MsgId.GameList, HandleGameListMsg);
         }
@@ -49,6 +50,21 @@ namespace Insight
 
                 connectionId = netMsg.connectionId,
             });
+        }
+
+        void HandleGameStatusMsg(InsightNetworkMessage netMsg)
+        {
+            GameStatusMsg message = netMsg.ReadMessage<GameStatusMsg>();
+
+            if (server.logNetworkMessages) { Debug.Log("[GameManager] - Received Game status update"); }
+
+            foreach (GameContainer game in registeredGameServers)
+            {
+                if (game.UniqueId == message.UniqueID)
+                {
+                    game.CurrentPlayers = message.CurrentPlayers;
+                }
+            };
         }
 
         void HandleDisconnect(int connectionId)

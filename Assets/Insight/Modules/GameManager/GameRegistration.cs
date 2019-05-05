@@ -35,6 +35,8 @@ namespace Insight
             networkManager = NetworkManager.singleton;
 
             GatherCmdArgs();
+
+            InvokeRepeating("SendGameStatusToGameManager", 30f, 30f);
         }
 
         void RegisterHandlers() { }
@@ -82,6 +84,16 @@ namespace Insight
                 UniqueID = UniqueID,
                 SceneName = GameScene,
                 MaxPlayers = MaxPlayers,
+                CurrentPlayers = CurrentPlayers
+            });
+        }
+
+        void SendGameStatusToGameManager()
+        {
+            Debug.Log("[GameRegistration] - status update");
+            client.Send((short)MsgId.RegisterGame, new RegisterGameMsg()
+            {
+                UniqueID = UniqueID,
                 CurrentPlayers = CurrentPlayers
             });
         }

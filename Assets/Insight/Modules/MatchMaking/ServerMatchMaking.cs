@@ -120,6 +120,27 @@ namespace Insight
         {
             foreach (MatchContainer match in matchList)
             {
+                if (match.InitMatch)
+                {
+                    bool stillActiveGame = false;
+                    foreach (GameContainer game in gameManager.registeredGameServers)
+                    {
+                        if (match.MatchServer.UniqueId == game.UniqueId)
+                        {
+                            stillActiveGame = true;
+                        }
+                    }
+
+                    if (!stillActiveGame)
+                    {
+                        match.MatchComplete = true;
+                    }
+                }
+                match.Update();
+            }
+
+            foreach (MatchContainer match in matchList)
+            {
                 if(match.MatchComplete)
                 {
                     matchList.Remove(match);

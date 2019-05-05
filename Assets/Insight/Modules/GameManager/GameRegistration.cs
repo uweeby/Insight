@@ -91,7 +91,7 @@ namespace Insight
         void SendGameStatusToGameManager()
         {
             Debug.Log("[GameRegistration] - status update");
-            client.Send((short)MsgId.RegisterGame, new RegisterGameMsg()
+            client.Send((short)MsgId.GameStatus, new GameStatusMsg()
             {
                 UniqueID = UniqueID,
                 CurrentPlayers = CurrentPlayers

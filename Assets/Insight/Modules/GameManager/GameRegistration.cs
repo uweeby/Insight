@@ -1,5 +1,4 @@
 ﻿using Mirror;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,8 +10,6 @@ namespace Insight
         [SerializeField] NetworkManager networkManager;
         [SerializeField] TelepathyTransport networkManagerTelepathyTransport;
         [SerializeField] TelepathyTransport insightTelepathyTransport;
-
-        public List<GameContainer> registeredGames = new List<GameContainer>();
 
         //Pulled from command line arguments
         public string GameScene;

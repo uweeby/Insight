@@ -1484,7 +1484,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   networkManager: {fileID: 1115168652}
-  transport: {fileID: 1668111369}
+  networkManagerTelepathyTransport: {fileID: 1115168651}
   gamesList: []
 --- !u!1 &858910305
 GameObject:

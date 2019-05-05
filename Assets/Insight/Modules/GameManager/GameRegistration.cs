@@ -87,6 +87,9 @@ namespace Insight
 
         void SendGameStatusToGameManager()
         {
+            //Update with current values from NetworkManager:
+            CurrentPlayers = networkManager.numPlayers;
+
             Debug.Log("[GameRegistration] - status update");
             client.Send((short)MsgId.GameStatus, new GameStatusMsg()
             {

@@ -139,15 +139,15 @@ namespace Insight
                 match.Update();
             }
 
-            foreach (MatchContainer match in matchList)
+            for(int i = matchList.Count - 1; i >= 0; i--)
             {
-                if(match.MatchComplete)
+                if (matchList[i].MatchComplete)
                 {
-                    matchList.Remove(match);
+                    matchList.RemoveAt(i);
                 }
                 else
                 {
-                    match.Update();
+                    matchList[i].Update();
                 }
             }
         }

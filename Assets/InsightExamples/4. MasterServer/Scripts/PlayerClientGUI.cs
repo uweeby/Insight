@@ -33,6 +33,7 @@ public class PlayerClientGUI : MonoBehaviour
     public GameObject GameListItemPrefab;
 
     public Text chatTextField;
+    public InputField chatInputField;
 
     public List<GameContainer> gamesList = new List<GameContainer>();
 
@@ -151,9 +152,10 @@ public class PlayerClientGUI : MonoBehaviour
         gameComp.SendRequestSpawnStart(new RequestSpawnStartMsg() { SceneName = GameName });
     }
 
-    public void HandleSendChatButton(string Data)
+    public void HandleSendChatButton()
     {
-        chatComp.SendChatMsg(Data);
+        chatComp.SendChatMsg(chatInputField.text);
+        chatInputField.text = "";
     }
     
     private void CheckGamesList()

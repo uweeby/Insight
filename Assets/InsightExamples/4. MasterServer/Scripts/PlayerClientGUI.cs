@@ -139,8 +139,12 @@ public class PlayerClientGUI : MonoBehaviour
 
     public void HandleCancelButton()
     {
-        GameListArea.SetActive(false);
+        foreach (Transform child in GameListPanel.transform)
+        {
+            GameObject.Destroy(child.gameObject);
+        }
 
+        GameListArea.SetActive(false);
         GetGameListButton.SetActive(true);
         StartMatchMakingButton.SetActive(true);
         StopMatchMakingButton.SetActive(false);

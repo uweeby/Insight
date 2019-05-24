@@ -1,4 +1,4 @@
-using Mirror;
+﻿using Mirror;
 using System;
 using UnityEngine;
 
@@ -150,10 +150,7 @@ namespace Insight
         {
             connectState = ConnectState.Disconnected;
 
-            if (insightNetworkConnection != null)
-            {
-                insightNetworkConnection.InvokeHandlerNoData((short)MsgId.Disconnect);
-            }
+            StopInsight();
         }
 
         protected void HandleBytes(ArraySegment<byte> data)

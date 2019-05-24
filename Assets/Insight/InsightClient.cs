@@ -1,4 +1,4 @@
-﻿using Mirror;
+using Mirror;
 using System;
 using UnityEngine;
 
@@ -184,7 +184,7 @@ namespace Insight
             }
         }
 
-        static void OnError(Exception exception)
+        void OnError(Exception exception)
         {
             // TODO Let's discuss how we will handle errors
             Debug.LogException(exception);

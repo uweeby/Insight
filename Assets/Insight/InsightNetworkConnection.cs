@@ -224,8 +224,8 @@ namespace Insight
         public void Reply(short msgId, MessageBase msg)
         {
             var writer = new NetworkWriter();
-            writer.Write(msgId);
-            writer.Write(callbackId);
+            writer.WriteInt16(msgId);
+            writer.WriteInt32(callbackId);
             msg.Serialize(writer);
 
             conn.Send(writer.ToArray());

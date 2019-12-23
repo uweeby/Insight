@@ -97,7 +97,7 @@ namespace Insight
             }
         }
 
-        void HandleData(int connectionId, ArraySegment<byte> data)
+        void HandleData(int connectionId, ArraySegment<byte> data, int i)
         {
             NetworkReader reader = new NetworkReader(data);
             short msgType = reader.ReadInt16();
@@ -153,12 +153,12 @@ namespace Insight
             return connections.Remove(connectionId);
         }
 
-        public bool SendToClient(int connectionId, short msgType, MessageBase msg, CallbackHandler callback)
+        public bool SendToClient(int connectionId, short msgType, MessageBase msg, CallbackHandler callback = null)
         {
             if (transport.ServerActive())
             {
                 NetworkWriter writer = new NetworkWriter();
-                writer.Write(msgType);
+                writer.WriteInt16(msgType);
 
                 int callbackId = 0;
                 if (callback != null)
@@ -167,7 +167,7 @@ namespace Insight
                     callbacks.Add(callbackId, new CallbackData() { callback = callback, timeout = Time.realtimeSinceStartup + callbackTimeout });
                 }
 
-                writer.Write(callbackId);
+                writer.WriteInt32(callbackId);
 
                 msg.Serialize(writer);
 
@@ -186,7 +186,7 @@ namespace Insight
         {
             if (transport.ServerActive())
             {
-                return transport.ServerSend(connectionId, 0, data);
+                return transport.ServerSend(new List<int> {connectionId}, 0, new ArraySegment<byte>(data));
             }
             Debug.LogError("Server.Send: not connected!", this);
             return false;

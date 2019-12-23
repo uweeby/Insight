@@ -96,7 +96,7 @@ namespace Insight
 
         public void Send(byte[] data)
         {
-            transport.ClientSend(0, data);
+            transport.ClientSend(0,  new ArraySegment<byte>(data));
         }
 
         public void Send(short msgType, MessageBase msg)
@@ -113,7 +113,7 @@ namespace Insight
             }
 
             NetworkWriter writer = new NetworkWriter();
-            writer.Write(msgType);
+            writer.WriteInt16(msgType);
 
             int callbackId = 0;
             if (callback != null)
@@ -126,10 +126,10 @@ namespace Insight
                 });
             }
 
-            writer.Write(callbackId);
+            writer.WriteInt32(callbackId);
 
             msg.Serialize(writer);
-            transport.ClientSend(0, writer.ToArray());
+            transport.ClientSend(0, new ArraySegment<byte>(writer.ToArray()));
         }
 
         void HandleCallbackHandler(CallbackStatus status, NetworkReader reader)
@@ -153,7 +153,7 @@ namespace Insight
             StopInsight();
         }
 
-        protected void HandleBytes(ArraySegment<byte> data)
+        protected void HandleBytes(ArraySegment<byte> data, int i)
         {
             InsightNetworkMessageDelegate msgDelegate;
             NetworkReader reader = new NetworkReader(data);

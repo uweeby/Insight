@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -118,6 +118,11 @@ namespace Insight
             //Check to see if a previously running process exited without warning
             for(int i = 0; i < spawnerProcesses.Length; i++)
             {
+                if(spawnerProcesses[i].process == null)
+                {
+                    continue;
+                }
+
                 if (spawnerProcesses[i].process.HasExited)
                 {
                     UnityEngine.Debug.Log("Removing process that has exited");

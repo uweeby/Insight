@@ -67,6 +67,7 @@ namespace Insight
             };
         }
 
+        //Checks if the connection that dropped is actually a GameServer
         void HandleDisconnect(int connectionId)
         {
             foreach (GameContainer game in registeredGameServers)

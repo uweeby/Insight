@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -78,7 +78,8 @@ namespace Insight
             //Try to start the new process
             if (!InternalStartNewProcess(message))
             {
-                netMsg.Reply((short)MsgId.Error, new ErrorMsg() { Text = "[ProcessSpawner] - Spawn failed" });
+                //Temporary stop replying if spawning fails.
+                //netMsg.Reply((short)MsgId.Error, new ErrorMsg() { Text = "[ProcessSpawner] - Spawn failed" });
             }
 
             if (netMsg.callbackId != 0)

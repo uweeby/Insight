@@ -15,8 +15,7 @@ namespace Insight
         [Tooltip("NetworkAddress that spawned processes will use")]
         public string SpawnerNetworkAddress = "localhost";
         [Tooltip("Port that will be used by the NetworkManager in the spawned game")]
-        public int StartingNetworkPort = 7777; //Default port of the NetworkManager. 
-        int _portCounter;
+        public int StartingNetworkPort = 7777; //Default port of the NetworkManager.
 
         [Header("Paths")]
         public string EditorPath;
@@ -28,16 +27,18 @@ namespace Insight
         public int HealthCheckPollRate = 5; //In Seconds
         bool registrationComplete;
 
-        public List<RunningProcessStruct> spawnerProcesses = new List<RunningProcessStruct>();
+        public RunningProcessStruct[] spawnerProcesses;
 
         public override void Initialize(InsightServer server, ModuleManager manager)
         {
+            spawnerProcesses = new RunningProcessStruct[MaximumProcesses];
             this.server = server;
             RegisterHandlers();
         }
 
         public override void Initialize(InsightClient client, ModuleManager manager)
         {
+            spawnerProcesses = new RunningProcessStruct[MaximumProcesses];
             this.client = client;
             RegisterHandlers();
         }
@@ -115,12 +116,12 @@ namespace Insight
         void CheckSpawnedProcessHealth()
         {
             //Check to see if a previously running process exited without warning
-            foreach (RunningProcessStruct item in spawnerProcesses)
+            for(int i = 0; i < spawnerProcesses.Length; i++)
             {
-                if (item.process.HasExited)
+                if (spawnerProcesses[i].process.HasExited)
                 {
-                    UnityEngine.Debug.Log("[ProcessSpawner] - Removing process that has exited");
-                    spawnerProcesses.Remove(item);
+                    UnityEngine.Debug.Log("Removing process that has exited");
+                    spawnerProcesses[i] = null;
                     return;
                 }
             }
@@ -130,12 +131,12 @@ namespace Insight
         {
             KillSpawnMsg message = netMsg.ReadMessage<KillSpawnMsg>();
 
-            foreach (RunningProcessStruct process in spawnerProcesses)
+            for(int i = 0; i < spawnerProcesses.Length; i++)
             {
-                if (process.uniqueID.Equals(message.UniqueID))
+                if (spawnerProcesses[i].uniqueID.Equals(message.UniqueID))
                 {
-                    process.process.Kill();
-                    spawnerProcesses.Remove(process);
+                    spawnerProcesses[i].process.Kill();
+                    spawnerProcesses[i] = null;
                     break;
                 }
             }
@@ -143,9 +144,9 @@ namespace Insight
 
         bool InternalStartNewProcess(RequestSpawnStartMsg spawnProperties)
         {
-            if (spawnerProcesses.Count >= MaximumProcesses)
+            int thisPort = GetPort();
+            if (thisPort == -1)
             {
-                UnityEngine.Debug.LogError("[ProcessSpawner] - Maximum Process Count Reached");
                 return false;
             }
 
@@ -162,7 +163,7 @@ namespace Insight
             //Args to pass: Port, Scene, UniqueID...
             p.StartInfo.Arguments = ArgsString() +
                 " -NetworkAddress " + SpawnerNetworkAddress +
-                " -NetworkPort " + (StartingNetworkPort + _portCounter) +
+                " -NetworkPort " + (StartingNetworkPort + thisPort) + 
                 " -SceneName " + spawnProperties.SceneName +
                 " -UniqueID " + spawnProperties.UniqueID; //What to do if the UniqueID or any other value is null??
 
@@ -171,15 +172,15 @@ namespace Insight
                 print("[ProcessSpawner]: spawning: " + p.StartInfo.FileName + "; args=" + p.StartInfo.Arguments);
 
                 //Increment port after sucessful spawn.
-                _portCounter++;
+                //_portCounter++;
 
                 //If registered to a master. Notify it of the current thread utilization
                 if (client != null)
                 {
-                    client.Send((short)MsgId.SpawnerStatus, new SpawnerStatusMsg() { CurrentThreads = spawnerProcesses.Count });
+                    client.Send((short)MsgId.SpawnerStatus, new SpawnerStatusMsg() { CurrentThreads = spawnerProcesses.Length });
                 }
 
-                spawnerProcesses.Add(new RunningProcessStruct() { process = p, pid = p.Id, uniqueID = spawnProperties.UniqueID });
+                spawnerProcesses[thisPort] = new RunningProcessStruct() { process = p, pid = p.Id, uniqueID = spawnProperties.UniqueID};
                 return true;
             }
             else
@@ -194,10 +195,24 @@ namespace Insight
             string[] args = System.Environment.GetCommandLineArgs();
             return args != null ? string.Join(" ", args.Skip(1).ToArray()) : "";
         }
+
+        int GetPort()
+        {
+            for(int i = 0; i < spawnerProcesses.Length; i++)
+            {
+                if(spawnerProcesses[i] == null)   
+                {
+                    return i;
+                }
+            }
+
+            UnityEngine.Debug.LogError("[ProcessSpawner] - Maximum Process Count Reached");
+            return -1;
+        }
     }
 
     [Serializable]
-    public struct RunningProcessStruct
+    public class RunningProcessStruct
     {
         public Process process;
         public int pid;

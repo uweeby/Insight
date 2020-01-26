@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -170,9 +170,6 @@ namespace Insight
             if (p.Start())
             {
                 print("[ProcessSpawner]: spawning: " + p.StartInfo.FileName + "; args=" + p.StartInfo.Arguments);
-
-                //Increment port after sucessful spawn.
-                //_portCounter++;
 
                 //If registered to a master. Notify it of the current thread utilization
                 if (client != null)

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -15,6 +15,8 @@ namespace Insight
         {
             server = insight;
             RegisterHandlers();
+
+            server.transport.OnServerDisconnected.AddListener(HandleDisconnect);
         }
 
         void RegisterHandlers()
@@ -22,6 +24,19 @@ namespace Insight
             server.RegisterHandler((short)MsgId.RegisterSpawner, HandleRegisterSpawnerMsg);
             server.RegisterHandler((short)MsgId.RequestSpawnStart, HandleSpawnRequestMsg);
             server.RegisterHandler((short)MsgId.SpawnerStatus, HandleSpawnerStatusMsg);
+        }
+
+        //Checks if the connection that dropped is actually a Spawner
+        void HandleDisconnect(int connectionId)
+        {
+            foreach (SpawnerContainer spawner in registeredSpawners)
+            {
+                if (spawner.connectionId == connectionId)
+                {
+                    registeredSpawners.Remove(spawner);
+                    return;
+                }
+            }
         }
 
         void HandleRegisterSpawnerMsg(InsightNetworkMessage netMsg)

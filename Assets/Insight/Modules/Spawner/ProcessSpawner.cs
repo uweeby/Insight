@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -183,7 +183,7 @@ namespace Insight
                 //If registered to a master. Notify it of the current thread utilization
                 if (client != null)
                 {
-                    client.Send((short)MsgId.SpawnerStatus, new SpawnerStatusMsg() { CurrentThreads = spawnerProcesses.Length });
+                    client.Send((short)MsgId.SpawnerStatus, new SpawnerStatusMsg() { CurrentThreads = GetRunningProcessCount() });
                 }
 
                 spawnerProcesses[thisPort] = new RunningProcessStruct() { process = p, pid = p.Id, uniqueID = spawnProperties.UniqueID};
@@ -214,6 +214,19 @@ namespace Insight
 
             UnityEngine.Debug.LogError("[ProcessSpawner] - Maximum Process Count Reached");
             return -1;
+        }
+
+        int GetRunningProcessCount()
+        {
+            int counter = 0;
+            for(int i = 0; i < spawnerProcesses.Length; i++)
+            {
+                if(spawnerProcesses[i].process != null)   
+                {
+                    counter++;
+                }
+            }
+            return counter;
         }
     }
 

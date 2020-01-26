@@ -106,12 +106,12 @@ namespace Insight
         {
             SpawnerStatusMsg message = netMsg.ReadMessage<SpawnerStatusMsg>();
 
+
             for (int i = 0; i < registeredSpawners.Count; i++)
             {
                 if (registeredSpawners[i].connectionId == netMsg.connectionId)
                 {
-                    SpawnerContainer instance = registeredSpawners[i];
-                    instance.CurrentThreads = message.CurrentThreads;
+                    registeredSpawners[i].CurrentThreads = message.CurrentThreads;
                 }
             }
         }
@@ -142,7 +142,7 @@ namespace Insight
     }
 
     [Serializable]
-    public struct SpawnerContainer
+    public class SpawnerContainer
     {
         public string uniqueId;
         public int connectionId;

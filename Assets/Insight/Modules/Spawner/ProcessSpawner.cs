@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -202,7 +202,7 @@ namespace Insight
         {
             for(int i = 0; i < spawnerProcesses.Length; i++)
             {
-                if(spawnerProcesses[i] == null)   
+                if(spawnerProcesses[i].process == null)   
                 {
                     return i;
                 }

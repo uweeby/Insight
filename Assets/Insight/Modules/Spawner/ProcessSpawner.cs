@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -31,16 +31,19 @@ namespace Insight
 
         public override void Initialize(InsightServer server, ModuleManager manager)
         {
-            spawnerProcesses = new RunningProcessStruct[MaximumProcesses];
             this.server = server;
             RegisterHandlers();
         }
 
         public override void Initialize(InsightClient client, ModuleManager manager)
         {
-            spawnerProcesses = new RunningProcessStruct[MaximumProcesses];
             this.client = client;
             RegisterHandlers();
+        }
+
+        void Awake()
+        {
+            spawnerProcesses = new RunningProcessStruct[MaximumProcesses];
         }
 
         void Start()

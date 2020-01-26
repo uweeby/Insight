@@ -27,7 +27,7 @@ namespace Insight
         public int HealthCheckPollRate = 5; //In Seconds
         bool registrationComplete;
 
-        public RunningProcessStruct[] spawnerProcesses;
+        public RunningProcessContainer[] spawnerProcesses;
 
         public override void Initialize(InsightServer server, ModuleManager manager)
         {
@@ -43,7 +43,7 @@ namespace Insight
 
         void Awake()
         {
-            spawnerProcesses = new RunningProcessStruct[MaximumProcesses];
+            spawnerProcesses = new RunningProcessContainer[MaximumProcesses];
         }
 
         void Start()
@@ -186,7 +186,7 @@ namespace Insight
                     client.Send((short)MsgId.SpawnerStatus, new SpawnerStatusMsg() { CurrentThreads = GetRunningProcessCount() });
                 }
 
-                spawnerProcesses[thisPort] = new RunningProcessStruct() { process = p, pid = p.Id, uniqueID = spawnProperties.UniqueID};
+                spawnerProcesses[thisPort] = new RunningProcessContainer() { process = p, pid = p.Id, uniqueID = spawnProperties.UniqueID};
                 return true;
             }
             else
@@ -231,7 +231,7 @@ namespace Insight
     }
 
     [Serializable]
-    public class RunningProcessStruct
+    public class RunningProcessContainer
     {
         public Process process;
         public int pid;

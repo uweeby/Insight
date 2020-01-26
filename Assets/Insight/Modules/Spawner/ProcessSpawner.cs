@@ -119,7 +119,7 @@ namespace Insight
             {
                 if (item.process.HasExited)
                 {
-                    UnityEngine.Debug.Log("Removing process that has exited");
+                    UnityEngine.Debug.Log("[ProcessSpawner] - Removing process that has exited");
                     spawnerProcesses.Remove(item);
                     return;
                 }

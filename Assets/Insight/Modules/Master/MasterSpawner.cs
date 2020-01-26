@@ -42,6 +42,12 @@ namespace Insight
         //Instead of handling the msg here we will forward it to an available spawner.
         void HandleSpawnRequestMsg(InsightNetworkMessage netMsg)
         {
+            if(registeredSpawners.Count == 0)
+            {
+                Debug.LogWarning("[MasterSpawner] - No Spawner Regsitered To Handle Spawn Request");
+                return;
+            }
+
             RequestSpawnStartMsg message = netMsg.ReadMessage<RequestSpawnStartMsg>();
 
             //Get all spawners that have atleast 1 slot free
@@ -97,6 +103,12 @@ namespace Insight
 
         public void InternalSpawnRequest(RequestSpawnStartMsg message)
         {
+            if(registeredSpawners.Count == 0)
+            {
+                Debug.LogWarning("[MasterSpawner] - No Spawner Regsitered To Handle Internal Spawn Request");
+                return;
+            }
+
             //Get all spawners that have atleast 1 slot free
             List<SpawnerContainer> freeSlotSpawners = registeredSpawners.Where(x => (x.CurrentThreads < x.MaxThreads)).ToList();
 

@@ -136,7 +136,7 @@ namespace Insight
                 if (spawnerProcesses[i].process.HasExited)
                 {
                     UnityEngine.Debug.Log("Removing process that has exited");
-                    spawnerProcesses[i] = null;
+                    spawnerProcesses[i].process = null;
                     spawnerProcesses[i].pid = 0;
                     spawnerProcesses[i].uniqueID = "";
                     return;

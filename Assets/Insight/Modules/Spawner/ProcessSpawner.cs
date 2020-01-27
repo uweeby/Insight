@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -189,21 +189,21 @@ namespace Insight
             if (p.Start())
             {
                 print("[ProcessSpawner]: spawning: " + p.StartInfo.FileName + "; args=" + p.StartInfo.Arguments);
-
-                //If registered to a master. Notify it of the current thread utilization
-                if (client != null)
-                {
-                    client.Send((short)MsgId.SpawnerStatus, new SpawnerStatusMsg() { CurrentThreads = GetRunningProcessCount() });
-                }
-
-                spawnerProcesses[thisPort] = new RunningProcessContainer() { process = p, pid = p.Id, uniqueID = spawnProperties.UniqueID};
-                return true;
             }
             else
             {
                 UnityEngine.Debug.LogError("[ProcessSpawner] - Process Createion Failed.");
                 return false;
             }
+
+            //If registered to a master. Notify it of the current thread utilization
+            if (client != null)
+            {
+                client.Send((short)MsgId.SpawnerStatus, new SpawnerStatusMsg() { CurrentThreads = GetRunningProcessCount() });
+            }
+
+            spawnerProcesses[thisPort] = new RunningProcessContainer() { process = p, pid = p.Id, uniqueID = spawnProperties.UniqueID};
+            return true;
         }
 
         static string ArgsString()

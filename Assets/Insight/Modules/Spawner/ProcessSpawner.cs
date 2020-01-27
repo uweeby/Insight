@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -51,6 +51,12 @@ namespace Insight
 #if UNITY_EDITOR
             ProcessPath = EditorPath;
 #endif
+      
+            spawnerProcesses = new RunningProcessContainer[MaximumProcesses];
+
+            for(int i = 0; i< spawnerProcesses.Length; i++) {
+                spawnerProcesses[i] = new RunningProcessContainer();
+            }
 
             InvokeRepeating("CheckSpawnedProcessHealth", HealthCheckPollRate, HealthCheckPollRate);
         }
@@ -131,6 +137,8 @@ namespace Insight
                 {
                     UnityEngine.Debug.Log("Removing process that has exited");
                     spawnerProcesses[i] = null;
+                    spawnerProcesses[i].pid = 0;
+                    spawnerProcesses[i].uniqueID = "";
                     return;
                 }
             }
@@ -145,7 +153,9 @@ namespace Insight
                 if (spawnerProcesses[i].uniqueID.Equals(message.UniqueID))
                 {
                     spawnerProcesses[i].process.Kill();
-                    spawnerProcesses[i] = null;
+                    spawnerProcesses[i].process = null;
+                    spawnerProcesses[i].pid = 0;
+                    spawnerProcesses[i].uniqueID = "";
                     break;
                 }
             }

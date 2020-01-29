@@ -9,7 +9,7 @@ namespace Insight
     {
         InsightClient client;
         [SerializeField] NetworkManager networkManager;
-        [SerializeField] TelepathyTransport networkManagerTelepathyTransport;
+        [SerializeField] Transport networkManagerTransport;
 
         public List<GameContainer> gamesList = new List<GameContainer>();
 
@@ -32,8 +32,11 @@ namespace Insight
 
             if (client.logNetworkMessages) { Debug.Log("[InsightClient] - Connecting to GameServer: " + message.NetworkAddress + ":" + message.NetworkPort + "/" + message.SceneName); }
 
+            if(networkManagerTransport.GetType().GetField("port") != null) {
+                networkManagerTransport.GetType().GetField("port").SetValue(networkManagerTransport, message.NetworkPort);
+            }
+
             networkManager.networkAddress = message.NetworkAddress;
-            networkManagerTelepathyTransport.port = message.NetworkPort;
             SceneManager.LoadScene(message.SceneName);
             networkManager.StartClient();
         }

@@ -8,8 +8,8 @@ namespace Insight
     {
         InsightClient client;
         [SerializeField] NetworkManager networkManager;
-        [SerializeField] TelepathyTransport networkManagerTelepathyTransport;
-        [SerializeField] TelepathyTransport insightTelepathyTransport;
+        [SerializeField] Transport networkManagerTransport;
+        [SerializeField] Transport insightTransport;
 
         //Pulled from command line arguments
         public string GameScene;
@@ -25,7 +25,7 @@ namespace Insight
         {
             client = insight;
 
-            insightTelepathyTransport.OnClientConnected.AddListener(SendGameRegistrationToGameManager);
+            insightTransport.OnClientConnected.AddListener(SendGameRegistrationToGameManager);
 
             RegisterHandlers();
 
@@ -51,7 +51,10 @@ namespace Insight
             {
                 Debug.Log("[Args] - NetworkPort: " + args.NetworkPort);
                 NetworkPort = (ushort)args.NetworkPort;
-                networkManagerTelepathyTransport.port = (ushort)args.NetworkPort;
+
+                if(networkManagerTransport.GetType().GetField("port") != null) {
+                    networkManagerTransport.GetType().GetField("port").SetValue(networkManagerTransport, (ushort)args.NetworkPort);
+                }
             }
 
             if (args.IsProvided("-SceneName"))

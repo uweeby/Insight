@@ -15,3 +15,7 @@ Insight is normally built to target the current monthly/Asset Store release of M
 [2. ChatModule](https://github.com/uweenukr/Insight/wiki/Example:-2-Chat) - Sends messages to players anywhere in the game.  
 [3. LoginModule](https://github.com/uweenukr/Insight/wiki/Example:-3-Login) - Simple user/pass verification.  
 [4. MasterServer](https://github.com/uweenukr/Insight/wiki/Example:-4-MasterServer) - Create games on demand or via a match maker.   
+
+### IL2CPP Note:  
+IL2CPP does not currently support System Process Spawning: https://forum.unity.com/threads/solved-il2cpp-and-process-start.533988/  
+Here is a possible work around script: https://github.com/josh4364/IL2cppStartProcess/blob/master/StartExternalProcess.cs  

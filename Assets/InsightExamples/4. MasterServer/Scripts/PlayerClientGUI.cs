@@ -1,4 +1,5 @@
 ﻿using Insight;
+using Mirror;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -37,6 +38,8 @@ public class PlayerClientGUI : MonoBehaviour
 
     public List<GameContainer> gamesList = new List<GameContainer>();
 
+    public NetworkManager networkManager;
+
     [Header("Playlist/Game Name")]
     public string GameName = "SuperAwesomeGame";
 
@@ -65,6 +68,11 @@ public class PlayerClientGUI : MonoBehaviour
             case PlayerClientGUIState.Game:
                 SwitchToGame();
                 break;
+        }
+
+        if(networkManager.isNetworkActive)
+        {
+            playerGuiState = PlayerClientGUIState.Game;
         }
     }
 

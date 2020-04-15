@@ -96,6 +96,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
+    m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
   m_UseShadowmask: 1
 --- !u!196 &4
@@ -1964,8 +1965,8 @@ MonoBehaviour:
   dontDestroyOnLoad: 1
   runInBackground: 1
   startOnHeadless: 1
-  serverTickRate: 30
   showDebugMessages: 0
+  serverTickRate: 30
   offlineScene: 
   onlineScene: 
   transport: {fileID: 1115168651}
@@ -2073,8 +2074,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: HandleLoginButton
+      - m_Target: {fileID: 2061953744}
+        m_MethodName: SendLoginMsg
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2403,6 +2404,7 @@ MonoBehaviour:
   chatTextField: {fileID: 1959587314}
   chatInputField: {fileID: 1801311394}
   gamesList: []
+  networkManager: {fileID: 1115168652}
   GameName: SuperAwesomeGame
 --- !u!114 &1365284629
 MonoBehaviour:

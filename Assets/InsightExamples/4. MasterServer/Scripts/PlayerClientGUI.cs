@@ -70,7 +70,7 @@ public class PlayerClientGUI : MonoBehaviour
                 break;
         }
 
-        if(networkManager.isNetworkActive)
+        if(networkManager.IsNetworkActive)
         {
             playerGuiState = PlayerClientGUIState.Game;
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
 namespace Insight
 {
@@ -9,12 +10,14 @@ namespace Insight
         IEnumerable<Type> Dependencies { get; }
         IEnumerable<Type> OptionalDependencies { get; }
 
-        void Initialize(InsightServer server, ModuleManager manager);
-        void Initialize(InsightClient client, ModuleManager manager);
+        void Initialize(NetworkServer server, ModuleManager manager);
+        void Initialize(NetworkClient client, ModuleManager manager);
     }
 
     public abstract class InsightModule : MonoBehaviour, IServerModule
     {
+        static readonly ILogger logger = LogFactory.GetLogger(typeof(InsightModule));
+
         private static Dictionary<Type, GameObject> _instances;
 
         private readonly List<Type> _dependencies = new List<Type>();
@@ -36,17 +39,13 @@ namespace Insight
         /// <summary>
         ///     Called by master server, when module should be started
         /// </summary>
-        public virtual void Initialize(InsightServer server, ModuleManager manager)
+        public virtual void Initialize(NetworkServer server, ModuleManager manager)
         {
-            if (server.logNetworkMessages) { Debug.LogWarning("[Module Manager] Initialize InsightServer not found for module"); }
+            if (logger.LogEnabled()) logger.Log("[Module Manager] Initialize InsightServer not found for module");
         }
-        public virtual void Initialize(InsightClient client, ModuleManager manager)
+        public virtual void Initialize(NetworkClient client, ModuleManager manager)
         {
-            if(client.logNetworkMessages) { Debug.LogWarning("[Module Manager] Initialize InsightClient not found for module"); }
-        }
-        public virtual void Initialize(InsightCommon insight, ModuleManager manager)
-        {
-            throw new NotImplementedException();
+            if (logger.LogEnabled()) logger.Log("[Module Manager] Initialize InsightClient not found for module");
         }
 
         /// <summary>

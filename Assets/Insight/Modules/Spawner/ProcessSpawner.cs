@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
+using Mirror;
 
 namespace Insight
 {
     public class ProcessSpawner : InsightModule
     {
-        [HideInInspector] public InsightServer server;
-        [HideInInspector] public InsightClient client;
+        [HideInInspector] public NetworkServer server;
+        [HideInInspector] public NetworkClient client;
 
         [Header("Network")]
         [Tooltip("NetworkAddress that spawned processes will use")]
@@ -29,13 +30,13 @@ namespace Insight
 
         public RunningProcessContainer[] spawnerProcesses;
 
-        public override void Initialize(InsightServer server, ModuleManager manager)
+        public override void Initialize(NetworkServer server, ModuleManager manager)
         {
             this.server = server;
             RegisterHandlers();
         }
 
-        public override void Initialize(InsightClient client, ModuleManager manager)
+        public override void Initialize(NetworkClient client, ModuleManager manager)
         {
             this.client = client;
             RegisterHandlers();
@@ -70,22 +71,20 @@ namespace Insight
         {
             if (client)
             {
-                client.RegisterHandler((short)MsgId.RequestSpawnStart, HandleRequestSpawnStart);
-                client.RegisterHandler((short)MsgId.KillSpawn, HandleKillSpawn);
+                client.Connection.RegisterHandler<RequestSpawnStartMsg>(HandleRequestSpawnStart);
+                client.Connection.RegisterHandler<KillSpawnMsg>(HandleKillSpawn);
             }
             if (server)
             {
-                server.RegisterHandler((short)MsgId.RequestSpawnStart, HandleRequestSpawnStart);
-                server.RegisterHandler((short)MsgId.KillSpawn, HandleKillSpawn);
+                server.LocalConnection.RegisterHandler<RequestSpawnStartMsg>(HandleRequestSpawnStart);
+                server.LocalConnection.RegisterHandler<KillSpawnMsg>(HandleKillSpawn);
             }
         }
 
-        void HandleRequestSpawnStart(InsightNetworkMessage netMsg)
+        void HandleRequestSpawnStart(RequestSpawnStartMsg netMsg)
         {
-            RequestSpawnStartMsg message = netMsg.ReadMessage<RequestSpawnStartMsg>();
-
             //Try to start the new process
-            if (!InternalStartNewProcess(message))
+            if (!InternalStartNewProcess(netMsg))
             {
                 //Temporary stop replying if spawning fails.
                 //netMsg.Reply((short)MsgId.Error, new ErrorMsg() { Text = "[ProcessSpawner] - Spawn failed" });
@@ -110,7 +109,7 @@ namespace Insight
             //Used only if acting as a ChildSpawner under a MasterServer
             if (client && !registrationComplete)
             {
-                if (client.isConnected)
+                if (client.IsConnected)
                 {
                     UnityEngine.Debug.LogWarning("[ProcessSpawner] - Registering to Master");
                     client.Send((short)MsgId.RegisterSpawner, new RegisterSpawnerMsg()
@@ -144,13 +143,11 @@ namespace Insight
             }
         }
 
-        void HandleKillSpawn(InsightNetworkMessage netMsg)
+        void HandleKillSpawn(KillSpawnMsg netMsg)
         {
-            KillSpawnMsg message = netMsg.ReadMessage<KillSpawnMsg>();
-
             for(int i = 0; i < spawnerProcesses.Length; i++)
             {
-                if (spawnerProcesses[i].uniqueID.Equals(message.UniqueID))
+                if (spawnerProcesses[i].uniqueID.Equals(netMsg.UniqueID))
                 {
                     spawnerProcesses[i].process.Kill();
                     spawnerProcesses[i].process = null;

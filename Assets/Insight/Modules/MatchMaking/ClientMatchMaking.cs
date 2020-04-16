@@ -1,12 +1,12 @@
-﻿using UnityEngine;
+﻿using Mirror;
 
 namespace Insight
 {
     public class ClientMatchMaking : InsightModule
     {
-        InsightClient client;
+        NetworkClient client;
 
-        public override void Initialize(InsightClient client, ModuleManager manager)
+        public override void Initialize(NetworkClient client, ModuleManager manager)
         {
             this.client = client;
 

@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Mirror;
 
 namespace Insight
 {
-    [RequireComponent(typeof(InsightCommon))]
     public class ModuleManager : MonoBehaviour
     {
-        InsightClient client;
-        InsightServer server;
+        NetworkClient client;
+        NetworkServer server;
 
         public bool SearchChildrenForModule = true;
 
@@ -17,25 +17,11 @@ namespace Insight
         private HashSet<Type> _initializedModules;
 
         private bool _initializeComplete;
-        private bool _cachedClientAutoStartValue;
-        private bool _cachedServerAutoStartValue;
 
         void Awake()
         {
-            client = GetComponent<InsightClient>();
-            server = GetComponent<InsightServer>();
-
-            if(client)
-            {
-                _cachedClientAutoStartValue = client.AutoStart;
-                client.AutoStart = false; //Wait until modules are loaded to AutoStart
-            }
-
-            if (server)
-            {
-                _cachedServerAutoStartValue = server.AutoStart;
-                server.AutoStart = false; //Wait until modules are loaded to AutoStart
-            }
+            client = GetComponent<NetworkClient>();
+            server = GetComponent<NetworkServer>();
         }
 
         void Start()
@@ -58,19 +44,6 @@ namespace Insight
 
                 // Initialize modules
                 InitializeModules(client, server);
-
-                //Now that modules are loaded check for original AutoStart value
-                if(_cachedServerAutoStartValue)
-                {
-                    server.AutoStart = _cachedServerAutoStartValue;
-                    server.StartInsight();
-                }
-
-                if (_cachedClientAutoStartValue)
-                {
-                    client.AutoStart = _cachedClientAutoStartValue;
-                    client.StartInsight();
-                }
             }
         }
 
@@ -93,7 +66,7 @@ namespace Insight
             return false;
         }
 
-        public bool InitializeModules(InsightClient client, InsightServer server)
+        public bool InitializeModules(NetworkClient client, NetworkServer server)
         {
             bool checkOptional = true;
 

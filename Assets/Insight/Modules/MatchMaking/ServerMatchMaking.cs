@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
 //TODO: Remove the example specific code from module
 
@@ -8,7 +9,9 @@ namespace Insight
 {
     public class ServerMatchMaking : InsightModule
     {
-        public InsightServer server;
+        static readonly ILogger logger = LogFactory.GetLogger(typeof(ServerMatchMaking));
+
+        public NetworkServer server;
         ModuleManager manager;
         ServerAuthentication authModule;
         public ServerGameManager gameManager;
@@ -29,7 +32,7 @@ namespace Insight
             AddDependency<ServerGameManager>(); //Used to track available games
         }
 
-        public override void Initialize(InsightServer insight, ModuleManager manager)
+        public override void Initialize(NetworkServer insight, ModuleManager manager)
         {
             server = insight;
             this.manager = manager;
@@ -44,8 +47,8 @@ namespace Insight
 
         void RegisterHandlers()
         {
-            server.RegisterHandler((short)MsgId.StartMatchMaking, HandleStartMatchSearchMsg);
-            server.RegisterHandler((short)MsgId.StopMatchMaking, HandleStopMatchSearchMsg);
+            server.LocalConnection.RegisterHandler<StartMatchMakingMsg>(HandleStartMatchSearchMsg);
+            server.LocalConnection.RegisterHandler<StopMatchMakingMsg>(HandleStopMatchSearchMsg);
         }
 
         void InvokedUpdate()
@@ -54,14 +57,14 @@ namespace Insight
             UpdateMatches();
         }
 
-        void HandleStartMatchSearchMsg(InsightNetworkMessage netMsg)
+        void HandleStartMatchSearchMsg(StartMatchMakingMsg netMsg)
         {
-            if (server.logNetworkMessages) { UnityEngine.Debug.Log("[MatchMaking] - Player joining MatchMaking."); }
+            if (logger.LogEnabled()) logger.Log("[MatchMaking] - Player joining MatchMaking.");
 
             playerQueue.Add(authModule.GetUserByConnection(netMsg.connectionId));
         }
 
-        void HandleStopMatchSearchMsg(InsightNetworkMessage netMsg)
+        void HandleStopMatchSearchMsg(StopMatchMakingMsg netMsg)
         {
             foreach (UserContainer seraching in playerQueue)
             {
@@ -77,13 +80,13 @@ namespace Insight
         {
             if (playerQueue.Count < MinimumPlayersForGame)
             {
-                if (server.logNetworkMessages) { UnityEngine.Debug.Log("[MatchMaking] - Minimum players in queue not reached."); }
+                if (logger.LogEnabled()) logger.Log("[MatchMaking] - Minimum players in queue not reached.");
                 return;
             }
 
             if (masterSpawner.registeredSpawners.Count == 0)
             {
-                if (server.logNetworkMessages) { UnityEngine.Debug.Log("[MatchMaking] - No spawners for players in queue."); }
+                if (logger.LogEnabled()) logger.Log("[MatchMaking] - No spawners for players in queue.");
                 return;
             }
 

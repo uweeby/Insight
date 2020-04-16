@@ -9,7 +9,7 @@ public class SimplePlayerController : NetworkBehaviour
 	void Update ()
     {
         // movement for local player
-        if (!isLocalPlayer) return;
+        if (!IsLocalPlayer) return;
 
         if(Input.GetKey(KeyCode.W))
         {

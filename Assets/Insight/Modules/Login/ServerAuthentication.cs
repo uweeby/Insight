@@ -1,36 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
 namespace Insight
 {
     public class ServerAuthentication : InsightModule
     {
-        InsightServer server;
+        static readonly ILogger logger = LogFactory.GetLogger(typeof(ServerAuthentication));
+
+        NetworkServer server;
 
         public List<UserContainer> registeredUsers = new List<UserContainer>();
 
-        public override void Initialize(InsightServer server, ModuleManager manager)
+        public override void Initialize(NetworkServer server, ModuleManager manager)
         {
             this.server = server;
 
             RegisterHandlers();
 
-            server.transport.OnServerDisconnected.AddListener(HandleDisconnect);
+            server.Disconnected.AddListener(HandleDisconnect);
         }
 
         void RegisterHandlers()
         {
-            server.RegisterHandler((short)MsgId.Login, HandleLoginMsg);
+            server.LocalConnection.RegisterHandler<LoginMsg>(HandleLoginMsg);
         }
 
         //This is just an example. No actual authentication happens.
         //You would need to replace with your own logic. Perhaps with a DB connection.
-        void HandleLoginMsg(InsightNetworkMessage netMsg)
+        void HandleLoginMsg(LoginMsg netMsg)
         {
-            LoginMsg message = netMsg.ReadMessage<LoginMsg>();
-
-            if (server.logNetworkMessages) { Debug.Log("[Authentication] - Login Received: " + message.AccountName + " / " + message.AccountPassword); }
+            if (logger.LogEnabled()) logger.Log("[Authentication] - Login Received: " + netMsg.AccountName + " / " + netMsg.AccountPassword);
 
             //Login Sucessful
             if (true) //Put your DB logic here
@@ -39,7 +40,7 @@ namespace Insight
 
                 registeredUsers.Add(new UserContainer()
                 {
-                    username = message.AccountName,
+                    username = netMsg.AccountName,
                     uniqueId = UniqueId,
                     connectionId = netMsg.connectionId
                 });
@@ -61,7 +62,7 @@ namespace Insight
             //}
         }
 
-        void HandleDisconnect(int connectionId)
+        void HandleDisconnect(INetworkConnection conn)
         {
             foreach (UserContainer user in registeredUsers)
             {

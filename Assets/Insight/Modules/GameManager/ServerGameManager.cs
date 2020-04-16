@@ -1,12 +1,15 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
 namespace Insight
 {
     public class ServerGameManager : InsightModule
     {
-        InsightServer server;
+        static readonly ILogger logger = LogFactory.GetLogger(typeof(ServerGameManager));
+
+        NetworkServer server;
         MasterSpawner masterSpawner;
 
         public List<GameContainer> registeredGameServers = new List<GameContainer>();
@@ -16,59 +19,55 @@ namespace Insight
             AddDependency<MasterSpawner>();
         }
 
-        public override void Initialize(InsightServer insight, ModuleManager manager)
+        public override void Initialize(NetworkServer insight, ModuleManager manager)
         {
             server = insight;
             masterSpawner = manager.GetModule<MasterSpawner>();
             RegisterHandlers();
 
-            server.transport.OnServerDisconnected.AddListener(HandleDisconnect);
+            server.Disconnected.AddListener(HandleDisconnect);
         }
 
         void RegisterHandlers()
         {
-            server.RegisterHandler((short)MsgId.RegisterGame, HandleRegisterGameMsg);
-            server.RegisterHandler((short)MsgId.GameStatus, HandleGameStatusMsg);
-            server.RegisterHandler((short)MsgId.JoinGame, HandleJoinGameMsg);
-            server.RegisterHandler((short)MsgId.GameList, HandleGameListMsg);
+            server.LocalConnection.RegisterHandler<RegisterGameMsg>(HandleRegisterGameMsg);
+            server.LocalConnection.RegisterHandler<GameStatusMsg>(HandleGameStatusMsg);
+            server.LocalConnection.RegisterHandler<JoinGameMsg>(HandleJoinGameMsg);
+            server.LocalConnection.RegisterHandler<GameListMsg>(HandleGameListMsg);
         }
 
-        void HandleRegisterGameMsg(InsightNetworkMessage netMsg)
+        void HandleRegisterGameMsg(RegisterGameMsg netMsg)
         {
-            RegisterGameMsg message = netMsg.ReadMessage<RegisterGameMsg>();
-
-            if (server.logNetworkMessages) { Debug.Log("[GameManager] - Received GameRegistration request"); }
+            if (logger.LogEnabled()) logger.Log("[GameManager] - Received GameRegistration request");
 
             registeredGameServers.Add(new GameContainer()
             {
-                NetworkAddress = message.NetworkAddress,
-                NetworkPort = message.NetworkPort,
-                UniqueId = message.UniqueID,
-                SceneName = message.SceneName,
-                MaxPlayers = message.MaxPlayers,
-                CurrentPlayers = message.CurrentPlayers,
+                NetworkAddress = netMsg.NetworkAddress,
+                NetworkPort = netMsg.NetworkPort,
+                UniqueId = netMsg.UniqueID,
+                SceneName = netMsg.SceneName,
+                MaxPlayers = netMsg.MaxPlayers,
+                CurrentPlayers = netMsg.CurrentPlayers,
 
                 connectionId = netMsg.connectionId,
             });
         }
 
-        void HandleGameStatusMsg(InsightNetworkMessage netMsg)
+        void HandleGameStatusMsg(GameStatusMsg netMsg)
         {
-            GameStatusMsg message = netMsg.ReadMessage<GameStatusMsg>();
-
-            if (server.logNetworkMessages) { Debug.Log("[GameManager] - Received Game status update"); }
+            if (logger.LogEnabled()) logger.Log("[GameManager] - Received Game status update");
 
             foreach (GameContainer game in registeredGameServers)
             {
-                if (game.UniqueId == message.UniqueID)
+                if (game.UniqueId == netMsg.UniqueID)
                 {
-                    game.CurrentPlayers = message.CurrentPlayers;
+                    game.CurrentPlayers = netMsg.CurrentPlayers;
                 }
             };
         }
 
         //Checks if the connection that dropped is actually a GameServer
-        void HandleDisconnect(int connectionId)
+        void HandleDisconnect(INetworkConnection connection)
         {
             foreach (GameContainer game in registeredGameServers)
             {
@@ -80,23 +79,20 @@ namespace Insight
             }
         }
 
-        void HandleGameListMsg(InsightNetworkMessage netMsg)
+        void HandleGameListMsg(GameListMsg netMsg)
         {
-            if (server.logNetworkMessages) { UnityEngine.Debug.Log("[MatchMaking] - Player Requesting Match list"); }
+            if (logger.LogEnabled()) logger.Log("[MatchMaking] - Player Requesting Match list");
 
-            GameListMsg gamesListMsg = new GameListMsg();
             gamesListMsg.Load(registeredGameServers);
 
             netMsg.Reply((short)MsgId.GameList, gamesListMsg);
         }
 
-        void HandleJoinGameMsg(InsightNetworkMessage netMsg)
+        void HandleJoinGameMsg(JoinGameMsg netMsg)
         {
-            JoinGamMsg message = netMsg.ReadMessage<JoinGamMsg>();
+            if (logger.LogEnabled()) logger.Log("[MatchMaking] - Player joining Match.");
 
-            if (server.logNetworkMessages) { UnityEngine.Debug.Log("[MatchMaking] - Player joining Match."); }
-
-            GameContainer game = GetGameByUniqueID(message.UniqueID);
+            GameContainer game = GetGameByUniqueID(netMsg.UniqueID);
 
             if (game == null)
             {

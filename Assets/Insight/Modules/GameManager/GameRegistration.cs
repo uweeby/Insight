@@ -6,7 +6,7 @@ namespace Insight
 {
     public class GameRegistration : InsightModule
     {
-        InsightClient client;
+        NetworkClient client;
         [SerializeField] NetworkManager networkManager;
         [SerializeField] Transport networkManagerTransport;
         [SerializeField] Transport insightTransport;
@@ -21,15 +21,13 @@ namespace Insight
         public int MaxPlayers;
         public int CurrentPlayers;
 
-        public override void Initialize(InsightClient insight, ModuleManager manager)
+        public override void Initialize(NetworkClient insight, ModuleManager manager)
         {
             client = insight;
 
             insightTransport.OnClientConnected.AddListener(SendGameRegistrationToGameManager);
 
             RegisterHandlers();
-
-            networkManager = NetworkManager.singleton;
 
             GatherCmdArgs();
 
@@ -70,7 +68,7 @@ namespace Insight
                 UniqueID = args.UniqueID;
             }
 
-            MaxPlayers = networkManager.maxConnections;
+            MaxPlayers = networkManager.server.MaxConnections;
 
             //Start NetworkManager
             networkManager.StartServer();
@@ -93,7 +91,7 @@ namespace Insight
         void SendGameStatusToGameManager()
         {
             //Update with current values from NetworkManager:
-            CurrentPlayers = networkManager.numPlayers;
+            CurrentPlayers = networkManager.server.NumPlayers;
 
             Debug.Log("[GameRegistration] - status update");
             client.Send((short)MsgId.GameStatus, new GameStatusMsg()

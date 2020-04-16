@@ -1,17 +1,20 @@
 ﻿using UnityEngine;
+using Mirror;
 
 namespace Insight
 {
     public class ChatServer : InsightModule
     {
-        InsightServer server;
+        static readonly ILogger logger = LogFactory.GetLogger(typeof(ServerAuthentication));
+
+        NetworkServer server;
         ServerAuthentication authModule;
 
         public void Awake()
         {
             AddOptionalDependency<ServerAuthentication>();
         }
-        public override void Initialize(InsightServer server, ModuleManager manager)
+        public override void Initialize(NetworkServer server, ModuleManager manager)
         {
             this.server = server;
 
@@ -25,14 +28,12 @@ namespace Insight
 
         void RegisterHandlers()
         {
-            server.RegisterHandler((short)MsgId.Chat, HandleChatMsg);
+            server.LocalConnection.RegisterHandler<ChatMsg>(HandleChatMsg);
         }
 
-        void HandleChatMsg(InsightNetworkMessage netMsg)
+        void HandleChatMsg(ChatMsg netMsg)
         {
-            if (server.logNetworkMessages) { Debug.Log("[ChatServer] - Received Chat Message."); }
-
-            ChatMsg message = netMsg.ReadMessage<ChatMsg>();
+            if (logger.LogEnabled()) logger.Log("[ChatServer] - Received Chat Message.");
 
             if (authModule != null)
             {

@@ -2,11 +2,12 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using Mirror;
 
 public class GUIMasterServer : MonoBehaviour
 {
     [Header("Insight")]
-    public InsightServer masterServer;
+    public NetworkServer masterServer;
     public ModuleManager moduleManager;
     public ServerAuthentication authModule;
     public ChatServer chatModule;
@@ -27,7 +28,7 @@ public class GUIMasterServer : MonoBehaviour
     {
         if(!Init)
         {
-            if(masterServer.isConnected)
+            if(masterServer.Listening)
             {
                 Init = true;
                 moduleManager = masterServer.GetComponent<ModuleManager>();

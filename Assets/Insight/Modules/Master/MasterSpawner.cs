@@ -2,32 +2,35 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Mirror;
 
 namespace Insight
 {
     public class MasterSpawner : InsightModule
     {
-        InsightServer server;
+        static readonly ILogger logger = LogFactory.GetLogger(typeof(MasterSpawner));
+
+        NetworkServer server;
 
         public List<SpawnerContainer> registeredSpawners = new List<SpawnerContainer>();
 
-        public override void Initialize(InsightServer insight, ModuleManager manager)
+        public override void Initialize(NetworkServer insight, ModuleManager manager)
         {
             server = insight;
             RegisterHandlers();
 
-            server.transport.OnServerDisconnected.AddListener(HandleDisconnect);
+            server.Disconnected.AddListener(HandleDisconnect);
         }
 
         void RegisterHandlers()
         {
-            server.RegisterHandler((short)MsgId.RegisterSpawner, HandleRegisterSpawnerMsg);
-            server.RegisterHandler((short)MsgId.RequestSpawnStart, HandleSpawnRequestMsg);
-            server.RegisterHandler((short)MsgId.SpawnerStatus, HandleSpawnerStatusMsg);
+            server.LocalConnection.RegisterHandler<RegisterSpawnerMsg>(HandleRegisterSpawnerMsg);
+            server.LocalConnection.RegisterHandler<RequestSpawnStartMsg>(HandleSpawnRequestMsg);
+            server.LocalConnection.RegisterHandler<SpawnerStatusMsg>(HandleSpawnerStatusMsg);
         }
 
         //Checks if the connection that dropped is actually a Spawner
-        void HandleDisconnect(int connectionId)
+        void HandleDisconnect(INetworkConnection conn)
         {
             foreach (SpawnerContainer spawner in registeredSpawners)
             {
@@ -39,31 +42,27 @@ namespace Insight
             }
         }
 
-        void HandleRegisterSpawnerMsg(InsightNetworkMessage netMsg)
+        void HandleRegisterSpawnerMsg(RegisterSpawnerMsg netMsg)
         {
-            RegisterSpawnerMsg message = netMsg.ReadMessage<RegisterSpawnerMsg>();
-
             //Add the new child spawner to the list of spawners
             registeredSpawners.Add(new SpawnerContainer()
             {
-                uniqueId = message.UniqueID,
+                uniqueId = netMsg.UniqueID,
                 connectionId = netMsg.connectionId,
-                MaxThreads = message.MaxThreads
+                MaxThreads = netMsg.MaxThreads
             });
 
-            if (server.logNetworkMessages) { Debug.Log("[MasterSpawner] - New Process Spawner Regsitered"); }
+            if (logger.LogEnabled()) logger.Log("[MasterSpawner] - New Process Spawner Regsitered");
         }
 
         //Instead of handling the msg here we will forward it to an available spawner.
-        void HandleSpawnRequestMsg(InsightNetworkMessage netMsg)
+        void HandleSpawnRequestMsg(RequestSpawnStartMsg netMsg)
         {
             if(registeredSpawners.Count == 0)
             {
                 Debug.LogWarning("[MasterSpawner] - No Spawner Regsitered To Handle Spawn Request");
                 return;
             }
-
-            RequestSpawnStartMsg message = netMsg.ReadMessage<RequestSpawnStartMsg>();
 
             //Get all spawners that have atleast 1 slot free
             List<SpawnerContainer> freeSlotSpawners = new List<SpawnerContainer>();
@@ -102,16 +101,13 @@ namespace Insight
             });
         }
 
-        void HandleSpawnerStatusMsg(InsightNetworkMessage netMsg)
+        void HandleSpawnerStatusMsg(SpawnerStatusMsg netMsg)
         {
-            SpawnerStatusMsg message = netMsg.ReadMessage<SpawnerStatusMsg>();
-
-
             for (int i = 0; i < registeredSpawners.Count; i++)
             {
                 if (registeredSpawners[i].connectionId == netMsg.connectionId)
                 {
-                    registeredSpawners[i].CurrentThreads = message.CurrentThreads;
+                    registeredSpawners[i].CurrentThreads = netMsg.CurrentThreads;
                 }
             }
         }

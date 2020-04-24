@@ -31,18 +31,18 @@ namespace Insight
             server.LocalConnection.RegisterHandler<ChatMsg>(HandleChatMsg);
         }
 
-        void HandleChatMsg(ChatMsg netMsg)
+        void HandleChatMsg(INetworkConnection conn, ChatMsg netMsg)
         {
             if (logger.LogEnabled()) logger.Log("[ChatServer] - Received Chat Message.");
 
             if (authModule != null)
             {
                 //Inject the username into the message
-                message.Origin = authModule.GetUserByConnection(netMsg.connectionId).username;
+                netMsg.Origin = authModule.GetUserByConnection(conn).username;
 
                 foreach(UserContainer user in authModule.registeredUsers)
                 {
-                    server.SendToClient(user.connectionId, (short)MsgId.Chat, message);
+                    user.connection.SendAsync(netMsg);
                 }
             }
 
@@ -50,7 +50,7 @@ namespace Insight
             else
             {
                 //Broadcast back to all other clients
-                server.SendToAll((short)MsgId.Chat, message);
+                server.SendToAll(netMsg);
             }
         }
     }

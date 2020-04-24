@@ -29,7 +29,7 @@ namespace Insight
 
         //This is just an example. No actual authentication happens.
         //You would need to replace with your own logic. Perhaps with a DB connection.
-        void HandleLoginMsg(LoginMsg netMsg)
+        void HandleLoginMsg(INetworkConnection conn, LoginMsg netMsg)
         {
             if (logger.LogEnabled()) logger.Log("[Authentication] - Login Received: " + netMsg.AccountName + " / " + netMsg.AccountPassword);
 
@@ -42,10 +42,10 @@ namespace Insight
                 {
                     username = netMsg.AccountName,
                     uniqueId = UniqueId,
-                    connectionId = netMsg.connectionId
+                    connection = conn
                 });
 
-                netMsg.Reply((short)MsgId.LoginResponse, new LoginResponseMsg()
+                conn.SendAsync(new LoginResponseMsg() //This was a reply
                 {
                     Authenticated = true,
                     UniqueID = UniqueId
@@ -66,7 +66,7 @@ namespace Insight
         {
             foreach (UserContainer user in registeredUsers)
             {
-                if (user.connectionId == connectionId)
+                if (user.connection == conn)
                 {
                     registeredUsers.Remove(user);
                     return;
@@ -74,11 +74,11 @@ namespace Insight
             }
         }
 
-        public UserContainer GetUserByConnection(int connectionId)
+        public UserContainer GetUserByConnection(INetworkConnection conn)
         {
             foreach (UserContainer user in registeredUsers)
             {
-                if (user.connectionId == connectionId)
+                if (user.connection == conn)
                 {
                     return user;
                 }
@@ -92,6 +92,6 @@ namespace Insight
     {
         public string uniqueId;
         public string username;
-        public int connectionId;
+        public INetworkConnection connection;
     }
 }

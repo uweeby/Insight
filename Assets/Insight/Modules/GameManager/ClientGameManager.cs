@@ -64,17 +64,17 @@ namespace Insight
         #region Message Senders
         public void SendRequestSpawnStart(RequestSpawnStartMsg requestSpawnStartMsg)
         {
-            client.Send((short)MsgId.RequestSpawnStart, requestSpawnStartMsg);
+            client.Send(requestSpawnStartMsg);
         }
 
         public void SendJoinGameMsg(string UniqueID)
         {
-            client.Send((short)MsgId.JoinGame, new JoinGamMsg() { UniqueID = UniqueID });
+            client.Send(new JoinGameMsg() { UniqueID = UniqueID });
         }
 
         public void SendGetGameListMsg()
         {
-            client.Send((short)MsgId.GameList, new GameListMsg());
+            client.Send(new GameListMsg());
         }
         #endregion
     }

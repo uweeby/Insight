@@ -57,18 +57,18 @@ namespace Insight
             UpdateMatches();
         }
 
-        void HandleStartMatchSearchMsg(StartMatchMakingMsg netMsg)
+        void HandleStartMatchSearchMsg(INetworkConnection conn, StartMatchMakingMsg netMsg)
         {
             if (logger.LogEnabled()) logger.Log("[MatchMaking] - Player joining MatchMaking.");
 
-            playerQueue.Add(authModule.GetUserByConnection(netMsg.connectionId));
+            playerQueue.Add(authModule.GetUserByConnection(conn));
         }
 
-        void HandleStopMatchSearchMsg(StopMatchMakingMsg netMsg)
+        void HandleStopMatchSearchMsg(INetworkConnection conn, StopMatchMakingMsg netMsg)
         {
             foreach (UserContainer seraching in playerQueue)
             {
-                if (seraching.connectionId == netMsg.connectionId)
+                if (seraching.connection == conn)
                 {
                     playerQueue.Remove(seraching);
                     return;
@@ -179,7 +179,7 @@ namespace Insight
         {
             matchModule = MatchModule;
             matchProperties = MatchProperties;
-            matchModule.gameManager.RequestGameSpawnStart(matchProperties);
+            matchModule.gameManager.RequestGameSpawnStart(null, matchProperties);
             matchUsers = MatchUsers;
             matchStartTime = DateTime.UtcNow;
         }
@@ -218,7 +218,7 @@ namespace Insight
         {
             foreach (UserContainer user in matchUsers)
             {
-                matchModule.server.SendToClient(user.connectionId, (short)MsgId.ChangeServers, new ChangeServerMsg()
+                user.connection.SendAsync(new ChangeServerMsg()
                 {
                     NetworkAddress = MatchServer.NetworkAddress,
                     NetworkPort = MatchServer.NetworkPort,

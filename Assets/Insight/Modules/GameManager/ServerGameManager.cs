@@ -36,7 +36,7 @@ namespace Insight
             server.LocalConnection.RegisterHandler<GameListMsg>(HandleGameListMsg);
         }
 
-        void HandleRegisterGameMsg(RegisterGameMsg netMsg)
+        void HandleRegisterGameMsg(INetworkConnection connection, RegisterGameMsg netMsg)
         {
             if (logger.LogEnabled()) logger.Log("[GameManager] - Received GameRegistration request");
 
@@ -49,7 +49,7 @@ namespace Insight
                 MaxPlayers = netMsg.MaxPlayers,
                 CurrentPlayers = netMsg.CurrentPlayers,
 
-                connectionId = netMsg.connectionId,
+                connection = connection,
             });
         }
 
@@ -71,7 +71,7 @@ namespace Insight
         {
             foreach (GameContainer game in registeredGameServers)
             {
-                if (game.connectionId == connectionId)
+                if (game.connection == connection)
                 {
                     registeredGameServers.Remove(game);
                     return;
@@ -79,16 +79,16 @@ namespace Insight
             }
         }
 
-        void HandleGameListMsg(GameListMsg netMsg)
+        void HandleGameListMsg(INetworkConnection connection, GameListMsg netMsg)
         {
             if (logger.LogEnabled()) logger.Log("[MatchMaking] - Player Requesting Match list");
 
-            gamesListMsg.Load(registeredGameServers);
+            netMsg.Load(registeredGameServers);
 
-            netMsg.Reply((short)MsgId.GameList, gamesListMsg);
+            connection.SendAsync(netMsg); //This was a reply
         }
 
-        void HandleJoinGameMsg(JoinGameMsg netMsg)
+        void HandleJoinGameMsg(INetworkConnection connection, JoinGameMsg netMsg)
         {
             if (logger.LogEnabled()) logger.Log("[MatchMaking] - Player joining Match.");
 
@@ -101,7 +101,7 @@ namespace Insight
             }
             else
             {
-                netMsg.Reply((short)MsgId.ChangeServers, new ChangeServerMsg()
+                connection.SendAsync(new ChangeServerMsg() //This was a reply
                 {
                     NetworkAddress = game.NetworkAddress,
                     NetworkPort = game.NetworkPort,
@@ -111,9 +111,9 @@ namespace Insight
         }
 
         //Used by MatchMaker to request a GameServer for a new Match
-        public void RequestGameSpawnStart(RequestSpawnStartMsg requestSpawn)
+        public void RequestGameSpawnStart(INetworkConnection connection, RequestSpawnStartMsg requestSpawn)
         {
-            masterSpawner.InternalSpawnRequest(requestSpawn);
+            masterSpawner.InternalSpawnRequest(connection, requestSpawn);
         }
 
         public GameContainer GetGameByUniqueID(string uniqueID)
@@ -135,7 +135,7 @@ namespace Insight
         public string NetworkAddress;
         public ushort NetworkPort;
         public string UniqueId;
-        public int connectionId;
+        public INetworkConnection connection;
 
         public string SceneName;
         public int MaxPlayers;

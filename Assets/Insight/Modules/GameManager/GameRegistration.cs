@@ -77,7 +77,7 @@ namespace Insight
         void SendGameRegistrationToGameManager()
         {
             Debug.Log("[GameRegistration] - registering with master");
-            client.Send((short)MsgId.RegisterGame, new RegisterGameMsg()
+            client.Send(new RegisterGameMsg()
             {
                 NetworkAddress = NetworkAddress,
                 NetworkPort = NetworkPort,
@@ -94,7 +94,7 @@ namespace Insight
             CurrentPlayers = networkManager.server.NumPlayers;
 
             Debug.Log("[GameRegistration] - status update");
-            client.Send((short)MsgId.GameStatus, new GameStatusMsg()
+            client.Send(new GameStatusMsg()
             {
                 UniqueID = UniqueID,
                 CurrentPlayers = CurrentPlayers

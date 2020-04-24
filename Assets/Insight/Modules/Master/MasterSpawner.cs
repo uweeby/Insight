@@ -34,7 +34,7 @@ namespace Insight
         {
             foreach (SpawnerContainer spawner in registeredSpawners)
             {
-                if (spawner.connectionId == connectionId)
+                if (spawner.connection == conn)
                 {
                     registeredSpawners.Remove(spawner);
                     return;
@@ -42,13 +42,13 @@ namespace Insight
             }
         }
 
-        void HandleRegisterSpawnerMsg(RegisterSpawnerMsg netMsg)
+        void HandleRegisterSpawnerMsg(INetworkConnection conn, RegisterSpawnerMsg netMsg)
         {
             //Add the new child spawner to the list of spawners
             registeredSpawners.Add(new SpawnerContainer()
             {
                 uniqueId = netMsg.UniqueID,
-                connectionId = netMsg.connectionId,
+                connection = conn,
                 MaxThreads = netMsg.MaxThreads
             });
 
@@ -56,7 +56,7 @@ namespace Insight
         }
 
         //Instead of handling the msg here we will forward it to an available spawner.
-        void HandleSpawnRequestMsg(RequestSpawnStartMsg netMsg)
+        void HandleSpawnRequestMsg(INetworkConnection conn, RequestSpawnStartMsg netMsg)
         {
             if(registeredSpawners.Count == 0)
             {
@@ -76,43 +76,43 @@ namespace Insight
 
             //sort by least busy spawner first
             freeSlotSpawners = freeSlotSpawners.OrderBy(x => x.CurrentThreads).ToList();
-            server.SendToClient(freeSlotSpawners[0].connectionId, (short)MsgId.RequestSpawnStart, message, (callbackStatus, reader) =>
+            conn.SendAsync(netMsg);//, (callbackStatus, reader) =>
             {
-                if (callbackStatus == CallbackStatus.Ok)
-                {
-                    RequestSpawnStartMsg callbackResponse = reader.ReadMessage<RequestSpawnStartMsg>();
-                    if (server.logNetworkMessages) { Debug.Log("[Spawn Callback] Game Created on Child Spawner: " + callbackResponse.UniqueID); }
+                //if (callbackStatus == CallbackStatus.Ok)
+                //{
+                //    RequestSpawnStartMsg callbackResponse = reader.ReadMessage<RequestSpawnStartMsg>();
+                //    if (server.logNetworkMessages) { Debug.Log("[Spawn Callback] Game Created on Child Spawner: " + callbackResponse.UniqueID); }
 
-                //If callback from original message is present
-                if (netMsg.callbackId != 0)
-                    {
-                        netMsg.Reply((short)MsgId.RequestSpawnStart, callbackResponse);
-                    }
-                }
-                if (callbackStatus == CallbackStatus.Timeout)
-                {
-                    RequestSpawnStartMsg callbackResponse = reader.ReadMessage<RequestSpawnStartMsg>();
-                    Debug.Log("[Spawn Callback] Createion Timed Out: " + callbackResponse.UniqueID);
-                }
-                if (callbackStatus == CallbackStatus.Error)
-                {
-                    Debug.Log("[Spawn Callback] Error in SpawnRequest.");
-                }
-            });
+                ////If callback from original message is present
+                //if (netMsg.callbackId != 0)
+                //    {
+                //        netMsg.Reply((short)MsgId.RequestSpawnStart, callbackResponse);
+                //    }
+                //}
+                //if (callbackStatus == CallbackStatus.Timeout)
+                //{
+                //    RequestSpawnStartMsg callbackResponse = reader.ReadMessage<RequestSpawnStartMsg>();
+                //    Debug.Log("[Spawn Callback] Createion Timed Out: " + callbackResponse.UniqueID);
+                //}
+                //if (callbackStatus == CallbackStatus.Error)
+                //{
+                //    Debug.Log("[Spawn Callback] Error in SpawnRequest.");
+                //}
+            };
         }
 
-        void HandleSpawnerStatusMsg(SpawnerStatusMsg netMsg)
+        void HandleSpawnerStatusMsg(INetworkConnection conn, SpawnerStatusMsg netMsg)
         {
             for (int i = 0; i < registeredSpawners.Count; i++)
             {
-                if (registeredSpawners[i].connectionId == netMsg.connectionId)
+                if (registeredSpawners[i].connection == conn)
                 {
                     registeredSpawners[i].CurrentThreads = netMsg.CurrentThreads;
                 }
             }
         }
 
-        public void InternalSpawnRequest(RequestSpawnStartMsg message)
+        public void InternalSpawnRequest(INetworkConnection conn, RequestSpawnStartMsg message)
         {
             if(registeredSpawners.Count == 0)
             {
@@ -133,7 +133,7 @@ namespace Insight
             freeSlotSpawners = freeSlotSpawners.OrderBy(x => x.CurrentThreads).ToList();
 
             //Send SpawnRequest to the least busy Spawner
-            server.SendToClient(freeSlotSpawners[0].connectionId, (short)MsgId.RequestSpawnStart, message);
+            freeSlotSpawners[0].connection.Send(message);
         }
     }
 
@@ -141,7 +141,7 @@ namespace Insight
     public class SpawnerContainer
     {
         public string uniqueId;
-        public int connectionId;
+        public INetworkConnection connection;
         public int MaxThreads;
         public int CurrentThreads;
     }

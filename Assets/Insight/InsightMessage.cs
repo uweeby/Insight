@@ -121,9 +121,9 @@ namespace Insight
     {
         public GameContainer[] gamesArray;
 
-        public void Load(List<GameContainer> gamesList)
+        public void Load(Dictionary<INetworkConnection, GameContainer> gamesList)
         {
-            gamesArray = gamesList.ToArray();
+            gamesArray = (new List<GameContainer>(gamesList.Values)).ToArray();
         }
     }
 

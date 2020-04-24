@@ -8,8 +8,8 @@ namespace Insight
     {
         NetworkClient client;
         [SerializeField] NetworkManager networkManager;
-        [SerializeField] Transport networkManagerTransport;
-        [SerializeField] Transport insightTransport;
+        [SerializeField] AsyncTransport networkManagerTransport;
+        [SerializeField] AsyncTransport insightTransport;
 
         //Pulled from command line arguments
         public string GameScene;
@@ -25,7 +25,7 @@ namespace Insight
         {
             client = insight;
 
-            insightTransport.OnClientConnected.AddListener(SendGameRegistrationToGameManager);
+            client.Connected.AddListener(SendGameRegistrationToGameManager);
 
             RegisterHandlers();
 
@@ -71,10 +71,10 @@ namespace Insight
             MaxPlayers = networkManager.server.MaxConnections;
 
             //Start NetworkManager
-            networkManager.StartServer();
+            _ = networkManager.StartServer();
         }
 
-        void SendGameRegistrationToGameManager()
+        void SendGameRegistrationToGameManager(INetworkConnection conn)
         {
             Debug.Log("[GameRegistration] - registering with master");
             client.Send(new RegisterGameMsg()

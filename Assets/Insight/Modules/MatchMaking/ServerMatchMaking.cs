@@ -126,9 +126,9 @@ namespace Insight
                 if (match.InitMatch)
                 {
                     bool stillActiveGame = false;
-                    foreach (GameContainer game in gameManager.registeredGameServers)
+                    foreach (KeyValuePair<INetworkConnection, GameContainer> game in gameManager.registeredGameServers)
                     {
-                        if (match.MatchServer.UniqueId == game.UniqueId)
+                        if (match.MatchServer.UniqueId == game.Value.UniqueId)
                         {
                             stillActiveGame = true;
                         }

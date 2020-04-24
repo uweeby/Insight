@@ -12,7 +12,7 @@ namespace Insight
         NetworkServer server;
         MasterSpawner masterSpawner;
 
-        public List<GameContainer> registeredGameServers = new List<GameContainer>();
+        public Dictionary<INetworkConnection, GameContainer> registeredGameServers = new Dictionary<INetworkConnection, GameContainer>();
 
         public void Awake()
         {
@@ -40,16 +40,14 @@ namespace Insight
         {
             if (logger.LogEnabled()) logger.Log("[GameManager] - Received GameRegistration request");
 
-            registeredGameServers.Add(new GameContainer()
+            registeredGameServers.Add(connection, new GameContainer()
             {
                 NetworkAddress = netMsg.NetworkAddress,
                 NetworkPort = netMsg.NetworkPort,
                 UniqueId = netMsg.UniqueID,
                 SceneName = netMsg.SceneName,
                 MaxPlayers = netMsg.MaxPlayers,
-                CurrentPlayers = netMsg.CurrentPlayers,
-
-                connection = connection,
+                CurrentPlayers = netMsg.CurrentPlayers
             });
         }
 
@@ -57,11 +55,11 @@ namespace Insight
         {
             if (logger.LogEnabled()) logger.Log("[GameManager] - Received Game status update");
 
-            foreach (GameContainer game in registeredGameServers)
+            foreach (KeyValuePair<INetworkConnection, GameContainer> game in registeredGameServers)
             {
-                if (game.UniqueId == netMsg.UniqueID)
+                if (game.Value.UniqueId == netMsg.UniqueID)
                 {
-                    game.CurrentPlayers = netMsg.CurrentPlayers;
+                    game.Value.CurrentPlayers = netMsg.CurrentPlayers;
                 }
             };
         }
@@ -69,11 +67,11 @@ namespace Insight
         //Checks if the connection that dropped is actually a GameServer
         void HandleDisconnect(INetworkConnection connection)
         {
-            foreach (GameContainer game in registeredGameServers)
+            foreach (KeyValuePair<INetworkConnection, GameContainer> game in registeredGameServers)
             {
-                if (game.connection == connection)
+                if (game.Key == connection)
                 {
-                    registeredGameServers.Remove(game);
+                    registeredGameServers.Remove(game.Key);
                     return;
                 }
             }
@@ -118,11 +116,11 @@ namespace Insight
 
         public GameContainer GetGameByUniqueID(string uniqueID)
         {
-            foreach (GameContainer game in registeredGameServers)
+            foreach (KeyValuePair<INetworkConnection, GameContainer> game in registeredGameServers)
             {
-                if (game.UniqueId.Equals(uniqueID))
+                if (game.Value.UniqueId.Equals(uniqueID))
                 {
-                    return game;
+                    return game.Value;
                 }
             }
             return null;
@@ -135,8 +133,6 @@ namespace Insight
         public string NetworkAddress;
         public ushort NetworkPort;
         public string UniqueId;
-        public INetworkConnection connection;
-
         public string SceneName;
         public int MaxPlayers;
         public int MinPlayers;

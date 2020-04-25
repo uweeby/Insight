@@ -3,6 +3,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using Mirror;
+using System.Collections.Generic;
 
 public class GUIMasterServer : MonoBehaviour
 {
@@ -50,9 +51,9 @@ public class GUIMasterServer : MonoBehaviour
         activeGamesText.text = "";
 
         //Game Status
-        foreach (GameContainer game in gameModule.registeredGameServers)
+        foreach (KeyValuePair<INetworkConnection, GameContainer> game in gameModule.registeredGameServers)
         {
-            activeGamesText.text += game.UniqueId + " - " + game.NetworkAddress + ":" + game.NetworkPort + " - " + game.SceneName + " - " + game.CurrentPlayers + "/" + game.MaxPlayers + Environment.NewLine;
+            activeGamesText.text += game.Value.UniqueId + " - " + game.Value.NetworkAddress + ":" + game.Value.NetworkPort + " - " + game.Value.SceneName + " - " + game.Value.CurrentPlayers + "/" + game.Value.MaxPlayers + Environment.NewLine;
         }
     }
 }

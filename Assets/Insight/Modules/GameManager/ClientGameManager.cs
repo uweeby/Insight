@@ -11,7 +11,7 @@ namespace Insight
 
         InsightClient client;
         [SerializeField] NetworkManager networkManager;
-        [SerializeField] Transport networkManagerTransport;
+        [SerializeField] AsyncTransport networkManagerTransport;
 
         public List<GameContainer> gamesList = new List<GameContainer>();
 

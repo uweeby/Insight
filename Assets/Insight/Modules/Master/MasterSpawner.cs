@@ -10,23 +10,23 @@ namespace Insight
     {
         static readonly ILogger logger = LogFactory.GetLogger(typeof(MasterSpawner));
 
-        NetworkServer server;
+        InsightServer server;
 
         public List<SpawnerContainer> registeredSpawners = new List<SpawnerContainer>();
 
-        public override void Initialize(NetworkServer insight, ModuleManager manager)
+        public override void Initialize(InsightServer insight, ModuleManager manager)
         {
             server = insight;
-            RegisterHandlers();
+            server.Authenticated.AddListener(RegisterHandlers);
 
             server.Disconnected.AddListener(HandleDisconnect);
         }
 
-        void RegisterHandlers()
+        void RegisterHandlers(INetworkConnection conn)
         {
-            server.LocalConnection.RegisterHandler<RegisterSpawnerMsg>(HandleRegisterSpawnerMsg);
-            server.LocalConnection.RegisterHandler<RequestSpawnStartMsg>(HandleSpawnRequestMsg);
-            server.LocalConnection.RegisterHandler<SpawnerStatusMsg>(HandleSpawnerStatusMsg);
+            conn.RegisterHandler<RegisterSpawnerMsg>(HandleRegisterSpawnerMsg);
+            conn.RegisterHandler<RequestSpawnStartMsg>(HandleSpawnRequestMsg);
+            conn.RegisterHandler<SpawnerStatusMsg>(HandleSpawnerStatusMsg);
         }
 
         //Checks if the connection that dropped is actually a Spawner
@@ -52,7 +52,7 @@ namespace Insight
                 MaxThreads = netMsg.MaxThreads
             });
 
-            if (logger.LogEnabled()) logger.Log("[MasterSpawner] - New Process Spawner Regsitered");
+            logger.Log("[MasterSpawner] - New Process Spawner Regsitered");
         }
 
         //Instead of handling the msg here we will forward it to an available spawner.
@@ -60,7 +60,7 @@ namespace Insight
         {
             if(registeredSpawners.Count == 0)
             {
-                Debug.LogWarning("[MasterSpawner] - No Spawner Regsitered To Handle Spawn Request");
+                logger.LogWarning("[MasterSpawner] - No Spawner Regsitered To Handle Spawn Request");
                 return;
             }
 
@@ -116,7 +116,7 @@ namespace Insight
         {
             if(registeredSpawners.Count == 0)
             {
-                Debug.LogWarning("[MasterSpawner] - No Spawner Regsitered To Handle Internal Spawn Request");
+                logger.LogWarning("[MasterSpawner] - No Spawner Regsitered To Handle Internal Spawn Request");
                 return;
             }
 
@@ -125,7 +125,7 @@ namespace Insight
 
             if (freeSlotSpawners.Count == 0)
             {
-                Debug.LogError("[MasterSpawner] - No Spawners with slots free available to service SpawnRequest.");
+                logger.LogError("[MasterSpawner] - No Spawners with slots free available to service SpawnRequest.");
                 return;
             }
 

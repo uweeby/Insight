@@ -8,8 +8,8 @@ namespace Insight
 {
     public class ProcessSpawner : InsightModule
     {
-        [HideInInspector] public NetworkServer server;
-        [HideInInspector] public NetworkClient client;
+        [HideInInspector] public InsightServer server;
+        [HideInInspector] public InsightClient client;
 
         [Header("Network")]
         [Tooltip("NetworkAddress that spawned processes will use")]
@@ -29,16 +29,16 @@ namespace Insight
 
         public RunningProcessContainer[] spawnerProcesses;
 
-        public override void Initialize(NetworkServer server, ModuleManager manager)
+        public override void Initialize(InsightServer server, ModuleManager manager)
         {
             this.server = server;
-            RegisterHandlers();
+            server.Authenticated.AddListener(RegisterHandlers);
         }
 
-        public override void Initialize(NetworkClient client, ModuleManager manager)
+        public override void Initialize(InsightClient client, ModuleManager manager)
         {
             this.client = client;
-            RegisterHandlers();
+            client.Authenticated.AddListener(RegisterHandlers);
         }
 
         void Awake()
@@ -66,17 +66,17 @@ namespace Insight
             RegisterToMaster();
         }
 
-        void RegisterHandlers()
+        void RegisterHandlers(INetworkConnection conn)
         {
             if (client)
             {
-                client.Connection.RegisterHandler<RequestSpawnStartMsg>(HandleRequestSpawnStart);
-                client.Connection.RegisterHandler<KillSpawnMsg>(HandleKillSpawn);
+                conn.RegisterHandler<RequestSpawnStartMsg>(HandleRequestSpawnStart);
+                conn.RegisterHandler<KillSpawnMsg>(HandleKillSpawn);
             }
             if (server)
             {
-                server.LocalConnection.RegisterHandler<RequestSpawnStartMsg>(HandleRequestSpawnStart);
-                server.LocalConnection.RegisterHandler<KillSpawnMsg>(HandleKillSpawn);
+                conn.RegisterHandler<RequestSpawnStartMsg>(HandleRequestSpawnStart);
+                conn.RegisterHandler<KillSpawnMsg>(HandleKillSpawn);
             }
         }
 

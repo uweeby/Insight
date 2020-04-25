@@ -8,8 +8,8 @@ namespace Insight
 {
     public class ModuleManager : MonoBehaviour
     {
-        NetworkClient client;
-        NetworkServer server;
+        InsightClient client;
+        InsightServer server;
 
         public bool SearchChildrenForModule = true;
 
@@ -20,8 +20,8 @@ namespace Insight
 
         void Awake()
         {
-            client = GetComponent<NetworkClient>();
-            server = GetComponent<NetworkServer>();
+            client = GetComponent<InsightClient>();
+            server = GetComponent<InsightServer>();
         }
 
         void Start()
@@ -66,7 +66,7 @@ namespace Insight
             return false;
         }
 
-        public bool InitializeModules(NetworkClient client, NetworkServer server)
+        public bool InitializeModules(InsightClient client, InsightServer server)
         {
             bool checkOptional = true;
 

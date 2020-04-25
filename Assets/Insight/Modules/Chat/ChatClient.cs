@@ -4,28 +4,28 @@ using UnityEngine;
 
 public class ChatClient : InsightModule
 {
-    static readonly ILogger logger = LogFactory.GetLogger(typeof(ServerAuthentication));
+    static readonly ILogger logger = LogFactory.GetLogger(typeof(ChatClient));
 
-    NetworkClient client;
+    InsightClient client;
 
     //Used in Example Scene:
     [HideInInspector] public string chatLog;
 
-    public override void Initialize(NetworkClient client, ModuleManager manager)
+    public override void Initialize(InsightClient client, ModuleManager manager)
     {
         this.client = client;
 
-        RegisterHandlers();
+        client.Authenticated.AddListener(RegisterHandlers);
     }
 
-    void RegisterHandlers()
+    void RegisterHandlers(INetworkConnection conn)
     {
-        client.Connection.RegisterHandler<ChatMsg>(HandleChatMsg);
+        conn.RegisterHandler<ChatMsg>(HandleChatMsg);
     }
 
     public void HandleChatMsg(ChatMsg netMsg)
     {
-        if (logger.LogEnabled()) logger.Log("[InsightClient] - HandleChatMsg()");
+        logger.Log("[InsightClient] - HandleChatMsg()");
 
         chatLog += netMsg.Origin + ": "  + netMsg.Data + "\n";
     }

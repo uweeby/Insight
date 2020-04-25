@@ -11,7 +11,7 @@ namespace Insight
     {
         static readonly ILogger logger = LogFactory.GetLogger(typeof(ServerMatchMaking));
 
-        public NetworkServer server;
+        public InsightServer server;
         ModuleManager manager;
         ServerAuthentication authModule;
         public ServerGameManager gameManager;
@@ -32,7 +32,7 @@ namespace Insight
             AddDependency<ServerGameManager>(); //Used to track available games
         }
 
-        public override void Initialize(NetworkServer insight, ModuleManager manager)
+        public override void Initialize(InsightServer insight, ModuleManager manager)
         {
             server = insight;
             this.manager = manager;
@@ -40,12 +40,12 @@ namespace Insight
             gameManager = this.manager.GetModule<ServerGameManager>();
             masterSpawner = this.manager.GetModule<MasterSpawner>();
 
-            RegisterHandlers();
+            server.Authenticated.AddListener(RegisterHandlers);
 
             InvokeRepeating("InvokedUpdate", MatchMakingPollRate, MatchMakingPollRate);
         }
 
-        void RegisterHandlers()
+        void RegisterHandlers(INetworkConnection conn)
         {
             server.LocalConnection.RegisterHandler<StartMatchMakingMsg>(HandleStartMatchSearchMsg);
             server.LocalConnection.RegisterHandler<StopMatchMakingMsg>(HandleStopMatchSearchMsg);
@@ -59,7 +59,7 @@ namespace Insight
 
         void HandleStartMatchSearchMsg(INetworkConnection conn, StartMatchMakingMsg netMsg)
         {
-            if (logger.LogEnabled()) logger.Log("[MatchMaking] - Player joining MatchMaking.");
+            logger.Log("[MatchMaking] - Player joining MatchMaking.");
 
             playerQueue.Add(authModule.GetUserByConnection(conn));
         }
@@ -80,13 +80,13 @@ namespace Insight
         {
             if (playerQueue.Count < MinimumPlayersForGame)
             {
-                if (logger.LogEnabled()) logger.Log("[MatchMaking] - Minimum players in queue not reached.");
+                logger.Log("[MatchMaking] - Minimum players in queue not reached.");
                 return;
             }
 
             if (masterSpawner.registeredSpawners.Count == 0)
             {
-                if (logger.LogEnabled()) logger.Log("[MatchMaking] - No spawners for players in queue.");
+                logger.Log("[MatchMaking] - No spawners for players in queue.");
                 return;
             }
 
@@ -159,6 +159,8 @@ namespace Insight
     [Serializable]
     public class MatchContainer
     {
+        static readonly ILogger logger = LogFactory.GetLogger(typeof(MatchContainer));
+
         public ServerMatchMaking matchModule;
         public GameContainer MatchServer;
         public List<UserContainer> matchUsers;
@@ -208,7 +210,7 @@ namespace Insight
                     CancelMatch();
                 }
 
-                Debug.Log("Server not active at this time");
+                logger.Log("Server not active at this time");
                 return false;
             }
             return true;
@@ -229,7 +231,7 @@ namespace Insight
 
         void CancelMatch()
         {
-            Debug.LogError("Server failed to start within timoue period. Cancelling match.");
+            logger.LogError("Server failed to start within timoue period. Cancelling match.");
 
             //TODO: Destroy the match process somewhere: MatchServer
 

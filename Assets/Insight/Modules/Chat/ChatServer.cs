@@ -5,16 +5,16 @@ namespace Insight
 {
     public class ChatServer : InsightModule
     {
-        static readonly ILogger logger = LogFactory.GetLogger(typeof(ServerAuthentication));
+        static readonly ILogger logger = LogFactory.GetLogger(typeof(ChatServer));
 
-        NetworkServer server;
+        InsightServer server;
         ServerAuthentication authModule;
 
         public void Awake()
         {
             AddOptionalDependency<ServerAuthentication>();
         }
-        public override void Initialize(NetworkServer server, ModuleManager manager)
+        public override void Initialize(InsightServer server, ModuleManager manager)
         {
             this.server = server;
 
@@ -23,17 +23,17 @@ namespace Insight
                 authModule = manager.GetModule<ServerAuthentication>();
             }
 
-            RegisterHandlers();
+            server.Authenticated.AddListener(RegisterHandlers);
         }
 
-        void RegisterHandlers()
+        void RegisterHandlers(INetworkConnection conn)
         {
-            server.LocalConnection.RegisterHandler<ChatMsg>(HandleChatMsg);
+            conn.RegisterHandler<ChatMsg>(HandleChatMsg);
         }
 
         void HandleChatMsg(INetworkConnection conn, ChatMsg netMsg)
         {
-            if (logger.LogEnabled()) logger.Log("[ChatServer] - Received Chat Message.");
+            logger.Log("[ChatServer] - Received Chat Message.");
 
             if (authModule != null)
             {

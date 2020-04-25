@@ -10,8 +10,8 @@ namespace Insight
         IEnumerable<Type> Dependencies { get; }
         IEnumerable<Type> OptionalDependencies { get; }
 
-        void Initialize(NetworkServer server, ModuleManager manager);
-        void Initialize(NetworkClient client, ModuleManager manager);
+        void Initialize(InsightServer server, ModuleManager manager);
+        void Initialize(InsightClient client, ModuleManager manager);
     }
 
     public abstract class InsightModule : MonoBehaviour, IServerModule
@@ -39,13 +39,13 @@ namespace Insight
         /// <summary>
         ///     Called by master server, when module should be started
         /// </summary>
-        public virtual void Initialize(NetworkServer server, ModuleManager manager)
+        public virtual void Initialize(InsightServer server, ModuleManager manager)
         {
-            if (logger.LogEnabled()) logger.Log("[Module Manager] Initialize InsightServer not found for module");
+            logger.Log("[Module Manager] Initialize InsightServer not found for module");
         }
-        public virtual void Initialize(NetworkClient client, ModuleManager manager)
+        public virtual void Initialize(InsightClient client, ModuleManager manager)
         {
-            if (logger.LogEnabled()) logger.Log("[Module Manager] Initialize InsightClient not found for module");
+            logger.Log("[Module Manager] Initialize InsightClient not found for module");
         }
 
         /// <summary>

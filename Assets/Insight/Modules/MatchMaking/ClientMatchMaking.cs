@@ -4,16 +4,16 @@ namespace Insight
 {
     public class ClientMatchMaking : InsightModule
     {
-        NetworkClient client;
+        InsightClient client;
 
-        public override void Initialize(NetworkClient client, ModuleManager manager)
+        public override void Initialize(InsightClient client, ModuleManager manager)
         {
             this.client = client;
 
-            RegisterHandlers();
+            client.Authenticated.AddListener(RegisterHandlers);
         }
 
-        void RegisterHandlers()
+        void RegisterHandlers(INetworkConnection conn)
         {
 
         }

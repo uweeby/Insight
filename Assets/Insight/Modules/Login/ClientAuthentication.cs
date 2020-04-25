@@ -7,7 +7,7 @@ namespace Insight
 {
     public class ClientAuthentication : InsightModule
     {
-        NetworkClient client;
+        InsightClient client;
 
         public string uniqueID;
 
@@ -15,14 +15,14 @@ namespace Insight
         [HideInInspector] public string loginResponse;
         [HideInInspector] public bool loginSucessful;
 
-        public override void Initialize(NetworkClient client, ModuleManager manager)
+        public override void Initialize(InsightClient client, ModuleManager manager)
         {
             this.client = client;
 
-            RegisterHandlers();
+            client.Authenticated.AddListener(RegisterHandlers);
         }
 
-        void RegisterHandlers()
+        void RegisterHandlers(INetworkConnection conn)
         {
 
         }

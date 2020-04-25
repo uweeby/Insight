@@ -9,7 +9,7 @@ namespace Insight
     {
         static readonly ILogger logger = LogFactory.GetLogger(typeof(ServerGameManager));
 
-        NetworkServer server;
+        InsightServer server;
         MasterSpawner masterSpawner;
 
         public Dictionary<INetworkConnection, GameContainer> registeredGameServers = new Dictionary<INetworkConnection, GameContainer>();
@@ -19,26 +19,26 @@ namespace Insight
             AddDependency<MasterSpawner>();
         }
 
-        public override void Initialize(NetworkServer insight, ModuleManager manager)
+        public override void Initialize(InsightServer insight, ModuleManager manager)
         {
             server = insight;
             masterSpawner = manager.GetModule<MasterSpawner>();
-            RegisterHandlers();
+            server.Authenticated.AddListener(RegisterHandlers);
 
             server.Disconnected.AddListener(HandleDisconnect);
         }
 
-        void RegisterHandlers()
+        void RegisterHandlers(INetworkConnection conn)
         {
-            server.LocalConnection.RegisterHandler<RegisterGameMsg>(HandleRegisterGameMsg);
-            server.LocalConnection.RegisterHandler<GameStatusMsg>(HandleGameStatusMsg);
-            server.LocalConnection.RegisterHandler<JoinGameMsg>(HandleJoinGameMsg);
-            server.LocalConnection.RegisterHandler<GameListMsg>(HandleGameListMsg);
+            conn.RegisterHandler<RegisterGameMsg>(HandleRegisterGameMsg);
+            conn.RegisterHandler<GameStatusMsg>(HandleGameStatusMsg);
+            conn.RegisterHandler<JoinGameMsg>(HandleJoinGameMsg);
+            conn.RegisterHandler<GameListMsg>(HandleGameListMsg);
         }
 
         void HandleRegisterGameMsg(INetworkConnection connection, RegisterGameMsg netMsg)
         {
-            if (logger.LogEnabled()) logger.Log("[GameManager] - Received GameRegistration request");
+            logger.Log("[GameManager] - Received GameRegistration request");
 
             registeredGameServers.Add(connection, new GameContainer()
             {
@@ -53,7 +53,7 @@ namespace Insight
 
         void HandleGameStatusMsg(GameStatusMsg netMsg)
         {
-            if (logger.LogEnabled()) logger.Log("[GameManager] - Received Game status update");
+            logger.Log("[GameManager] - Received Game status update");
 
             foreach (KeyValuePair<INetworkConnection, GameContainer> game in registeredGameServers)
             {
@@ -79,7 +79,7 @@ namespace Insight
 
         void HandleGameListMsg(INetworkConnection connection, GameListMsg netMsg)
         {
-            if (logger.LogEnabled()) logger.Log("[MatchMaking] - Player Requesting Match list");
+            logger.Log("[MatchMaking] - Player Requesting Match list");
 
             netMsg.Load(registeredGameServers);
 
@@ -88,7 +88,7 @@ namespace Insight
 
         void HandleJoinGameMsg(INetworkConnection connection, JoinGameMsg netMsg)
         {
-            if (logger.LogEnabled()) logger.Log("[MatchMaking] - Player joining Match.");
+            logger.Log("[MatchMaking] - Player joining Match.");
 
             GameContainer game = GetGameByUniqueID(netMsg.UniqueID);
 

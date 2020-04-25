@@ -7,30 +7,30 @@ namespace Insight
 {
     public class ClientGameManager : InsightModule
     {
-        static readonly ILogger logger = LogFactory.GetLogger(typeof(MasterSpawner));
+        static readonly ILogger logger = LogFactory.GetLogger(typeof(ClientGameManager));
 
-        NetworkClient client;
+        InsightClient client;
         [SerializeField] NetworkManager networkManager;
         [SerializeField] Transport networkManagerTransport;
 
         public List<GameContainer> gamesList = new List<GameContainer>();
 
-        public override void Initialize(NetworkClient client, ModuleManager manager)
+        public override void Initialize(InsightClient client, ModuleManager manager)
         {
             this.client = client;
 
-            RegisterHandlers();
+            client.Authenticated.AddListener(RegisterHandlers);
         }
 
-        void RegisterHandlers()
+        void RegisterHandlers(INetworkConnection conn)
         {
-            client.Connection.RegisterHandler<ChangeServerMsg>(HandleChangeServersMsg);
-            client.Connection.RegisterHandler<GameListMsg>(HandleGameListMsg);
+            conn.RegisterHandler<ChangeServerMsg>(HandleChangeServersMsg);
+            conn.RegisterHandler<GameListMsg>(HandleGameListMsg);
         }
 
         void HandleChangeServersMsg(ChangeServerMsg netMsg)
         {
-            if (logger.LogEnabled()) logger.Log("[InsightClient] - Connecting to GameServer: " + netMsg.NetworkAddress + ":" + netMsg.NetworkPort + "/" + netMsg.SceneName);
+            logger.Log("[InsightClient] - Connecting to GameServer: " + netMsg.NetworkAddress + ":" + netMsg.NetworkPort + "/" + netMsg.SceneName);
 
             if(networkManagerTransport.GetType().GetField("port") != null) {
                 networkManagerTransport.GetType().GetField("port").SetValue(networkManagerTransport, netMsg.NetworkPort);
@@ -42,7 +42,7 @@ namespace Insight
 
         void HandleGameListMsg(GameListMsg netMsg)
         {
-            if (logger.LogEnabled()) logger.Log("[InsightClient] - Received Games List");
+            logger.Log("[InsightClient] - Received Games List");
 
             gamesList.Clear();
 

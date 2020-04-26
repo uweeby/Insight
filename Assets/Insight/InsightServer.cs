@@ -15,8 +15,13 @@ namespace Insight
 
             if (AutoStart)
             {
-                _ = ListenAsync();
+                Listen();
             }
+        }
+
+        public void Listen()
+        {
+            _ = ListenAsync();
         }
 
         void OnApplicationQuit()

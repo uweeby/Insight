@@ -14,20 +14,34 @@ namespace Insight
         public bool SearchChildrenForModule = true;
 
         private Dictionary<Type, InsightModule> _modules;
-        private HashSet<Type> _initializedModules;
+        private List<Type> _initializedModules;
 
         private bool _initializeComplete;
+        private bool _cachedClientAutoStartValue;
+        private bool _cachedServerAutoStartValue;
 
         void Awake()
         {
             client = GetComponent<InsightClient>();
             server = GetComponent<InsightServer>();
+
+            if (client)
+            {
+                _cachedClientAutoStartValue = client.AutoStart;
+                client.AutoStart = false; //Wait until modules are loaded to AutoStart
+            }
+
+            if (server)
+            {
+                _cachedServerAutoStartValue = server.AutoStart;
+                server.AutoStart = false; //Wait until modules are loaded to AutoStart
+            }
         }
 
         void Start()
         {
             _modules = new Dictionary<Type, InsightModule>();
-            _initializedModules = new HashSet<Type>();
+            _initializedModules = new List<Type>();
         }
 
         void Update()
@@ -44,6 +58,19 @@ namespace Insight
 
                 // Initialize modules
                 InitializeModules(client, server);
+
+                //Now that modules are loaded check for original AutoStart value
+                if (_cachedServerAutoStartValue)
+                {
+                    server.AutoStart = _cachedServerAutoStartValue;
+                    server.Listen();
+                }
+
+                if (_cachedClientAutoStartValue)
+                {
+                    client.AutoStart = _cachedClientAutoStartValue;
+                    client.Connect();
+                }
             }
         }
 
@@ -127,6 +154,7 @@ namespace Insight
         public T GetModule<T>() where T : class, IServerModule
         {
             InsightModule module;
+
             _modules.TryGetValue(typeof(T), out module);
 
             if (module == null)

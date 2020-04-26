@@ -29,7 +29,7 @@ public class GUIMasterServer : MonoBehaviour
     {
         if(!Init)
         {
-            if(masterServer.Listening)
+            if(masterServer.Active)
             {
                 Init = true;
                 moduleManager = masterServer.GetComponent<ModuleManager>();

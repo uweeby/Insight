@@ -41,10 +41,10 @@ namespace Insight
         {
             if (AutoReconnect)
             {
-                if (!IsConnected && (_reconnectTimer < Time.Time))
+                if (!IsConnected && (_reconnectTimer < UnityEngine.Time.time))
                 {
                     logger.Log("[InsightClient] - Trying to reconnect...");
-                    //_reconnectTimer = Time.Time + ReconnectDelayInSeconds;
+                    _reconnectTimer = UnityEngine.Time.time + ReconnectDelayInSeconds;
                     Disconnect();
                 }
             }

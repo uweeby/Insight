@@ -7,6 +7,8 @@ namespace Insight
 {
     public class ClientAuthentication : InsightModule
     {
+        static readonly ILogger logger = LogFactory.GetLogger(typeof(ClientAuthentication));
+
         InsightClient client;
 
         public string uniqueID;
@@ -29,6 +31,12 @@ namespace Insight
 
         public void SendLoginMsg(string username, string password)
         {
+            if (!client.Active)
+            {
+                logger.LogError("InsightClient not connected to a server");
+                return;
+            }
+
             client.Send(new LoginMsg() { AccountName = username, AccountPassword = password });
             //, (callbackStatus, reader) =>
             //{

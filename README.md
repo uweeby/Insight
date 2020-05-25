@@ -1,3 +1,6 @@
+[![Ko-Fi](https://img.shields.io/badge/Donate-Ko--Fi-red)](https://ko-fi.com/happynukegames) 
+[![PayPal](https://img.shields.io/badge/Donate-PayPal-blue)](https://paypal.me/happynukegames)  
+
 Insight is a Simple Message Server for Unity based on Mirror. It can operate on its network connection or alongside a NetworkMannager. Inspired by MasterServerFramework it can be expanded with flexible modules. Please see the [Wiki](https://github.com/uweenukr/Insight/wiki) for more detailed inforamtion.
 
 ### Disclaimer  

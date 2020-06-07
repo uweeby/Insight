@@ -7,7 +7,7 @@ namespace Insight
 {
     public class InsightNetworkConnection : IDisposable
     {
-        Dictionary<short, InsightNetworkMessageDelegate> m_MessageHandlers;
+        Dictionary<int, InsightNetworkMessageDelegate> m_MessageHandlers;
 
         public int hostId = -1;
         public int connectionId = -1;
@@ -60,7 +60,7 @@ namespace Insight
             isReady = false;
         }
 
-        internal void SetHandlers(Dictionary<short, InsightNetworkMessageDelegate> handlers)
+        internal void SetHandlers(Dictionary<int, InsightNetworkMessageDelegate> handlers)
         {
             m_MessageHandlers = handlers;
         }

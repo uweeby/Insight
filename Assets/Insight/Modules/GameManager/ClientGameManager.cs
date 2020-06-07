@@ -22,8 +22,8 @@ namespace Insight
 
         void RegisterHandlers()
         {
-            client.RegisterHandler((short)MsgId.ChangeServers, HandleChangeServersMsg);
-            client.RegisterHandler((short)MsgId.GameList, HandleGameListMsg);
+            client.RegisterHandler<ChangeServerMsg>(HandleChangeServersMsg);
+            client.RegisterHandler<GameListMsg>(HandleGameListMsg);
         }
 
         void HandleChangeServersMsg(InsightNetworkMessage netMsg)
@@ -67,17 +67,17 @@ namespace Insight
         #region Message Senders
         public void SendRequestSpawnStart(RequestSpawnStartMsg requestSpawnStartMsg)
         {
-            client.Send((short)MsgId.RequestSpawnStart, requestSpawnStartMsg);
+            client.Send(requestSpawnStartMsg);
         }
 
         public void SendJoinGameMsg(string UniqueID)
         {
-            client.Send((short)MsgId.JoinGame, new JoinGamMsg() { UniqueID = UniqueID });
+            client.Send(new JoinGamMsg() { UniqueID = UniqueID });
         }
 
         public void SendGetGameListMsg()
         {
-            client.Send((short)MsgId.GameList, new GameListMsg());
+            client.Send(new GameListMsg());
         }
         #endregion
     }

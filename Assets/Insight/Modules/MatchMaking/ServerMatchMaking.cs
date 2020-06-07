@@ -44,8 +44,8 @@ namespace Insight
 
         void RegisterHandlers()
         {
-            server.RegisterHandler((short)MsgId.StartMatchMaking, HandleStartMatchSearchMsg);
-            server.RegisterHandler((short)MsgId.StopMatchMaking, HandleStopMatchSearchMsg);
+            server.RegisterHandler<StartMatchMakingMsg>(HandleStartMatchSearchMsg);
+            server.RegisterHandler<StopMatchMakingMsg>(HandleStopMatchSearchMsg);
         }
 
         void InvokedUpdate()
@@ -215,7 +215,7 @@ namespace Insight
         {
             foreach (UserContainer user in matchUsers)
             {
-                matchModule.server.SendToClient(user.connectionId, (short)MsgId.ChangeServers, new ChangeServerMsg()
+                matchModule.server.SendToClient(user.connectionId, new ChangeServerMsg()
                 {
                     NetworkAddress = MatchServer.NetworkAddress,
                     NetworkPort = MatchServer.NetworkPort,

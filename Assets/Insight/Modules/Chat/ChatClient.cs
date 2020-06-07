@@ -17,7 +17,7 @@ public class ChatClient : InsightModule
 
     void RegisterHandlers()
     {
-        client.RegisterHandler((short)MsgId.Chat, HandleChatMsg);
+        client.RegisterHandler<ChatMsg>(HandleChatMsg);
     }
 
     public void HandleChatMsg(InsightNetworkMessage netMsg)
@@ -32,13 +32,13 @@ public class ChatClient : InsightModule
     //Has server control the username (MasterServer Example)
     public void SendChatMsg(string data)
     {
-        client.Send((short)MsgId.Chat, new ChatMsg() { Data = data });
+        client.Send(new ChatMsg() { Data = data });
     }
 
     //Allows the user to set their own name (Chat Example)
     public void SendChatMsg(string Origin, string Data)
     {
-        client.Send((short)MsgId.Chat, new ChatMsg()
+        client.Send(new ChatMsg()
         {
             Origin = Origin,
             Data = Data

@@ -25,7 +25,7 @@ namespace Insight
 
         void RegisterHandlers()
         {
-            server.RegisterHandler((short)MsgId.Chat, HandleChatMsg);
+            server.RegisterHandler<ChatMsg>(HandleChatMsg);
         }
 
         void HandleChatMsg(InsightNetworkMessage netMsg)
@@ -41,7 +41,7 @@ namespace Insight
 
                 foreach(UserContainer user in authModule.registeredUsers)
                 {
-                    server.SendToClient(user.connectionId, (short)MsgId.Chat, message);
+                    server.SendToClient(user.connectionId, message);
                 }
             }
 
@@ -49,7 +49,7 @@ namespace Insight
             else
             {
                 //Broadcast back to all other clients
-                server.SendToAll((short)MsgId.Chat, message);
+                server.SendToAll(message);
             }
         }
     }

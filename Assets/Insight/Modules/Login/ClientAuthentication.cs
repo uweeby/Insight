@@ -28,7 +28,7 @@ namespace Insight
 
         public void SendLoginMsg(string username, string password)
         {
-            client.Send((short)MsgId.Login, new LoginMsg() { AccountName = username, AccountPassword = password }, (callbackStatus, reader) =>
+            client.Send(new LoginMsg() { AccountName = username, AccountPassword = password }, (callbackStatus, reader) =>
             {
                 if (callbackStatus == CallbackStatus.Ok)
                 {

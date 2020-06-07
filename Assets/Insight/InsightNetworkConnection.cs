@@ -178,6 +178,18 @@ namespace Insight
             }
             return false;
         }
+
+        public InsightCommon GetActiveInsight()
+        {
+            if(client != null)
+            {
+                return client;
+            }
+            else
+            {
+                return server;
+            }
+        }
     }
 
     public class InsightNetworkMessage

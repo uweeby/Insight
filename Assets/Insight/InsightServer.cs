@@ -153,12 +153,13 @@ namespace Insight
             return connections.Remove(connectionId);
         }
 
-        public bool SendToClient(int connectionId, short msgType, MessageBase msg, CallbackHandler callback = null)
+        public bool SendToClient(int connectionId, MessageBase msg, CallbackHandler callback = null)
         {
             if (transport.ServerActive())
             {
                 NetworkWriter writer = new NetworkWriter();
-                writer.WriteInt16(msgType);
+                int msgType = GetId(default(MessageBase) != null ? typeof(MessageBase) : msg.GetType());
+                writer.WriteUInt16((ushort)msgType);
 
                 int callbackId = 0;
                 if (callback != null)
@@ -177,9 +178,9 @@ namespace Insight
             return false;
         }
 
-        public bool SendToClient(int connectionId, short msgType, MessageBase msg)
+        public bool SendToClient(int connectionId, MessageBase msg)
         {
-            return SendToClient(connectionId, msgType, msg, null);
+            return SendToClient(connectionId, msg, null);
         }
 
         public bool SendToClient(int connectionId, byte[] data)
@@ -192,7 +193,7 @@ namespace Insight
             return false;
         }
 
-        public bool SendToAll(short msgType, MessageBase msg, CallbackHandler callback, SendToAllFinishedCallbackHandler finishedCallback)
+        public bool SendToAll(MessageBase msg, CallbackHandler callback, SendToAllFinishedCallbackHandler finishedCallback)
         {
             if (transport.ServerActive())
             {
@@ -200,7 +201,7 @@ namespace Insight
 
                 foreach (KeyValuePair<int, InsightNetworkConnection> conn in connections)
                 {
-                    SendToClient(conn.Key, msgType, msg, callback);
+                    SendToClient(conn.Key, msg, callback);
                     finishedCallbackData.requiredCallbackIds.Add(callbackIdIndex);
                 }
 
@@ -218,14 +219,14 @@ namespace Insight
             return false;
         }
 
-        public bool SendToAll(short msgType, MessageBase msg, CallbackHandler callback)
+        public bool SendToAll(MessageBase msg, CallbackHandler callback)
         {
-            return SendToAll(msgType, msg, callback, null);
+            return SendToAll(msg, callback, null);
         }
 
-        public bool SendToAll(short msgType, MessageBase msg)
+        public bool SendToAll(MessageBase msg)
         {
-            return SendToAll(msgType, msg, null, null);
+            return SendToAll(msg, null, null);
         }
 
         public bool SendToAll(byte[] bytes)

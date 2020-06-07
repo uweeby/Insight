@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Insight
@@ -90,6 +90,16 @@ namespace Insight
             public HashSet<int> requiredCallbackIds;
             public int callbacks;
             public float timeout;
+        }
+
+        public int GetId<T>()
+        {
+            return typeof(T).FullName.GetStableHashCode() & 0xFFFF;
+        }
+
+        public int GetId(Type type)
+        {
+            return type.FullName.GetStableHashCode() & 0xFFFF;
         }
     }
 }

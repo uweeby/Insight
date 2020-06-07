@@ -230,13 +230,17 @@ namespace Insight
 
         public void Reply()
         {
-            Reply(this.msgType, new EmptyMsg());
+            Reply(new EmptyMsg());
         }
 
-        public void Reply(short msgId, MessageBase msg)
+        public void Reply(MessageBase msg)
         {
-            var writer = new NetworkWriter();
-            writer.WriteInt16(msgId);
+            NetworkWriter writer = new NetworkWriter();
+            int msgType = conn.GetActiveInsight().GetId(default(MessageBase) != null ? typeof(MessageBase) : msg.GetType());
+            writer.WriteUInt16((ushort)msgType);
+
+            //var writer = new NetworkWriter();
+            //writer.WriteInt16(msgId);
             writer.WriteInt32(callbackId);
             msg.Serialize(writer);
 

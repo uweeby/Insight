@@ -1,4 +1,4 @@
-﻿using Mirror;
+using Mirror;
 using System;
 using UnityEngine;
 
@@ -99,12 +99,12 @@ namespace Insight
             transport.ClientSend(0,  new ArraySegment<byte>(data));
         }
 
-        public void Send(short msgType, MessageBase msg)
+        public void Send(MessageBase msg)
         {
-            Send(msgType, msg, null);
+            Send(msg, null);
         }
 
-        public void Send(short msgType, MessageBase msg, CallbackHandler callback)
+        public void Send(MessageBase msg, CallbackHandler callback)
         {
             if (!transport.ClientConnected())
             {
@@ -113,7 +113,8 @@ namespace Insight
             }
 
             NetworkWriter writer = new NetworkWriter();
-            writer.WriteInt16(msgType);
+            int msgType = GetId(default(MessageBase) != null ? typeof(MessageBase) : msg.GetType());
+            writer.WriteUInt16((ushort)msgType);
 
             int callbackId = 0;
             if (callback != null)

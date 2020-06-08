@@ -105,5 +105,20 @@ namespace Insight
         {
             return type.FullName.GetStableHashCode() & 0xFFFF;
         }
+
+        public bool UnpackMessage(NetworkReader messageReader, out int msgType)
+        {
+            // read message type (varint)
+            try
+            {
+                msgType = messageReader.ReadUInt16();
+                return true;
+            }
+            catch (System.IO.EndOfStreamException)
+            {
+                msgType = 0;
+                return false;
+            }
+        }
     }
 }

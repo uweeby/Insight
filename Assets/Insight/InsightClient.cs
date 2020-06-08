@@ -158,22 +158,24 @@ namespace Insight
         {
             InsightNetworkMessageDelegate msgDelegate;
             NetworkReader reader = new NetworkReader(data);
-            short msgType = reader.ReadInt16();
-            int callbackId = reader.ReadInt32();
-            InsightNetworkMessage msg = new InsightNetworkMessage(insightNetworkConnection, callbackId)
+            if(UnpackMessage(reader, out int msgType))
             {
-                msgType = msgType,
-                reader = reader
-            };
+                int callbackId = reader.ReadInt32();
+                InsightNetworkMessage msg = new InsightNetworkMessage(insightNetworkConnection, callbackId)
+                {
+                    msgType = msgType,
+                    reader = reader
+                };
 
-            if (callbacks.ContainsKey(callbackId))
-            {
-                callbacks[callbackId].callback.Invoke(CallbackStatus.Ok, msg);
-                callbacks.Remove(callbackId);
-            }
-            else if (messageHandlers.TryGetValue(msgType, out msgDelegate))
-            {
-                msgDelegate(msg);
+                if (callbacks.ContainsKey(callbackId))
+                {
+                    callbacks[callbackId].callback.Invoke(CallbackStatus.Ok, msg);
+                    callbacks.Remove(callbackId);
+                }
+                else if (messageHandlers.TryGetValue(msgType, out msgDelegate))
+                {
+                    msgDelegate(msg);
+                }
             }
             else
             {

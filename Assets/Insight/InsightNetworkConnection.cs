@@ -142,20 +142,27 @@ namespace Insight
             // unpack message
             NetworkReader reader = new NetworkReader(data);
 
-            short msgType = reader.ReadInt16();
-            int callbackId = reader.ReadInt32();
-
-            InsightNetworkMessageDelegate msgDelegate;
-            if (m_MessageHandlers.TryGetValue(msgType, out msgDelegate))
+            if (GetActiveInsight().UnpackMessage(reader, out int msgType))
             {
-                // create message here instead of caching it. so we can add it to queue more easily.
-                InsightNetworkMessage msg = new InsightNetworkMessage(this, callbackId);
-                msg.msgType = msgType;
-                msg.reader = reader;
+                // logging TODO: Replce all Insight logging with loggers like Mirror
+                //if (logger.LogEnabled()) logger.Log("ConnectionRecv " + this + " msgType:" + msgType + " content:" + BitConverter.ToString(buffer.Array, buffer.Offset, buffer.Count));
 
-                msgDelegate(msg);
-                lastMessageTime = Time.time;
+                int callbackId = reader.ReadInt32();
+
+                // try to invoke the handler for that message
+                InsightNetworkMessageDelegate msgDelegate;
+                if (m_MessageHandlers.TryGetValue(msgType, out msgDelegate))
+                {
+                    // create message here instead of caching it. so we can add it to queue more easily.
+                    InsightNetworkMessage msg = new InsightNetworkMessage(this, callbackId);
+                    msg.msgType = msgType;
+                    msg.reader = reader;
+
+                    msgDelegate(msg);
+                    lastMessageTime = Time.time;
+                }
             }
+
             else
             {
                 //NOTE: this throws away the rest of the buffer. Need moar error codes
@@ -194,7 +201,7 @@ namespace Insight
 
     public class InsightNetworkMessage
     {
-        public short msgType;
+        public int msgType;
         InsightNetworkConnection conn;
         public NetworkReader reader;
         public int callbackId { get; protected set; }

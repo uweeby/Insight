@@ -122,12 +122,12 @@ namespace Insight
                     if (server)
                     {
                         entry.Value.Initialize(server, this);
-                        Debug.LogWarning("[" + gameObject.name + "] Loaded InsightServer Module: " + entry.Key.ToString());
+                        logger.LogWarning("[" + gameObject.name + "] Loaded InsightServer Module: " + entry.Key.ToString());
                     }
                     if (client)
                     {
                         entry.Value.Initialize(client, this);
-                        Debug.LogWarning("[" + gameObject.name + "] Loaded InsightClient Module: " + entry.Key.ToString());
+                        logger.LogWarning("[" + gameObject.name + "] Loaded InsightClient Module: " + entry.Key.ToString());
                     }
 
                     //Add the new module to the HashSet

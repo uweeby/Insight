@@ -41,11 +41,11 @@ namespace Insight
         /// </summary>
         public virtual void Initialize(InsightServer server, ModuleManager manager)
         {
-            if (server.logNetworkMessages) { Debug.LogWarning("[Module Manager] Initialize InsightServer not found for module"); }
+            if (server.logNetworkMessages) { logger.LogWarning("[Module Manager] Initialize InsightServer not found for module"); }
         }
         public virtual void Initialize(InsightClient client, ModuleManager manager)
         {
-            if(client.logNetworkMessages) { Debug.LogWarning("[Module Manager] Initialize InsightClient not found for module"); }
+            if(client.logNetworkMessages) { logger.LogWarning("[Module Manager] Initialize InsightClient not found for module"); }
         }
         public virtual void Initialize(InsightCommon insight, ModuleManager manager)
         {

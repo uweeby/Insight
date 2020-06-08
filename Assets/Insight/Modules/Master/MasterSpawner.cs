@@ -54,7 +54,7 @@ namespace Insight
                 MaxThreads = message.MaxThreads
             });
 
-            if (server.logNetworkMessages) { Debug.Log("[MasterSpawner] - New Process Spawner Regsitered"); }
+            if (server.logNetworkMessages) { logger.Log("[MasterSpawner] - New Process Spawner Regsitered"); }
         }
 
         //Instead of handling the msg here we will forward it to an available spawner.
@@ -62,7 +62,7 @@ namespace Insight
         {
             if(registeredSpawners.Count == 0)
             {
-                Debug.LogWarning("[MasterSpawner] - No Spawner Regsitered To Handle Spawn Request");
+                logger.LogWarning("[MasterSpawner] - No Spawner Regsitered To Handle Spawn Request");
                 return;
             }
 
@@ -85,7 +85,7 @@ namespace Insight
                 if (callbackStatus == CallbackStatus.Ok)
                 {
                     RequestSpawnStartMsg callbackResponse = reader.ReadMessage<RequestSpawnStartMsg>();
-                    if (server.logNetworkMessages) { Debug.Log("[Spawn Callback] Game Created on Child Spawner: " + callbackResponse.UniqueID); }
+                    if (server.logNetworkMessages) { logger.Log("[Spawn Callback] Game Created on Child Spawner: " + callbackResponse.UniqueID); }
 
                 //If callback from original message is present
                 if (netMsg.callbackId != 0)
@@ -96,11 +96,11 @@ namespace Insight
                 if (callbackStatus == CallbackStatus.Timeout)
                 {
                     RequestSpawnStartMsg callbackResponse = reader.ReadMessage<RequestSpawnStartMsg>();
-                    Debug.Log("[Spawn Callback] Createion Timed Out: " + callbackResponse.UniqueID);
+                    logger.Log("[Spawn Callback] Createion Timed Out: " + callbackResponse.UniqueID);
                 }
                 if (callbackStatus == CallbackStatus.Error)
                 {
-                    Debug.Log("[Spawn Callback] Error in SpawnRequest.");
+                    logger.Log("[Spawn Callback] Error in SpawnRequest.");
                 }
             });
         }
@@ -123,7 +123,7 @@ namespace Insight
         {
             if(registeredSpawners.Count == 0)
             {
-                Debug.LogWarning("[MasterSpawner] - No Spawner Regsitered To Handle Internal Spawn Request");
+                logger.LogWarning("[MasterSpawner] - No Spawner Regsitered To Handle Internal Spawn Request");
                 return;
             }
 
@@ -132,7 +132,7 @@ namespace Insight
 
             if (freeSlotSpawners.Count == 0)
             {
-                Debug.LogError("[MasterSpawner] - No Spawners with slots free available to service SpawnRequest.");
+                logger.LogError("[MasterSpawner] - No Spawners with slots free available to service SpawnRequest.");
                 return;
             }
 

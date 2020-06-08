@@ -21,7 +21,7 @@ namespace Insight
             {
                 _transport = _transport ?? GetComponent<Transport>();
                 if (_transport == null)
-                    Debug.LogWarning("InsightClient has no Transport component. Networking won't work without a Transport");
+                    logger.LogWarning("InsightClient has no Transport component. Networking won't work without a Transport");
                 return _transport;
             }
         }
@@ -89,7 +89,7 @@ namespace Insight
             {
                 if (!isConnected && (_reconnectTimer < Time.time))
                 {
-                    if (logNetworkMessages) { Debug.Log("[InsightClient] - Trying to reconnect..."); }
+                    if (logNetworkMessages) { logger.Log("[InsightClient] - Trying to reconnect..."); }
                     _reconnectTimer = Time.realtimeSinceStartup + ReconnectDelayInSeconds;
                     StartInsight();
                 }
@@ -110,7 +110,7 @@ namespace Insight
         {
             if (!transport.ClientConnected())
             {
-                Debug.LogError("[InsightClient] - Client not connected!");
+                logger.LogError("[InsightClient] - Client not connected!");
                 return;
             }
 
@@ -143,10 +143,10 @@ namespace Insight
         {
             if (insightNetworkConnection != null)
             {
-                if (logNetworkMessages) { Debug.Log("[InsightClient] - Connected to Insight Server"); }
+                if (logNetworkMessages) { logger.Log("[InsightClient] - Connected to Insight Server"); }
                 connectState = ConnectState.Connected;
             }
-            else Debug.LogError("Skipped Connect message handling because m_Connection is null.");
+            else logger.LogError("Skipped Connect message handling because m_Connection is null.");
         }
 
         void OnDisconnected()
@@ -182,31 +182,31 @@ namespace Insight
             else
             {
                 //NOTE: this throws away the rest of the buffer. Need moar error codes
-                Debug.LogError("Unknown message ID " + msgType);// + " connId:" + connectionId);
+                logger.LogError("Unknown message ID " + msgType);// + " connId:" + connectionId);
             }
         }
 
         void OnError(Exception exception)
         {
             // TODO Let's discuss how we will handle errors
-            Debug.LogException(exception);
+            logger.LogException(exception);
         }
 
         void OnApplicationQuit()
         {
-            if (logNetworkMessages) { Debug.Log("[InsightClient] Stopping Client"); }
+            if (logNetworkMessages) { logger.Log("[InsightClient] Stopping Client"); }
             StopInsight();
         }
 
         ////------------Virtual Handlers-------------
         public virtual void OnStartInsight()
         {
-            if (logNetworkMessages) { Debug.Log("[InsightClient] - Connecting to Insight Server: " + networkAddress); }
+            if (logNetworkMessages) { logger.Log("[InsightClient] - Connecting to Insight Server: " + networkAddress); }
         }
 
         public virtual void OnStopInsight()
         {
-            if (logNetworkMessages) { Debug.Log("[InsightClient] - Disconnecting from Insight Server"); }
+            if (logNetworkMessages) { logger.Log("[InsightClient] - Disconnecting from Insight Server"); }
         }
     }
 }

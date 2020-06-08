@@ -45,13 +45,13 @@ namespace Insight
             InsightArgs args = new InsightArgs();
             if (args.IsProvided("-NetworkAddress"))
             {
-                Debug.Log("[Args] - NetworkAddress: " + args.NetworkAddress);
+                logger.Log("[Args] - NetworkAddress: " + args.NetworkAddress);
                 NetworkAddress = args.NetworkAddress;
             }
 
             if (args.IsProvided("-NetworkPort"))
             {
-                Debug.Log("[Args] - NetworkPort: " + args.NetworkPort);
+                logger.Log("[Args] - NetworkPort: " + args.NetworkPort);
                 NetworkPort = (ushort)args.NetworkPort;
 
                 if(networkManagerTransport.GetType().GetField("port") != null) {
@@ -61,14 +61,14 @@ namespace Insight
 
             if (args.IsProvided("-SceneName"))
             {
-                Debug.Log("[Args] - SceneName: " + args.SceneName);
+                logger.Log("[Args] - SceneName: " + args.SceneName);
                 GameScene = args.SceneName;
                 SceneManager.LoadScene(args.SceneName);
             }
 
             if (args.IsProvided("-UniqueID"))
             {
-                Debug.Log("[Args] - UniqueID: " + args.UniqueID);
+                logger.Log("[Args] - UniqueID: " + args.UniqueID);
                 UniqueID = args.UniqueID;
             }
 
@@ -80,7 +80,7 @@ namespace Insight
 
         void SendGameRegistrationToGameManager()
         {
-            Debug.Log("[GameRegistration] - registering with master");
+            logger.Log("[GameRegistration] - registering with master");
             client.Send(new RegisterGameMsg()
             {
                 NetworkAddress = NetworkAddress,
@@ -97,7 +97,7 @@ namespace Insight
             //Update with current values from NetworkManager:
             CurrentPlayers = networkManager.numPlayers;
 
-            Debug.Log("[GameRegistration] - status update");
+            logger.Log("[GameRegistration] - status update");
             client.Send(new GameStatusMsg()
             {
                 UniqueID = UniqueID,

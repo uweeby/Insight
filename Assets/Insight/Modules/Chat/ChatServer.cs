@@ -30,7 +30,7 @@ namespace Insight
 
         void HandleChatMsg(InsightNetworkMessage netMsg)
         {
-            if (server.logNetworkMessages) { Debug.Log("[ChatServer] - Received Chat Message."); }
+            if (server.logNetworkMessages) { logger.Log("[ChatServer] - Received Chat Message."); }
 
             ChatMsg message = netMsg.ReadMessage<ChatMsg>();
 

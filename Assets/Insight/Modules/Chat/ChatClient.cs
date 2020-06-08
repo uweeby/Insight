@@ -25,7 +25,7 @@ public class ChatClient : InsightModule
 
     public void HandleChatMsg(InsightNetworkMessage netMsg)
     {
-        if (client.logNetworkMessages) { Debug.Log("[InsightClient] - HandleChatMsg()"); }
+        if (client.logNetworkMessages) { logger.Log("[InsightClient] - HandleChatMsg()"); }
 
         ChatMsg message = netMsg.ReadMessage<ChatMsg>();
 

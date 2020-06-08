@@ -32,7 +32,7 @@ namespace Insight
         {
             ChangeServerMsg message = netMsg.ReadMessage<ChangeServerMsg>();
 
-            if (client.logNetworkMessages) { Debug.Log("[InsightClient] - Connecting to GameServer: " + message.NetworkAddress + ":" + message.NetworkPort + "/" + message.SceneName); }
+            if (client.logNetworkMessages) { logger.Log("[InsightClient] - Connecting to GameServer: " + message.NetworkAddress + ":" + message.NetworkPort + "/" + message.SceneName); }
 
             if(networkManagerTransport.GetType().GetField("port") != null) {
                 networkManagerTransport.GetType().GetField("port").SetValue(networkManagerTransport, message.NetworkPort);
@@ -47,13 +47,13 @@ namespace Insight
         {
             GameListMsg message = netMsg.ReadMessage<GameListMsg>();
 
-            if (client.logNetworkMessages) { Debug.Log("[InsightClient] - Received Games List"); };
+            if (client.logNetworkMessages) { logger.Log("[InsightClient] - Received Games List"); };
 
             gamesList.Clear();
 
             foreach (GameContainer game in message.gamesArray)
             {
-                Debug.Log(game.SceneName);
+                logger.Log(game.SceneName);
 
                 gamesList.Add(new GameContainer()
                 {

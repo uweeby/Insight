@@ -34,7 +34,7 @@ namespace Insight
         {
             LoginMsg message = netMsg.ReadMessage<LoginMsg>();
 
-            if (server.logNetworkMessages) { Debug.Log("[Authentication] - Login Received: " + message.AccountName + " / " + message.AccountPassword); }
+            if (server.logNetworkMessages) { logger.Log("[Authentication] - Login Received: " + message.AccountName + " / " + message.AccountPassword); }
 
             //Login Sucessful
             if (true) //Put your DB logic here

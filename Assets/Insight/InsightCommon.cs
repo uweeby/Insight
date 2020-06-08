@@ -47,7 +47,7 @@ namespace Insight
             int msgType = GetId<T>();
             if (messageHandlers.ContainsKey(msgType))
             {
-                Debug.Log("NetworkConnection.RegisterHandler replacing " + msgType);
+                logger.Log("NetworkConnection.RegisterHandler replacing " + msgType);
             }
             messageHandlers[msgType] = handler;
         }

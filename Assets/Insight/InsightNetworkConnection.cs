@@ -7,6 +7,8 @@ namespace Insight
 {
     public class InsightNetworkConnection : IDisposable
     {
+        static readonly ILogger logger = LogFactory.GetLogger(typeof(InsightNetworkConnection));
+
         Dictionary<int, InsightNetworkMessageDelegate> m_MessageHandlers;
 
         public int hostId = -1;
@@ -82,7 +84,7 @@ namespace Insight
                 msgDelegate(message);
                 return true;
             }
-            Debug.LogError("NetworkConnection InvokeHandler no handler for " + msgType);
+            logger.LogError("NetworkConnection InvokeHandler no handler for " + msgType);
             return false;
         }
 
@@ -101,7 +103,7 @@ namespace Insight
         {
             if (m_MessageHandlers.ContainsKey(msgType))
             {
-                Debug.Log("NetworkConnection.RegisterHandler replacing " + msgType);
+                logger.Log("NetworkConnection.RegisterHandler replacing " + msgType);
             }
             m_MessageHandlers[msgType] = handler;
         }
@@ -122,14 +124,14 @@ namespace Insight
         {
             if (bytes.Length > int.MaxValue)
             {
-                Debug.LogError("NetworkConnection:SendBytes cannot send packet larger than " + int.MaxValue + " bytes");
+                logger.LogError("NetworkConnection:SendBytes cannot send packet larger than " + int.MaxValue + " bytes");
                 return false;
             }
 
             if (bytes.Length == 0)
             {
                 // zero length packets getting into the packet queues are bad.
-                Debug.LogError("NetworkConnection:SendBytes cannot send zero bytes");
+                logger.LogError("NetworkConnection:SendBytes cannot send zero bytes");
                 return false;
             }
 
@@ -166,7 +168,7 @@ namespace Insight
             else
             {
                 //NOTE: this throws away the rest of the buffer. Need moar error codes
-                Debug.LogError("Unknown message ID " + msgType + " connId:" + connectionId);
+                logger.LogError("Unknown message ID " + msgType + " connId:" + connectionId);
             }
         }
 

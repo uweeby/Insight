@@ -1,3 +1,4 @@
+using Mirror;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,8 @@ namespace Insight
 {
     public class ServerGameManager : InsightModule
     {
+        static readonly ILogger logger = LogFactory.GetLogger(typeof(ServerGameManager));
+
         InsightServer server;
         MasterSpawner masterSpawner;
 
@@ -37,7 +40,7 @@ namespace Insight
         {
             RegisterGameMsg message = netMsg.ReadMessage<RegisterGameMsg>();
 
-            if (server.logNetworkMessages) { Debug.Log("[GameManager] - Received GameRegistration request"); }
+            if (server.logNetworkMessages) { logger.Log("[GameManager] - Received GameRegistration request"); }
 
             registeredGameServers.Add(new GameContainer()
             {
@@ -56,7 +59,7 @@ namespace Insight
         {
             GameStatusMsg message = netMsg.ReadMessage<GameStatusMsg>();
 
-            if (server.logNetworkMessages) { Debug.Log("[GameManager] - Received Game status update"); }
+            if (server.logNetworkMessages) { logger.Log("[GameManager] - Received Game status update"); }
 
             foreach (GameContainer game in registeredGameServers)
             {
@@ -82,7 +85,7 @@ namespace Insight
 
         void HandleGameListMsg(InsightNetworkMessage netMsg)
         {
-            if (server.logNetworkMessages) { UnityEngine.Debug.Log("[MatchMaking] - Player Requesting Match list"); }
+            if (server.logNetworkMessages) { logger.Log("[MatchMaking] - Player Requesting Match list"); }
 
             GameListMsg gamesListMsg = new GameListMsg();
             gamesListMsg.Load(registeredGameServers);
@@ -94,7 +97,7 @@ namespace Insight
         {
             JoinGamMsg message = netMsg.ReadMessage<JoinGamMsg>();
 
-            if (server.logNetworkMessages) { UnityEngine.Debug.Log("[MatchMaking] - Player joining Match."); }
+            if (server.logNetworkMessages) { logger.Log("[MatchMaking] - Player joining Match."); }
 
             GameContainer game = GetGameByUniqueID(message.UniqueID);
 

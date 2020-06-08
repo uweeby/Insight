@@ -14,6 +14,8 @@ namespace Insight
 
     public abstract class InsightCommon : MonoBehaviour
 	{
+        static readonly ILogger logger = LogFactory.GetLogger(typeof(InsightCommon));
+
         public bool DontDestroy = true; //Sets DontDestroyOnLoad for this object. Default to true. Can be disabled via Inspector or runtime code.
         public bool AutoStart = true;
         public bool logNetworkMessages = false;
@@ -45,7 +47,7 @@ namespace Insight
             int msgType = GetId<T>();
             if (messageHandlers.ContainsKey(msgType))
             {
-                Debug.Log("NetworkConnection.RegisterHandler replacing " + msgType);
+                logger.Log("NetworkConnection.RegisterHandler replacing " + msgType);
             }
             messageHandlers[msgType] = handler;
         }

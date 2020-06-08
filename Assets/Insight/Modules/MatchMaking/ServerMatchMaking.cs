@@ -1,3 +1,4 @@
+using Mirror;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +9,8 @@ namespace Insight
 {
     public class ServerMatchMaking : InsightModule
     {
+        static readonly ILogger logger = LogFactory.GetLogger(typeof(ServerMatchMaking));
+
         public InsightServer server;
         ModuleManager manager;
         ServerAuthentication authModule;
@@ -56,7 +59,7 @@ namespace Insight
 
         void HandleStartMatchSearchMsg(InsightNetworkMessage netMsg)
         {
-            if (server.logNetworkMessages) { UnityEngine.Debug.Log("[MatchMaking] - Player joining MatchMaking."); }
+            if (server.logNetworkMessages) { logger.Log("[MatchMaking] - Player joining MatchMaking."); }
 
             playerQueue.Add(authModule.GetUserByConnection(netMsg.connectionId));
         }
@@ -77,13 +80,13 @@ namespace Insight
         {
             if (playerQueue.Count < MinimumPlayersForGame)
             {
-                if (server.logNetworkMessages) { UnityEngine.Debug.Log("[MatchMaking] - Minimum players in queue not reached."); }
+                if (server.logNetworkMessages) { logger.Log("[MatchMaking] - Minimum players in queue not reached."); }
                 return;
             }
 
             if (masterSpawner.registeredSpawners.Count == 0)
             {
-                if (server.logNetworkMessages) { UnityEngine.Debug.Log("[MatchMaking] - No spawners for players in queue."); }
+                if (server.logNetworkMessages) { logger.Log("[MatchMaking] - No spawners for players in queue."); }
                 return;
             }
 
@@ -156,6 +159,8 @@ namespace Insight
     [Serializable]
     public class MatchContainer
     {
+        static readonly ILogger logger = LogFactory.GetLogger(typeof(MatchContainer));
+
         public ServerMatchMaking matchModule;
         public GameContainer MatchServer;
         public List<UserContainer> matchUsers;
@@ -205,7 +210,7 @@ namespace Insight
                     CancelMatch();
                 }
 
-                Debug.Log("Server not active at this time");
+                logger.Log("Server not active at this time");
                 return false;
             }
             return true;
@@ -226,7 +231,7 @@ namespace Insight
 
         void CancelMatch()
         {
-            Debug.LogError("Server failed to start within timoue period. Cancelling match.");
+            logger.LogError("Server failed to start within timoue period. Cancelling match.");
 
             //TODO: Destroy the match process somewhere: MatchServer
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Mirror;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -8,6 +9,8 @@ namespace Insight
     [RequireComponent(typeof(InsightCommon))]
     public class ModuleManager : MonoBehaviour
     {
+        static readonly ILogger logger = LogFactory.GetLogger(typeof(ModuleManager));
+
         InsightClient client;
         InsightServer server;
 
@@ -119,12 +122,12 @@ namespace Insight
                     if (server)
                     {
                         entry.Value.Initialize(server, this);
-                        Debug.LogWarning("[" + gameObject.name + "] Loaded InsightServer Module: " + entry.Key.ToString());
+                        logger.LogWarning("[" + gameObject.name + "] Loaded InsightServer Module: " + entry.Key.ToString());
                     }
                     if (client)
                     {
                         entry.Value.Initialize(client, this);
-                        Debug.LogWarning("[" + gameObject.name + "] Loaded InsightClient Module: " + entry.Key.ToString());
+                        logger.LogWarning("[" + gameObject.name + "] Loaded InsightClient Module: " + entry.Key.ToString());
                     }
 
                     //Add the new module to the HashSet

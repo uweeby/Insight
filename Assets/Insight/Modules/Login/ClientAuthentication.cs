@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Mirror;
+using UnityEngine;
 
 //TODO: Remove the example specific code from module
 
@@ -6,6 +7,8 @@ namespace Insight
 {
     public class ClientAuthentication : InsightModule
     {
+        static readonly ILogger logger = LogFactory.GetLogger(typeof(ClientAuthentication));
+
         InsightClient client;
 
         public string uniqueID;
@@ -46,11 +49,11 @@ namespace Insight
                 }
                 if (callbackStatus == CallbackStatus.Error)
                 {
-                    Debug.LogError("Callback Error: Login error");
+                    logger.LogError("Callback Error: Login error");
                 }
                 if (callbackStatus == CallbackStatus.Timeout)
                 {
-                    Debug.LogError("Callback Error: Login attempt timed out");
+                    logger.LogError("Callback Error: Login attempt timed out");
                 }
             });
         }

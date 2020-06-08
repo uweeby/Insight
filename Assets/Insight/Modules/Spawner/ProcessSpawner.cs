@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Mirror;
+using System;
 using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
@@ -8,6 +8,8 @@ namespace Insight
 {
     public class ProcessSpawner : InsightModule
     {
+        static readonly ILogger logger = LogFactory.GetLogger(typeof(ProcessSpawner));
+
         [HideInInspector] public InsightServer server;
         [HideInInspector] public InsightClient client;
 
@@ -112,7 +114,7 @@ namespace Insight
             {
                 if (client.isConnected)
                 {
-                    UnityEngine.Debug.LogWarning("[ProcessSpawner] - Registering to Master");
+                    logger.LogWarning("[ProcessSpawner] - Registering to Master");
                     client.Send(new RegisterSpawnerMsg()
                     {
                         UniqueID = "", //Can provide a password to authenticate to the master as a trusted spawner
@@ -135,7 +137,7 @@ namespace Insight
 
                 if (spawnerProcesses[i].process.HasExited)
                 {
-                    UnityEngine.Debug.Log("Removing process that has exited");
+                    logger.Log("Removing process that has exited");
                     spawnerProcesses[i].process = null;
                     spawnerProcesses[i].pid = 0;
                     spawnerProcesses[i].uniqueID = "";
@@ -174,7 +176,7 @@ namespace Insight
             {
                 spawnProperties.UniqueID = Guid.NewGuid().ToString();
 
-                UnityEngine.Debug.LogWarning("[ProcessSpawner] - UniqueID was not provided for spawn. Generating: " + spawnProperties.UniqueID);
+                logger.LogWarning("[ProcessSpawner] - UniqueID was not provided for spawn. Generating: " + spawnProperties.UniqueID);
             }
 
             Process p = new Process();
@@ -188,11 +190,11 @@ namespace Insight
 
             if (p.Start())
             {
-                print("[ProcessSpawner]: spawning: " + p.StartInfo.FileName + "; args=" + p.StartInfo.Arguments);
+                logger.Log("[ProcessSpawner]: spawning: " + p.StartInfo.FileName + "; args=" + p.StartInfo.Arguments);
             }
             else
             {
-                UnityEngine.Debug.LogError("[ProcessSpawner] - Process Createion Failed.");
+                logger.LogError("[ProcessSpawner] - Process Createion Failed.");
                 return false;
             }
 
@@ -222,7 +224,7 @@ namespace Insight
                 }
             }
 
-            UnityEngine.Debug.LogError("[ProcessSpawner] - Maximum Process Count Reached");
+            logger.LogError("[ProcessSpawner] - Maximum Process Count Reached");
             return -1;
         }
 

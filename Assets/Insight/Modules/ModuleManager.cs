@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Mirror;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -8,6 +9,8 @@ namespace Insight
     [RequireComponent(typeof(InsightCommon))]
     public class ModuleManager : MonoBehaviour
     {
+        static readonly ILogger logger = LogFactory.GetLogger(typeof(ModuleManager));
+
         InsightClient client;
         InsightServer server;
 

@@ -1,3 +1,4 @@
+using Mirror;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,8 @@ namespace Insight
 {
     public class MasterSpawner : InsightModule
     {
+        static readonly ILogger logger = LogFactory.GetLogger(typeof(MasterSpawner));
+
         InsightServer server;
 
         public List<SpawnerContainer> registeredSpawners = new List<SpawnerContainer>();

@@ -1,3 +1,4 @@
+using Mirror;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,8 @@ namespace Insight
 {
     public class ServerGameManager : InsightModule
     {
+        static readonly ILogger logger = LogFactory.GetLogger(typeof(ServerGameManager));
+
         InsightServer server;
         MasterSpawner masterSpawner;
 

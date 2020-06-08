@@ -6,6 +6,8 @@ namespace Insight
 {
     public class InsightClient : InsightCommon
     {
+        static readonly ILogger logger = LogFactory.GetLogger(typeof(InsightClient));
+
         public bool AutoReconnect = true;
         protected int clientID = -1; //-1 = never connected, 0 = disconnected, 1 = connected
         protected int connectionID = 0;

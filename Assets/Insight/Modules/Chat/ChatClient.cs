@@ -1,8 +1,11 @@
 ﻿using Insight;
+using Mirror;
 using UnityEngine;
 
 public class ChatClient : InsightModule
 {
+    static readonly ILogger logger = LogFactory.GetLogger(typeof(ChatClient));
+
     InsightClient client;
 
     //Used in Example Scene:

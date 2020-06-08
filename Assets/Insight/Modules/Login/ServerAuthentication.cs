@@ -7,6 +7,8 @@ namespace Insight
 {
     public class ServerAuthentication : InsightModule
     {
+        static readonly ILogger logger = LogFactory.GetLogger(typeof(ServerAuthentication));
+
         InsightServer server;
         public NetworkAuthenticator authenticator;
 

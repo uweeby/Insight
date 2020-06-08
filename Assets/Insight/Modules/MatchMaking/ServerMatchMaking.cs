@@ -1,3 +1,4 @@
+using Mirror;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +9,8 @@ namespace Insight
 {
     public class ServerMatchMaking : InsightModule
     {
+        static readonly ILogger logger = LogFactory.GetLogger(typeof(ServerMatchMaking));
+
         public InsightServer server;
         ModuleManager manager;
         ServerAuthentication authModule;
@@ -156,6 +159,8 @@ namespace Insight
     [Serializable]
     public class MatchContainer
     {
+        static readonly ILogger logger = LogFactory.GetLogger(typeof(MatchContainer));
+
         public ServerMatchMaking matchModule;
         public GameContainer MatchServer;
         public List<UserContainer> matchUsers;

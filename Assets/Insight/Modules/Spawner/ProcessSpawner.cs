@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Mirror;
+using System;
 using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
@@ -8,6 +8,8 @@ namespace Insight
 {
     public class ProcessSpawner : InsightModule
     {
+        static readonly ILogger logger = LogFactory.GetLogger(typeof(ProcessSpawner));
+
         [HideInInspector] public InsightServer server;
         [HideInInspector] public InsightClient client;
 

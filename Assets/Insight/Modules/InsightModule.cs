@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Mirror;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,6 +16,8 @@ namespace Insight
 
     public abstract class InsightModule : MonoBehaviour, IServerModule
     {
+        static readonly ILogger logger = LogFactory.GetLogger(typeof(InsightModule));
+
         private static Dictionary<Type, GameObject> _instances;
 
         private readonly List<Type> _dependencies = new List<Type>();

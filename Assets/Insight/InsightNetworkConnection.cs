@@ -7,6 +7,8 @@ namespace Insight
 {
     public class InsightNetworkConnection : IDisposable
     {
+        static readonly ILogger logger = LogFactory.GetLogger(typeof(InsightNetworkConnection));
+
         Dictionary<int, InsightNetworkMessageDelegate> m_MessageHandlers;
 
         public int hostId = -1;

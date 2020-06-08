@@ -6,6 +6,8 @@ namespace Insight
 {
     public class GameRegistration : InsightModule
     {
+        static readonly ILogger logger = LogFactory.GetLogger(typeof(GameRegistration));
+
         InsightClient client;
         [SerializeField] NetworkManager networkManager;
         [SerializeField] Transport networkManagerTransport;

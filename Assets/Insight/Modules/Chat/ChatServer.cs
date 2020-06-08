@@ -1,9 +1,12 @@
-﻿using UnityEngine;
+﻿using Mirror;
+using UnityEngine;
 
 namespace Insight
 {
     public class ChatServer : InsightModule
     {
+        static readonly ILogger logger = LogFactory.GetLogger(typeof(ChatServer));
+
         InsightServer server;
         ServerAuthentication authModule;
 

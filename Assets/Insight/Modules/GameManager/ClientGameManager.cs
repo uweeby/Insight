@@ -10,7 +10,6 @@ namespace Insight
         static readonly ILogger logger = LogFactory.GetLogger(typeof(ClientGameManager));
 
         InsightClient client;
-        [SerializeField] NetworkManager networkManager;
         [SerializeField] Transport networkManagerTransport;
 
         public List<GameContainer> gamesList = new List<GameContainer>();
@@ -38,9 +37,9 @@ namespace Insight
                 networkManagerTransport.GetType().GetField("port").SetValue(networkManagerTransport, message.NetworkPort);
             }
 
-            networkManager.networkAddress = message.NetworkAddress;
+            NetworkManager.singleton.networkAddress = message.NetworkAddress;
             SceneManager.LoadScene(message.SceneName);
-            networkManager.StartClient();
+            NetworkManager.singleton.StartClient();
         }
 
         void HandleGameListMsg(InsightNetworkMessage netMsg)

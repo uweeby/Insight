@@ -9,7 +9,6 @@ namespace Insight
         static readonly ILogger logger = LogFactory.GetLogger(typeof(GameRegistration));
 
         InsightClient client;
-        [SerializeField] NetworkManager networkManager;
         [SerializeField] Transport networkManagerTransport;
         [SerializeField] Transport insightTransport;
 
@@ -30,8 +29,6 @@ namespace Insight
             insightTransport.OnClientConnected.AddListener(SendGameRegistrationToGameManager);
 
             RegisterHandlers();
-
-            networkManager = NetworkManager.singleton;
 
             GatherCmdArgs();
 
@@ -72,10 +69,10 @@ namespace Insight
                 UniqueID = args.UniqueID;
             }
 
-            MaxPlayers = networkManager.maxConnections;
+            MaxPlayers = NetworkManager.singleton.maxConnections;
 
             //Start NetworkManager
-            networkManager.StartServer();
+            NetworkManager.singleton.StartServer();
         }
 
         void SendGameRegistrationToGameManager()
@@ -95,7 +92,7 @@ namespace Insight
         void SendGameStatusToGameManager()
         {
             //Update with current values from NetworkManager:
-            CurrentPlayers = networkManager.numPlayers;
+            CurrentPlayers = NetworkManager.singleton.numPlayers;
 
             logger.Log("[GameRegistration] - status update");
             client.Send(new GameStatusMsg()

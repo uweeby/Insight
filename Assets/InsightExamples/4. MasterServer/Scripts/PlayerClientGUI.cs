@@ -39,8 +39,6 @@ namespace Insight.Examples
 
         public List<GameContainer> gamesList = new List<GameContainer>();
 
-        public NetworkManager networkManager;
-
         [Header("Playlist/Game Name")]
         public string GameName = "SuperAwesomeGame";
 
@@ -71,7 +69,7 @@ namespace Insight.Examples
                     break;
             }
 
-            if (networkManager.isNetworkActive)
+            if (NetworkManager.singleton.isNetworkActive)
             {
                 playerGuiState = PlayerClientGUIState.Game;
             }

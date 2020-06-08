@@ -3,44 +3,6 @@ using System.Collections.Generic;
 
 namespace Insight
 {
-    public enum MsgId : short
-    {
-        Error = -1,
-        Empty,
-        Status,
-        //Disconnect,
-
-        Login,
-        LoginResponse,
-
-        //Chat
-        Chat,
-        JoinChatChannel,
-        LeaveChatChannel,
-
-        //GameManager
-        RegisterSpawner,
-        RegisterGame,
-        GameStatus,
-        GameList,
-        JoinGame,
-        LeaveGame,
-
-        //ProcessSpawner
-        RequestSpawnStart,
-        RequestSpawnStop,
-        KillSpawn,
-
-        //MatchMaking
-        StartMatchMaking,
-        StopMatchMaking,
-        
-        ChangeServers,
-        
-        //Health Management Msgs
-        SpawnerStatus,
-    }
-
     public class ErrorMsg : MessageBase
     {
         public string Text;

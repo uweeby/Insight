@@ -1,4 +1,4 @@
-﻿using Mirror;
+using Mirror;
 using System;
 using UnityEngine;
 
@@ -99,12 +99,12 @@ namespace Insight
             transport.ClientSend(0,  new ArraySegment<byte>(data));
         }
 
-        public void Send(short msgType, MessageBase msg)
+        public void Send(MessageBase msg)
         {
-            Send(msgType, msg, null);
+            Send(msg, null);
         }
 
-        public void Send(short msgType, MessageBase msg, CallbackHandler callback)
+        public void Send(MessageBase msg, CallbackHandler callback)
         {
             if (!transport.ClientConnected())
             {
@@ -113,7 +113,8 @@ namespace Insight
             }
 
             NetworkWriter writer = new NetworkWriter();
-            writer.WriteInt16(msgType);
+            int msgType = GetId(default(MessageBase) != null ? typeof(MessageBase) : msg.GetType());
+            writer.WriteUInt16((ushort)msgType);
 
             int callbackId = 0;
             if (callback != null)
@@ -157,22 +158,24 @@ namespace Insight
         {
             InsightNetworkMessageDelegate msgDelegate;
             NetworkReader reader = new NetworkReader(data);
-            short msgType = reader.ReadInt16();
-            int callbackId = reader.ReadInt32();
-            InsightNetworkMessage msg = new InsightNetworkMessage(insightNetworkConnection, callbackId)
+            if(UnpackMessage(reader, out int msgType))
             {
-                msgType = msgType,
-                reader = reader
-            };
+                int callbackId = reader.ReadInt32();
+                InsightNetworkMessage msg = new InsightNetworkMessage(insightNetworkConnection, callbackId)
+                {
+                    msgType = msgType,
+                    reader = reader
+                };
 
-            if (callbacks.ContainsKey(callbackId))
-            {
-                callbacks[callbackId].callback.Invoke(CallbackStatus.Ok, msg);
-                callbacks.Remove(callbackId);
-            }
-            else if (messageHandlers.TryGetValue(msgType, out msgDelegate))
-            {
-                msgDelegate(msg);
+                if (callbacks.ContainsKey(callbackId))
+                {
+                    callbacks[callbackId].callback.Invoke(CallbackStatus.Ok, msg);
+                    callbacks.Remove(callbackId);
+                }
+                else if (messageHandlers.TryGetValue(msgType, out msgDelegate))
+                {
+                    msgDelegate(msg);
+                }
             }
             else
             {

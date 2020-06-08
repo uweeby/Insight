@@ -21,9 +21,9 @@ namespace Insight
 
         void RegisterHandlers()
         {
-            server.RegisterHandler((short)MsgId.RegisterSpawner, HandleRegisterSpawnerMsg);
-            server.RegisterHandler((short)MsgId.RequestSpawnStart, HandleSpawnRequestMsg);
-            server.RegisterHandler((short)MsgId.SpawnerStatus, HandleSpawnerStatusMsg);
+            server.RegisterHandler<RegisterSpawnerMsg>(HandleRegisterSpawnerMsg);
+            server.RegisterHandler<RequestSpawnStartMsg>(HandleSpawnRequestMsg);
+            server.RegisterHandler<SpawnerStatusMsg>(HandleSpawnerStatusMsg);
         }
 
         //Checks if the connection that dropped is actually a Spawner
@@ -77,7 +77,7 @@ namespace Insight
 
             //sort by least busy spawner first
             freeSlotSpawners = freeSlotSpawners.OrderBy(x => x.CurrentThreads).ToList();
-            server.SendToClient(freeSlotSpawners[0].connectionId, (short)MsgId.RequestSpawnStart, message, (callbackStatus, reader) =>
+            server.SendToClient(freeSlotSpawners[0].connectionId, message, (callbackStatus, reader) =>
             {
                 if (callbackStatus == CallbackStatus.Ok)
                 {
@@ -87,7 +87,7 @@ namespace Insight
                 //If callback from original message is present
                 if (netMsg.callbackId != 0)
                     {
-                        netMsg.Reply((short)MsgId.RequestSpawnStart, callbackResponse);
+                        netMsg.Reply(callbackResponse);
                     }
                 }
                 if (callbackStatus == CallbackStatus.Timeout)
@@ -137,7 +137,7 @@ namespace Insight
             freeSlotSpawners = freeSlotSpawners.OrderBy(x => x.CurrentThreads).ToList();
 
             //Send SpawnRequest to the least busy Spawner
-            server.SendToClient(freeSlotSpawners[0].connectionId, (short)MsgId.RequestSpawnStart, message);
+            server.SendToClient(freeSlotSpawners[0].connectionId, message);
         }
     }
 

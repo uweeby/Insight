@@ -27,10 +27,10 @@ namespace Insight
 
         void RegisterHandlers()
         {
-            server.RegisterHandler((short)MsgId.RegisterGame, HandleRegisterGameMsg);
-            server.RegisterHandler((short)MsgId.GameStatus, HandleGameStatusMsg);
-            server.RegisterHandler((short)MsgId.JoinGame, HandleJoinGameMsg);
-            server.RegisterHandler((short)MsgId.GameList, HandleGameListMsg);
+            server.RegisterHandler<RegisterGameMsg>(HandleRegisterGameMsg);
+            server.RegisterHandler<GameStatusMsg>(HandleGameStatusMsg);
+            server.RegisterHandler<JoinGamMsg>(HandleJoinGameMsg);
+            server.RegisterHandler<GameListMsg>(HandleGameListMsg);
         }
 
         void HandleRegisterGameMsg(InsightNetworkMessage netMsg)
@@ -87,7 +87,7 @@ namespace Insight
             GameListMsg gamesListMsg = new GameListMsg();
             gamesListMsg.Load(registeredGameServers);
 
-            netMsg.Reply((short)MsgId.GameList, gamesListMsg);
+            netMsg.Reply(gamesListMsg);
         }
 
         void HandleJoinGameMsg(InsightNetworkMessage netMsg)
@@ -105,7 +105,7 @@ namespace Insight
             }
             else
             {
-                netMsg.Reply((short)MsgId.ChangeServers, new ChangeServerMsg()
+                netMsg.Reply(new ChangeServerMsg()
                 {
                     NetworkAddress = game.NetworkAddress,
                     NetworkPort = game.NetworkPort,

@@ -21,12 +21,12 @@ namespace Insight
         #region Message Senders
         public void SendStartMatchMaking(StartMatchMakingMsg startMatchMakingMsg)
         {
-            client.Send((short)MsgId.StartMatchMaking, startMatchMakingMsg);
+            client.Send(startMatchMakingMsg);
         }
 
         public void SendStopMatchMaking()
         {
-            client.Send((short)MsgId.StopMatchMaking, new StopMatchMakingMsg());
+            client.Send(new StopMatchMakingMsg());
         }
         #endregion
     }

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Mirror;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Insight
@@ -17,7 +19,7 @@ namespace Insight
         public bool logNetworkMessages = false;
         public string networkAddress = "localhost";
         
-        protected Dictionary<short, InsightNetworkMessageDelegate> messageHandlers = new Dictionary<short, InsightNetworkMessageDelegate>(); //Default handlers
+        protected Dictionary<int, InsightNetworkMessageDelegate> messageHandlers = new Dictionary<int, InsightNetworkMessageDelegate>(); //Default handlers
 
         protected enum ConnectState
         {
@@ -38,8 +40,9 @@ namespace Insight
 
         public bool isConnected { get { return connectState == ConnectState.Connected; } }
 
-        public void RegisterHandler(short msgType, InsightNetworkMessageDelegate handler)
+        public void RegisterHandler<T>(InsightNetworkMessageDelegate handler)
         {
+            int msgType = GetId<T>();
             if (messageHandlers.ContainsKey(msgType))
             {
                 Debug.Log("NetworkConnection.RegisterHandler replacing " + msgType);
@@ -47,8 +50,9 @@ namespace Insight
             messageHandlers[msgType] = handler;
         }
 
-        public void UnRegisterHandler(short msgType, InsightNetworkMessageDelegate handler)
+        public void UnRegisterHandler<T>(InsightNetworkMessageDelegate handler)
         {
+            int msgType = GetId<T>();
             if (messageHandlers.ContainsKey(msgType))
             {
                 messageHandlers[msgType] -= handler;
@@ -90,6 +94,31 @@ namespace Insight
             public HashSet<int> requiredCallbackIds;
             public int callbacks;
             public float timeout;
+        }
+
+        public int GetId<T>()
+        {
+            return typeof(T).FullName.GetStableHashCode() & 0xFFFF;
+        }
+
+        public int GetId(Type type)
+        {
+            return type.FullName.GetStableHashCode() & 0xFFFF;
+        }
+
+        public bool UnpackMessage(NetworkReader messageReader, out int msgType)
+        {
+            // read message type (varint)
+            try
+            {
+                msgType = messageReader.ReadUInt16();
+                return true;
+            }
+            catch (System.IO.EndOfStreamException)
+            {
+                msgType = 0;
+                return false;
+            }
         }
     }
 }

@@ -7,7 +7,7 @@ namespace Insight
 {
     public class InsightNetworkConnection : IDisposable
     {
-        Dictionary<short, InsightNetworkMessageDelegate> m_MessageHandlers;
+        Dictionary<int, InsightNetworkMessageDelegate> m_MessageHandlers;
 
         public int hostId = -1;
         public int connectionId = -1;
@@ -60,7 +60,7 @@ namespace Insight
             isReady = false;
         }
 
-        internal void SetHandlers(Dictionary<short, InsightNetworkMessageDelegate> handlers)
+        internal void SetHandlers(Dictionary<int, InsightNetworkMessageDelegate> handlers)
         {
             m_MessageHandlers = handlers;
         }
@@ -142,20 +142,27 @@ namespace Insight
             // unpack message
             NetworkReader reader = new NetworkReader(data);
 
-            short msgType = reader.ReadInt16();
-            int callbackId = reader.ReadInt32();
-
-            InsightNetworkMessageDelegate msgDelegate;
-            if (m_MessageHandlers.TryGetValue(msgType, out msgDelegate))
+            if (GetActiveInsight().UnpackMessage(reader, out int msgType))
             {
-                // create message here instead of caching it. so we can add it to queue more easily.
-                InsightNetworkMessage msg = new InsightNetworkMessage(this, callbackId);
-                msg.msgType = msgType;
-                msg.reader = reader;
+                // logging TODO: Replce all Insight logging with loggers like Mirror
+                //if (logger.LogEnabled()) logger.Log("ConnectionRecv " + this + " msgType:" + msgType + " content:" + BitConverter.ToString(buffer.Array, buffer.Offset, buffer.Count));
 
-                msgDelegate(msg);
-                lastMessageTime = Time.time;
+                int callbackId = reader.ReadInt32();
+
+                // try to invoke the handler for that message
+                InsightNetworkMessageDelegate msgDelegate;
+                if (m_MessageHandlers.TryGetValue(msgType, out msgDelegate))
+                {
+                    // create message here instead of caching it. so we can add it to queue more easily.
+                    InsightNetworkMessage msg = new InsightNetworkMessage(this, callbackId);
+                    msg.msgType = msgType;
+                    msg.reader = reader;
+
+                    msgDelegate(msg);
+                    lastMessageTime = Time.time;
+                }
             }
+
             else
             {
                 //NOTE: this throws away the rest of the buffer. Need moar error codes
@@ -178,11 +185,23 @@ namespace Insight
             }
             return false;
         }
+
+        public InsightCommon GetActiveInsight()
+        {
+            if(client != null)
+            {
+                return client;
+            }
+            else
+            {
+                return server;
+            }
+        }
     }
 
     public class InsightNetworkMessage
     {
-        public short msgType;
+        public int msgType;
         InsightNetworkConnection conn;
         public NetworkReader reader;
         public int callbackId { get; protected set; }
@@ -218,13 +237,17 @@ namespace Insight
 
         public void Reply()
         {
-            Reply(this.msgType, new EmptyMsg());
+            Reply(new EmptyMsg());
         }
 
-        public void Reply(short msgId, MessageBase msg)
+        public void Reply(MessageBase msg)
         {
-            var writer = new NetworkWriter();
-            writer.WriteInt16(msgId);
+            NetworkWriter writer = new NetworkWriter();
+            int msgType = conn.GetActiveInsight().GetId(default(MessageBase) != null ? typeof(MessageBase) : msg.GetType());
+            writer.WriteUInt16((ushort)msgType);
+
+            //var writer = new NetworkWriter();
+            //writer.WriteInt16(msgId);
             writer.WriteInt32(callbackId);
             msg.Serialize(writer);
 

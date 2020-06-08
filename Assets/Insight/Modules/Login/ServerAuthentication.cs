@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Mirror;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ namespace Insight
     public class ServerAuthentication : InsightModule
     {
         InsightServer server;
+        public NetworkAuthenticator authenticator;
 
         public List<UserContainer> registeredUsers = new List<UserContainer>();
 
@@ -21,7 +23,7 @@ namespace Insight
 
         void RegisterHandlers()
         {
-            server.RegisterHandler((short)MsgId.Login, HandleLoginMsg);
+            server.RegisterHandler<LoginMsg>(HandleLoginMsg);
         }
 
         //This is just an example. No actual authentication happens.
@@ -44,7 +46,7 @@ namespace Insight
                     connectionId = netMsg.connectionId
                 });
 
-                netMsg.Reply((short)MsgId.LoginResponse, new LoginResponseMsg()
+                netMsg.Reply(new LoginResponseMsg()
                 {
                     Authenticated = true,
                     UniqueID = UniqueId

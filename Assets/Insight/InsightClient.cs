@@ -171,7 +171,7 @@ namespace Insight
 
                 if (callbacks.ContainsKey(callbackId))
                 {
-                    callbacks[callbackId].callback.Invoke(CallbackStatus.Ok, msg);
+                    callbacks[callbackId].callback.Invoke(msg);
                     callbacks.Remove(callbackId);
                 }
                 else if (messageHandlers.TryGetValue(msgType, out msgDelegate))

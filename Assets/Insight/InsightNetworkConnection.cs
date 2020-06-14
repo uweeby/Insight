@@ -239,7 +239,7 @@ namespace Insight
 
         public void Reply()
         {
-            Reply(new EmptyMsg());
+            Reply(new Message());
         }
 
         public void Reply(MessageBase msg)

@@ -80,25 +80,25 @@ namespace Insight
 
             //sort by least busy spawner first
             freeSlotSpawners = freeSlotSpawners.OrderBy(x => x.CurrentThreads).ToList();
-            server.SendToClient(freeSlotSpawners[0].connectionId, message, (callbackStatus, reader) =>
+            server.SendToClient(freeSlotSpawners[0].connectionId, message, (reader) =>
             {
-                if (callbackStatus == CallbackStatus.Ok)
-                {
-                    RequestSpawnStartMsg callbackResponse = reader.ReadMessage<RequestSpawnStartMsg>();
-                    if (server.logNetworkMessages) { logger.Log("[Spawn Callback] Game Created on Child Spawner: " + callbackResponse.UniqueID); }
+                RequestSpawnStartMsg callbackResponse = reader.ReadMessage<RequestSpawnStartMsg>();
 
-                //If callback from original message is present
-                if (netMsg.callbackId != 0)
+                if (callbackResponse.Status == CallbackStatus.Success)
+                {
+                    logger.Log("[Spawn Callback] Game Created on Child Spawner: " + callbackResponse.UniqueID);
+
+                    //If callback from original message is present
+                    if (netMsg.callbackId != 0)
                     {
                         netMsg.Reply(callbackResponse);
                     }
                 }
-                if (callbackStatus == CallbackStatus.Timeout)
+                if (callbackResponse.Status == CallbackStatus.Timeout)
                 {
-                    RequestSpawnStartMsg callbackResponse = reader.ReadMessage<RequestSpawnStartMsg>();
                     logger.Log("[Spawn Callback] Createion Timed Out: " + callbackResponse.UniqueID);
                 }
-                if (callbackStatus == CallbackStatus.Error)
+                if (callbackResponse.Status == CallbackStatus.Error)
                 {
                     logger.Log("[Spawn Callback] Error in SpawnRequest.");
                 }

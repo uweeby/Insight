@@ -114,7 +114,7 @@ namespace Insight
             if (callbacks.ContainsKey(callbackId))
             {
                 InsightNetworkMessage msg = new InsightNetworkMessage(insightNetworkConnection, callbackId) { msgType = msgType, reader = reader };
-                callbacks[callbackId].callback.Invoke(CallbackStatus.Ok, msg);
+                callbacks[callbackId].callback.Invoke(msg);
                 callbacks.Remove(callbackId);
 
                 CheckForFinishedCallback(callbackId);
@@ -258,7 +258,7 @@ namespace Insight
                 if (item.requiredCallbackIds.Contains(callbackId)) item.callbacks++;
                 if (item.callbacks >= item.requiredCallbackIds.Count)
                 {
-                    item.callback.Invoke(CallbackStatus.Ok);
+                    item.callback.Invoke(CallbackStatus.Success);
                     sendToAllFinishedCallbacks.Remove(item);
                     return;
                 }

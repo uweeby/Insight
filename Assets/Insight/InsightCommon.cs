@@ -5,9 +5,10 @@ using UnityEngine;
 
 namespace Insight
 {
-    public enum CallbackStatus
+    public enum CallbackStatus : byte
     {
-        Ok,
+        Default,
+        Success,
         Error,
         Timeout
     }
@@ -35,7 +36,7 @@ namespace Insight
         protected int callbackIdIndex = 0; // 0 is a _special_ id - it represents _no callback_. 
         protected Dictionary<int, CallbackData> callbacks = new Dictionary<int, CallbackData>();
 
-        public delegate void CallbackHandler(CallbackStatus status, InsightNetworkMessage netMsg);
+        public delegate void CallbackHandler(InsightNetworkMessage netMsg);
         public delegate void SendToAllFinishedCallbackHandler(CallbackStatus status);
 
         public const float callbackTimeout = 30f; // all callbacks have a 30 second time out. 
@@ -67,7 +68,7 @@ namespace Insight
             {
                 if (callback.Value.timeout < Time.realtimeSinceStartup)
                 {
-                    callback.Value.callback.Invoke(CallbackStatus.Timeout, null);
+                    callback.Value.callback.Invoke(null);
                     callbacks.Remove(callback.Key);
                     break;
                 }

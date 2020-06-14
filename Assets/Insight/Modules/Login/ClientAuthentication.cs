@@ -31,29 +31,24 @@ namespace Insight
 
         public void SendLoginMsg(string username, string password)
         {
-            client.Send(new LoginMsg() { AccountName = username, AccountPassword = password }, (callbackStatus, reader) =>
+            client.Send(new LoginMsg() { AccountName = username, AccountPassword = password }, (reader) =>
             {
-                if (callbackStatus == CallbackStatus.Ok)
+                LoginResponseMsg msg = reader.ReadMessage<LoginResponseMsg>();
+
+                if (msg.Status == CallbackStatus.Success)
                 {
-                    LoginResponseMsg msg = reader.ReadMessage<LoginResponseMsg>();
-                    loginSucessful = msg.Authenticated; //This will always be true for prototyping
-                if (loginSucessful)
-                    {
-                        uniqueID = msg.UniqueID;
-                        loginResponse = "Login Successful!";
-                    }
-                    else
-                    {
-                        loginResponse = "Login Failed!";
-                    }
+                    uniqueID = msg.UniqueID;
+                    loginSucessful = true;
+                    loginResponse = "Login Successful!";
+                    logger.Log("[ClientAuthentication] - Login Successful!");
                 }
-                if (callbackStatus == CallbackStatus.Error)
+                if (msg.Status == CallbackStatus.Error)
                 {
-                    logger.LogError("Callback Error: Login error");
+                    logger.LogError("[ClientAuthentication] - Callback Error: Login error");
                 }
-                if (callbackStatus == CallbackStatus.Timeout)
+                if (msg.Status == CallbackStatus.Timeout)
                 {
-                    logger.LogError("Callback Error: Login attempt timed out");
+                    logger.LogError("[ClientAuthentication] - Callback Error: Login attempt timed out");
                 }
             });
         }

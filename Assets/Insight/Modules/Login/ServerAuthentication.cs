@@ -1,4 +1,4 @@
-﻿using Mirror;
+using Mirror;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,7 +10,6 @@ namespace Insight
         static readonly ILogger logger = LogFactory.GetLogger(typeof(ServerAuthentication));
 
         InsightServer server;
-        public NetworkAuthenticator authenticator;
 
         public List<UserContainer> registeredUsers = new List<UserContainer>();
 

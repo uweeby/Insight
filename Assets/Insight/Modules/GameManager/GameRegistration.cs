@@ -54,6 +54,12 @@ namespace Insight
                 if(networkManagerTransport.GetType().GetField("port") != null) {
                     networkManagerTransport.GetType().GetField("port").SetValue(networkManagerTransport, (ushort)args.NetworkPort);
                 }
+
+                //For IgnoranceTransport
+                if (networkManagerTransport.GetType().GetField("CommunicationPort") != null)
+                {
+                    networkManagerTransport.GetType().GetField("CommunicationPort").SetValue(networkManagerTransport, (ushort)args.NetworkPort);
+                }
             }
 
             if (args.IsProvided("-SceneName"))

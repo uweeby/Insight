@@ -37,6 +37,12 @@ namespace Insight
                 networkManagerTransport.GetType().GetField("port").SetValue(networkManagerTransport, message.NetworkPort);
             }
 
+            //For IgnoranceTransport
+            if (networkManagerTransport.GetType().GetField("CommunicationPort") != null)
+            {
+                networkManagerTransport.GetType().GetField("CommunicationPort").SetValue(networkManagerTransport, message.NetworkPort);
+            }
+
             NetworkManager.singleton.networkAddress = message.NetworkAddress;
             SceneManager.LoadScene(message.SceneName);
             NetworkManager.singleton.StartClient();

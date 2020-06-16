@@ -10,13 +10,15 @@ namespace Insight
         static readonly ILogger logger = LogFactory.GetLogger(typeof(ClientGameManager));
 
         InsightClient client;
-        public Transport networkManagerTransport;
+        Transport networkManagerTransport;
 
         public List<GameContainer> gamesList = new List<GameContainer>();
 
         public override void Initialize(InsightClient client, ModuleManager manager)
         {
             this.client = client;
+
+            networkManagerTransport = Transport.activeTransport;
 
             RegisterHandlers();
         }

@@ -151,7 +151,7 @@ namespace Insight
             if(UnpackMessage(reader, out int msgType))
             {
                 int callbackId = reader.ReadInt32();
-                InsightNetworkMessage msg = new InsightNetworkMessage(insightNetworkConnection, callbackId)
+                Message msg = new Message(insightNetworkConnection, callbackId)
                 {
                     msgType = msgType,
                     reader = reader

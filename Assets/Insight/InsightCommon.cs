@@ -19,7 +19,6 @@ namespace Insight
 
         public bool DontDestroy = true; //Sets DontDestroyOnLoad for this object. Default to true. Can be disabled via Inspector or runtime code.
         public bool AutoStart = true;
-        public bool logNetworkMessages = false;
         public string networkAddress = "localhost";
         
         protected Dictionary<int, InsightNetworkMessageDelegate> messageHandlers = new Dictionary<int, InsightNetworkMessageDelegate>(); //Default handlers

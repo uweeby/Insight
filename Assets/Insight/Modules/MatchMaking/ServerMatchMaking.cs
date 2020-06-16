@@ -59,7 +59,7 @@ namespace Insight
 
         void HandleStartMatchSearchMsg(InsightNetworkMessage netMsg)
         {
-            if (server.logNetworkMessages) { logger.Log("[MatchMaking] - Player joining MatchMaking."); }
+            logger.Log("[MatchMaking] - Player joining MatchMaking.");
 
             playerQueue.Add(authModule.GetUserByConnection(netMsg.connectionId));
         }
@@ -80,13 +80,13 @@ namespace Insight
         {
             if (playerQueue.Count < MinimumPlayersForGame)
             {
-                if (server.logNetworkMessages) { logger.Log("[MatchMaking] - Minimum players in queue not reached."); }
+                logger.Log("[MatchMaking] - Minimum players in queue not reached.");
                 return;
             }
 
             if (masterSpawner.registeredSpawners.Count == 0)
             {
-                if (server.logNetworkMessages) { logger.Log("[MatchMaking] - No spawners for players in queue."); }
+                logger.Log("[MatchMaking] - No spawners for players in queue.");
                 return;
             }
 

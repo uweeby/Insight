@@ -1,4 +1,4 @@
-using Mirror;
+﻿using Mirror;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -31,7 +31,7 @@ namespace Insight
         {
             ChangeServerMsg message = netMsg.ReadMessage<ChangeServerMsg>();
 
-            if (client.logNetworkMessages) { logger.Log("[InsightClient] - Connecting to GameServer: " + message.NetworkAddress + ":" + message.NetworkPort + "/" + message.SceneName); }
+            logger.Log("[InsightClient] - Connecting to GameServer: " + message.NetworkAddress + ":" + message.NetworkPort + "/" + message.SceneName);
 
             if(networkManagerTransport.GetType().GetField("port") != null) {
                 networkManagerTransport.GetType().GetField("port").SetValue(networkManagerTransport, message.NetworkPort);
@@ -52,7 +52,7 @@ namespace Insight
         {
             GameListMsg message = netMsg.ReadMessage<GameListMsg>();
 
-            if (client.logNetworkMessages) { logger.Log("[InsightClient] - Received Games List"); };
+            logger.Log("[InsightClient] - Received Games List");
 
             gamesList.Clear();
 

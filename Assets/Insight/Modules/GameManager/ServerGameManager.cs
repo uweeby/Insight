@@ -40,7 +40,7 @@ namespace Insight
         {
             RegisterGameMsg message = netMsg.ReadMessage<RegisterGameMsg>();
 
-            if (server.logNetworkMessages) { logger.Log("[GameManager] - Received GameRegistration request"); }
+            logger.Log("[GameManager] - Received GameRegistration request");
 
             registeredGameServers.Add(new GameContainer()
             {
@@ -59,7 +59,7 @@ namespace Insight
         {
             GameStatusMsg message = netMsg.ReadMessage<GameStatusMsg>();
 
-            if (server.logNetworkMessages) { logger.Log("[GameManager] - Received Game status update"); }
+            logger.Log("[GameManager] - Received Game status update");
 
             foreach (GameContainer game in registeredGameServers)
             {
@@ -85,7 +85,7 @@ namespace Insight
 
         void HandleGameListMsg(InsightNetworkMessage netMsg)
         {
-            if (server.logNetworkMessages) { logger.Log("[MatchMaking] - Player Requesting Match list"); }
+            logger.Log("[MatchMaking] - Player Requesting Match list");
 
             GameListMsg gamesListMsg = new GameListMsg();
             gamesListMsg.Load(registeredGameServers);
@@ -97,7 +97,7 @@ namespace Insight
         {
             JoinGamMsg message = netMsg.ReadMessage<JoinGamMsg>();
 
-            if (server.logNetworkMessages) { logger.Log("[MatchMaking] - Player joining Match."); }
+            logger.Log("[MatchMaking] - Player joining Match.");
 
             GameContainer game = GetGameByUniqueID(message.UniqueID);
 

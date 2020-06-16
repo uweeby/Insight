@@ -54,7 +54,7 @@ namespace Insight
                 MaxThreads = message.MaxThreads
             });
 
-            if (server.logNetworkMessages) { logger.Log("[MasterSpawner] - New Process Spawner Regsitered"); }
+            logger.Log("[MasterSpawner] - New Process Spawner Regsitered");
         }
 
         //Instead of handling the msg here we will forward it to an available spawner.

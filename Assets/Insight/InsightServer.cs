@@ -52,7 +52,7 @@ namespace Insight
 
         public override void StartInsight()
         {
-            if (logNetworkMessages) { logger.Log("[InsightServer] - Start"); }
+            logger.Log("[InsightServer] - Start");
             transport.ServerStart();
             serverHostId = 0;
 
@@ -76,7 +76,7 @@ namespace Insight
 
         void HandleConnect(int connectionId)
         {
-            if (logNetworkMessages) { logger.Log("[InsightServer] - Client connected connectionID: " + connectionId, this); }
+            logger.Log("[InsightServer] - Client connected connectionID: " + connectionId, this);
 
             // get ip address from connection
             string address = GetConnectionInfo(connectionId);
@@ -89,7 +89,7 @@ namespace Insight
 
         void HandleDisconnect(int connectionId)
         {
-            if (logNetworkMessages) { logger.Log("[InsightServer] - Client disconnected connectionID: " + connectionId, this); }
+            logger.Log("[InsightServer] - Client disconnected connectionID: " + connectionId, this);
 
             InsightNetworkConnection conn;
             if (connections.TryGetValue(connectionId, out conn))
@@ -247,7 +247,7 @@ namespace Insight
 
         void OnApplicationQuit()
         {
-            if (logNetworkMessages) { logger.Log("[InsightServer] Stopping Server"); }
+            logger.Log("[InsightServer] Stopping Server");
             transport.ServerStop();
         }
 
@@ -282,12 +282,12 @@ namespace Insight
         ////----------virtual handlers--------------//
         public virtual void OnStartInsight()
         {
-            if (logNetworkMessages) { logger.Log("[InsightServer] - Server started listening"); }
+            logger.Log("[InsightServer] - Server started listening");
         }
 
         public virtual void OnStopInsight()
         {
-            if (logNetworkMessages) { logger.Log("[InsightServer] - Server stopping"); }
+            logger.Log("[InsightServer] - Server stopping");
         }
     }
 }

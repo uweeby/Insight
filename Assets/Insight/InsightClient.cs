@@ -89,7 +89,7 @@ namespace Insight
             {
                 if (!isConnected && (_reconnectTimer < Time.time))
                 {
-                    if (logNetworkMessages) { logger.Log("[InsightClient] - Trying to reconnect..."); }
+                    logger.Log("[InsightClient] - Trying to reconnect...");
                     _reconnectTimer = Time.realtimeSinceStartup + ReconnectDelayInSeconds;
                     StartInsight();
                 }
@@ -143,7 +143,7 @@ namespace Insight
         {
             if (insightNetworkConnection != null)
             {
-                if (logNetworkMessages) { logger.Log("[InsightClient] - Connected to Insight Server"); }
+                logger.Log("[InsightClient] - Connected to Insight Server");
                 connectState = ConnectState.Connected;
             }
             else logger.LogError("Skipped Connect message handling because m_Connection is null.");
@@ -194,19 +194,19 @@ namespace Insight
 
         void OnApplicationQuit()
         {
-            if (logNetworkMessages) { logger.Log("[InsightClient] Stopping Client"); }
+            logger.Log("[InsightClient] Stopping Client");
             StopInsight();
         }
 
         ////------------Virtual Handlers-------------
         public virtual void OnStartInsight()
         {
-            if (logNetworkMessages) { logger.Log("[InsightClient] - Connecting to Insight Server: " + networkAddress); }
+            logger.Log("[InsightClient] - Connecting to Insight Server: " + networkAddress);
         }
 
         public virtual void OnStopInsight()
         {
-            if (logNetworkMessages) { logger.Log("[InsightClient] - Disconnecting from Insight Server"); }
+            logger.Log("[InsightClient] - Disconnecting from Insight Server");
         }
     }
 }

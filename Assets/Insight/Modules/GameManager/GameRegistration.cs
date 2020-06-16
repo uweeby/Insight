@@ -9,8 +9,7 @@ namespace Insight
         static readonly ILogger logger = LogFactory.GetLogger(typeof(GameRegistration));
 
         InsightClient client;
-        [SerializeField] public Transport networkManagerTransport;
-        [SerializeField] public Transport insightTransport;
+        Transport networkManagerTransport;
 
         //Pulled from command line arguments
         public string GameScene;
@@ -25,11 +24,11 @@ namespace Insight
         public override void Initialize(InsightClient insight, ModuleManager manager)
         {
             client = insight;
+            client.transport.OnClientConnected.AddListener(SendGameRegistrationToGameManager);
 
-            insightTransport.OnClientConnected.AddListener(SendGameRegistrationToGameManager);
+            networkManagerTransport = Transport.activeTransport;
 
             RegisterHandlers();
-
             GatherCmdArgs();
 
             InvokeRepeating("SendGameStatusToGameManager", 30f, 30f);

@@ -146,8 +146,7 @@ namespace Insight
 
             if (GetActiveInsight().UnpackMessage(reader, out int msgType))
             {
-                // logging TODO: Replce all Insight logging with loggers like Mirror
-                //if (logger.LogEnabled()) logger.Log("ConnectionRecv " + this + " msgType:" + msgType + " content:" + BitConverter.ToString(buffer.Array, buffer.Offset, buffer.Count));
+                logger.Log("ConnectionRecv " + this + " msgType:" + msgType + " content:" + BitConverter.ToString(data.Array, data.Offset, data.Count));
 
                 int callbackId = reader.ReadInt32();
 

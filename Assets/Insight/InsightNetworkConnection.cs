@@ -122,7 +122,8 @@ namespace Insight
         // would be detected as some kind of message. send messages instead.
         protected virtual bool SendBytes(byte[] bytes)
         {
-            if (bytes.Length > int.MaxValue)
+            //Currently no support for transport channels in Insight.
+            if (bytes.Length > GetActiveInsight().transport.GetMaxPacketSize(0))
             {
                 logger.LogError("NetworkConnection:SendBytes cannot send packet larger than " + int.MaxValue + " bytes");
                 return false;

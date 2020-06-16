@@ -1,27 +1,54 @@
-Temp
-/.vs/uMMORPG/v15/*.suo
-*.csproj
-Library
-obj
-/*.sln
-.vs
-/*.csproj
-Builds
-/Database.sqlite
-/JenkinsBuild.bat
-/UnityPackageManager
-/Packages
-
-\.vscode/settings\.json
-
+# ===================== #
+# Insight Repo Specific #
+# ===================== #
 Assets/Mirror/
-Assets/Mirror\.meta
+Assets/Mirror/.meta
+Assets/Mirror.meta
+Builds
 
-Assets/Ignorance/
-Assets/Ignorance\.meta
+# =============== #
+# Unity generated #
+# =============== #
+Source/Temp/
+Source/Library/
 
-Logs/
+# ===================================== #
+# Project specific #
+# ===================================== #
+Database.sqlite
+Database/
 
-ProjectSettings/ProjectVersion.txt
+# ===================================== #
+# Visual Studio / MonoDevelop / Rider   #
+# ===================================== #
+ExportedObj/
+obj/
+*.svd
+*.userprefs
+/*.csproj
+Source/Assembly-CSharp.csproj
+Source/Assembly-CSharp-Editor.csproj
+Source/Assembly-CSharp-firstpass.csproj
+Source/Source.sln
+*.pidb
+*.suo
+/*.sln
+*.user
+*.unityproj
+*.booproj
+Output/
+bin/
+.vs/
+.idea/
+Mirror/packages
+.mfractor
 
-ProjectSettings/ProjectSettings.asset
+# Unity generated
+Library
+Temp
+UnityPackageManager
+CodeCoverage
+Logs
+Obj
+*.mdb
+*.mdb.meta

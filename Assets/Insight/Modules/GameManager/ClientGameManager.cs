@@ -1,4 +1,4 @@
-﻿using Mirror;
+using Mirror;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -10,7 +10,7 @@ namespace Insight
         static readonly ILogger logger = LogFactory.GetLogger(typeof(ClientGameManager));
 
         InsightClient client;
-        [SerializeField] Transport networkManagerTransport;
+        [SerializeField] public Transport networkManagerTransport;
 
         public List<GameContainer> gamesList = new List<GameContainer>();
 

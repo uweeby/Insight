@@ -1,4 +1,4 @@
-﻿using Mirror;
+using Mirror;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,8 +9,8 @@ namespace Insight
         static readonly ILogger logger = LogFactory.GetLogger(typeof(GameRegistration));
 
         InsightClient client;
-        [SerializeField] Transport networkManagerTransport;
-        [SerializeField] Transport insightTransport;
+        [SerializeField] public Transport networkManagerTransport;
+        [SerializeField] public Transport insightTransport;
 
         //Pulled from command line arguments
         public string GameScene;

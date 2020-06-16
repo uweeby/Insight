@@ -180,7 +180,10 @@ namespace Insight
             }
 
             Process p = new Process();
-            p.StartInfo.FileName = ProcessPath + ProcessName;
+            // Put the process path and the process name together. We use
+            // Path.Combine for this, which will include correct directory
+            // seperators on the OS we're running on (ie. C:\Game\ or /Game/ )
+            p.StartInfo.FileName = System.IO.Path.Combine(ProcessPath, ProcessName);
             //Args to pass: Port, Scene, UniqueID...
             p.StartInfo.Arguments = ArgsString() +
                 " -NetworkAddress " + SpawnerNetworkAddress +
@@ -194,7 +197,7 @@ namespace Insight
             }
             else
             {
-                logger.LogError("[ProcessSpawner] - Process Createion Failed.");
+                logger.LogError("[ProcessSpawner] - Process Creation Failed.");
                 return false;
             }
 

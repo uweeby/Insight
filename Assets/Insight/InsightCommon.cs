@@ -42,6 +42,18 @@ namespace Insight
 
         public bool isConnected { get { return connectState == ConnectState.Connected; } }
 
+        Transport _transport;
+        public virtual Transport transport
+        {
+            get
+            {
+                _transport = _transport ?? GetComponent<Transport>();
+                if (_transport == null)
+                    logger.LogWarning("Insight has no Transport component. Networking won't work without a Transport");
+                return _transport;
+            }
+        }
+
         public void RegisterHandler<T>(InsightNetworkMessageDelegate handler)
         {
             int msgType = GetId<T>();

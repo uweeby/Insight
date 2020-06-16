@@ -13,18 +13,6 @@ namespace Insight
         protected Dictionary<int, InsightNetworkConnection> connections = new Dictionary<int, InsightNetworkConnection>();
         protected List<SendToAllFinishedCallbackData> sendToAllFinishedCallbacks = new List<SendToAllFinishedCallbackData>();
 
-        Transport _transport;
-        public virtual Transport transport
-        {
-            get
-            {
-                _transport = _transport ?? GetComponent<Transport>();
-                if (_transport == null)
-                    logger.LogWarning("InsightServer has no Transport component. Networking won't work without a Transport");
-                return _transport;
-            }
-        }
-
         public virtual void Start()
         {
             if(DontDestroy)

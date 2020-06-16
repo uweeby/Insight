@@ -14,18 +14,6 @@ namespace Insight
 
         InsightNetworkConnection insightNetworkConnection;
 
-        Transport _transport;
-        public virtual Transport transport
-        {
-            get
-            {
-                _transport = _transport ?? GetComponent<Transport>();
-                if (_transport == null)
-                    logger.LogWarning("InsightClient has no Transport component. Networking won't work without a Transport");
-                return _transport;
-            }
-        }
-
         public float ReconnectDelayInSeconds = 5f;
         float _reconnectTimer;
 

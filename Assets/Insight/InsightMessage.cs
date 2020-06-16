@@ -6,6 +6,7 @@ namespace Insight
     public class Message : MessageBase
     {
         public CallbackStatus Status = CallbackStatus.Default;
+        public int callbackId { get; protected set; }
     }
 
     public class PropertiesMsg : Message

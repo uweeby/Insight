@@ -29,10 +29,8 @@ namespace Insight
             client.RegisterHandler<GameListMsg>(HandleGameListMsg);
         }
 
-        void HandleChangeServersMsg(InsightNetworkMessage netMsg)
+        void HandleChangeServersMsg(InsightNetworkConnection conn, ChangeServerMsg message)
         {
-            ChangeServerMsg message = netMsg.ReadMessage<ChangeServerMsg>();
-
             logger.Log("[InsightClient] - Connecting to GameServer: " + message.NetworkAddress + ":" + message.NetworkPort + "/" + message.SceneName);
 
             if(networkManagerTransport.GetType().GetField("port") != null) {
@@ -50,10 +48,8 @@ namespace Insight
             NetworkManager.singleton.StartClient();
         }
 
-        void HandleGameListMsg(InsightNetworkMessage netMsg)
+        void HandleGameListMsg(InsightNetworkConnection conn, GameListMsg message)
         {
-            GameListMsg message = netMsg.ReadMessage<GameListMsg>();
-
             logger.Log("[InsightClient] - Received Games List");
 
             gamesList.Clear();

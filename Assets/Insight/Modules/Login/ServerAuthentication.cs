@@ -31,10 +31,8 @@ namespace Insight
 
         //This is a very simple very bad example.
         //You would need to replace with your own logic. Perhaps with a DB connection.
-        void HandleLoginMsg(InsightNetworkMessage netMsg)
+        void HandleLoginMsg(InsightNetworkConnection conn, LoginMsg message)
         {
-            LoginMsg message = netMsg.ReadMessage<LoginMsg>();
-
             logger.Log("[ServerAuthentication] - Login Received: " + message.AccountName + " / " + message.AccountPassword);
 
             if(EnforceAuthentication)
@@ -48,10 +46,10 @@ namespace Insight
                     {
                         username = message.AccountName,
                         uniqueId = UniqueId,
-                        connectionId = netMsg.connectionId
+                        connectionId = conn.connectionId
                     });
 
-                    netMsg.Reply(new LoginResponseMsg()
+                    conn.Reply(new LoginResponseMsg()
                     {
                         Status = CallbackStatus.Success,
                         UniqueID = UniqueId
@@ -61,7 +59,7 @@ namespace Insight
                 //Login Failed
                 else
                 {
-                    netMsg.Reply(new LoginResponseMsg()
+                    conn.Reply(new LoginResponseMsg()
                     {
                         Status = CallbackStatus.Error
                     });
@@ -75,10 +73,10 @@ namespace Insight
                 {
                     username = message.AccountName,
                     uniqueId = UniqueId,
-                    connectionId = netMsg.connectionId
+                    connectionId = conn.connectionId
                 });
 
-                netMsg.Reply(new LoginResponseMsg()
+                conn.Reply(new LoginResponseMsg()
                 {
                     Status = CallbackStatus.Success
                 });

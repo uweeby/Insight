@@ -36,10 +36,8 @@ namespace Insight
             server.RegisterHandler<GameListMsg>(HandleGameListMsg);
         }
 
-        void HandleRegisterGameMsg(InsightNetworkMessage netMsg)
+        void HandleRegisterGameMsg(InsightNetworkConnection conn, RegisterGameMsg message)
         {
-            RegisterGameMsg message = netMsg.ReadMessage<RegisterGameMsg>();
-
             logger.Log("[GameManager] - Received GameRegistration request");
 
             registeredGameServers.Add(new GameContainer()
@@ -51,14 +49,12 @@ namespace Insight
                 MaxPlayers = message.MaxPlayers,
                 CurrentPlayers = message.CurrentPlayers,
 
-                connectionId = netMsg.connectionId,
+                connectionId = conn.connectionId,
             });
         }
 
-        void HandleGameStatusMsg(InsightNetworkMessage netMsg)
+        void HandleGameStatusMsg(InsightNetworkConnection conn, GameStatusMsg message)
         {
-            GameStatusMsg message = netMsg.ReadMessage<GameStatusMsg>();
-
             logger.Log("[GameManager] - Received Game status update");
 
             foreach (GameContainer game in registeredGameServers)
@@ -83,20 +79,18 @@ namespace Insight
             }
         }
 
-        void HandleGameListMsg(InsightNetworkMessage netMsg)
+        void HandleGameListMsg(InsightNetworkConnection conn, GameListMsg message)
         {
             logger.Log("[MatchMaking] - Player Requesting Match list");
 
             GameListMsg gamesListMsg = new GameListMsg();
             gamesListMsg.Load(registeredGameServers);
 
-            netMsg.Reply(gamesListMsg);
+            conn.Reply(gamesListMsg);
         }
 
-        void HandleJoinGameMsg(InsightNetworkMessage netMsg)
+        void HandleJoinGameMsg(InsightNetworkConnection conn, JoinGamMsg message)
         {
-            JoinGamMsg message = netMsg.ReadMessage<JoinGamMsg>();
-
             logger.Log("[MatchMaking] - Player joining Match.");
 
             GameContainer game = GetGameByUniqueID(message.UniqueID);
@@ -108,7 +102,7 @@ namespace Insight
             }
             else
             {
-                netMsg.Reply(new ChangeServerMsg()
+                conn.Reply(new ChangeServerMsg()
                 {
                     NetworkAddress = game.NetworkAddress,
                     NetworkPort = game.NetworkPort,

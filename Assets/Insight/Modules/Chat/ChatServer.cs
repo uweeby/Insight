@@ -31,16 +31,14 @@ namespace Insight
             server.RegisterHandler<ChatMsg>(HandleChatMsg);
         }
 
-        void HandleChatMsg(InsightNetworkMessage netMsg)
+        void HandleChatMsg(InsightNetworkConnection conn, ChatMsg message)
         {
             logger.Log("[ChatServer] - Received Chat Message.");
-
-            ChatMsg message = netMsg.ReadMessage<ChatMsg>();
 
             if (authModule != null)
             {
                 //Inject the username into the message
-                message.Origin = authModule.GetUserByConnection(netMsg.connectionId).username;
+                message.Origin = authModule.GetUserByConnection(conn.connectionId).username;
 
                 foreach(UserContainer user in authModule.registeredUsers)
                 {

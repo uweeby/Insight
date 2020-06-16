@@ -23,11 +23,9 @@ public class ChatClient : InsightModule
         client.RegisterHandler<ChatMsg>(HandleChatMsg);
     }
 
-    public void HandleChatMsg(InsightNetworkMessage netMsg)
+    public void HandleChatMsg(InsightNetworkConnection conn, ChatMsg message)
     {
         logger.Log("[InsightClient] - HandleChatMsg()");
-
-        ChatMsg message = netMsg.ReadMessage<ChatMsg>();
 
         chatLog += message.Origin + ": "  + message.Data + "\n";
     }

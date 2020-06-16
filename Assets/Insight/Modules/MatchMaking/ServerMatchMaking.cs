@@ -57,18 +57,18 @@ namespace Insight
             UpdateMatches();
         }
 
-        void HandleStartMatchSearchMsg(InsightNetworkMessage netMsg)
+        void HandleStartMatchSearchMsg(InsightNetworkConnection conn, StartMatchMakingMsg message)
         {
             logger.Log("[MatchMaking] - Player joining MatchMaking.");
 
-            playerQueue.Add(authModule.GetUserByConnection(netMsg.connectionId));
+            playerQueue.Add(authModule.GetUserByConnection(conn.connectionId));
         }
 
-        void HandleStopMatchSearchMsg(InsightNetworkMessage netMsg)
+        void HandleStopMatchSearchMsg(InsightNetworkConnection conn, StopMatchMakingMsg message)
         {
             foreach (UserContainer seraching in playerQueue)
             {
-                if (seraching.connectionId == netMsg.connectionId)
+                if (seraching.connectionId == conn.connectionId)
                 {
                     playerQueue.Remove(seraching);
                     return;

@@ -33,7 +33,7 @@ namespace Insight
         {
             client.Send(new LoginMsg() { AccountName = username, AccountPassword = password }, (reader) =>
             {
-                LoginResponseMsg msg = reader.ReadMessage<LoginResponseMsg>();
+                LoginResponseMsg msg = reader as LoginResponseMsg;
 
                 if (msg.Status == CallbackStatus.Success)
                 {

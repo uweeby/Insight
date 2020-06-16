@@ -1,4 +1,4 @@
-﻿using Mirror;
+using Mirror;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -87,7 +87,7 @@ namespace Insight
             }
         }
 
-        void HandleData(int connectionId, ArraySegment<byte> data, int i)
+        void HandleData(int connectionId, ArraySegment<byte> data, int channelId)
         {
             NetworkReader reader = new NetworkReader(data);
             short msgType = reader.ReadInt16();

@@ -144,7 +144,7 @@ namespace Insight
             StopInsight();
         }
 
-        protected void HandleBytes(ArraySegment<byte> data, int i)
+        protected void HandleBytes(ArraySegment<byte> data, int channelId)
         {
             InsightNetworkMessageDelegate msgDelegate;
             NetworkReader reader = new NetworkReader(data);

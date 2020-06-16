@@ -10,7 +10,7 @@ namespace Insight
         static readonly ILogger logger = LogFactory.GetLogger(typeof(ClientGameManager));
 
         InsightClient client;
-        [SerializeField] public Transport networkManagerTransport;
+        public Transport networkManagerTransport;
 
         public List<GameContainer> gamesList = new List<GameContainer>();
 

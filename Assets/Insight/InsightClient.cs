@@ -151,18 +151,13 @@ namespace Insight
             if(UnpackMessage(reader, out int msgType))
             {
                 int callbackId = reader.ReadInt32();
-                Message msg = new Message(insightNetworkConnection, callbackId)
-                {
-                    msgType = msgType,
-                    reader = reader
-                };
 
                 if (callbacks.ContainsKey(callbackId))
                 {
-                    callbacks[callbackId].callback.Invoke(msg);
                     callbacks.Remove(callbackId);
                 }
-                else if (messageHandlers.TryGetValue(msgType, out msgDelegate))
+
+                if (messageHandlers.TryGetValue(msgType, out msgDelegate))
                 {
                     insightNetworkConnection.InvokeHandler(msgType, reader, channelId);
                 }

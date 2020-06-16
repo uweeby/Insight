@@ -102,8 +102,6 @@ namespace Insight
 
             if (callbacks.ContainsKey(callbackId))
             {
-                Message msg = new Message(insightNetworkConnection, callbackId) { msgType = msgType, reader = reader };
-                callbacks[callbackId].callback.Invoke(msg);
                 callbacks.Remove(callbackId);
 
                 CheckForFinishedCallback(callbackId);

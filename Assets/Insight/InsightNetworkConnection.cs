@@ -135,8 +135,7 @@ namespace Insight
                 return false;
             }
 
-            byte error;
-            return TransportSend(bytes, out error);
+            return TransportSend(bytes);
         }
 
         public virtual void TransportReceive(ArraySegment<byte> data)
@@ -171,9 +170,8 @@ namespace Insight
             }
         }
 
-        protected virtual bool TransportSend(byte[] bytes, out byte error)
+        protected virtual bool TransportSend(byte[] bytes)
         {
-            error = 0;
             if (client != null)
             {
                 client.Send(bytes);
@@ -181,8 +179,7 @@ namespace Insight
             }
             else if (server != null)
             {
-                server.SendToClient(connectionId, bytes);
-                return true;
+                return server.SendToClient(connectionId, bytes);
             }
             return false;
         }

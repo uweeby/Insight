@@ -90,7 +90,8 @@ namespace Insight
         void HandleData(int connectionId, ArraySegment<byte> data, int channelId)
         {
             NetworkReader reader = new NetworkReader(data);
-            short msgType = reader.ReadInt16();
+            UnpackMessage(reader, out int msgType);
+            //short msgType = reader.ReadInt16();
             int callbackId = reader.ReadInt32();
             InsightNetworkConnection insightNetworkConnection;
             if (!connections.TryGetValue(connectionId, out insightNetworkConnection))
@@ -109,7 +110,7 @@ namespace Insight
             }
             else
             {
-                insightNetworkConnection.TransportReceive(data);
+                insightNetworkConnection.TransportReceive(data, channelId);
             }
         }
 

@@ -35,7 +35,7 @@ namespace Insight
         protected int callbackIdIndex = 0; // 0 is a _special_ id - it represents _no callback_. 
         protected Dictionary<int, CallbackData> callbacks = new Dictionary<int, CallbackData>();
 
-        public delegate void CallbackHandler(InsightNetworkMessage netMsg);
+        public delegate void CallbackHandler(Message netMsg);
         public delegate void SendToAllFinishedCallbackHandler(CallbackStatus status);
 
         public const float callbackTimeout = 30f; // all callbacks have a 30 second time out. 
@@ -54,22 +54,22 @@ namespace Insight
             }
         }
 
-        public void RegisterHandler<T>(InsightNetworkMessageDelegate handler)
+        public void RegisterHandler<T>(Action<InsightNetworkConnection, T> handler) where T : Message, new()
         {
             int msgType = GetId<T>();
             if (messageHandlers.ContainsKey(msgType))
             {
                 logger.Log("NetworkConnection.RegisterHandler replacing " + msgType);
             }
-            messageHandlers[msgType] = handler;
+            messageHandlers[msgType] = MessageHandler(handler, false);
         }
 
-        public void UnRegisterHandler<T>(InsightNetworkMessageDelegate handler)
+        public void UnRegisterHandler<T>() where T : Message
         {
             int msgType = GetId<T>();
             if (messageHandlers.ContainsKey(msgType))
             {
-                messageHandlers[msgType] -= handler;
+                messageHandlers.Remove(msgType);
             }
         }
 
@@ -119,6 +119,49 @@ namespace Insight
         {
             return type.FullName.GetStableHashCode() & 0xFFFF;
         }
+
+        internal static InsightNetworkMessageDelegate MessageHandler<T, C>(Action<C, T> handler, bool requireAuthenication)
+            where T : Message, new()
+            where C : InsightNetworkConnection
+            => (conn, reader, channelId) =>
+            {
+                // protect against DOS attacks if attackers try to send invalid
+                // data packets to crash the server/client. there are a thousand
+                // ways to cause an exception in data handling:
+                // - invalid headers
+                // - invalid message ids
+                // - invalid data causing exceptions
+                // - negative ReadBytesAndSize prefixes
+                // - invalid utf8 strings
+                // - etc.
+                //
+                // let's catch them all and then disconnect that connection to avoid
+                // further attacks.
+                T message = default;
+                try
+                {
+                    //if (requireAuthenication && !conn.isAuthenticated)
+                    //{
+                    //    // message requires authentication, but the connection was not authenticated
+                    //    logger.LogWarning($"Closing connection: {conn}. Received message {typeof(T)} that required authentication, but the user has not authenticated yet");
+                    //    conn.Disconnect();
+                    //    return;
+                    //}
+
+                    // if it is a value type, just use defult(T)
+                    // otherwise allocate a new instance
+                    message = default(T) != null ? default(T) : new T();
+                    message.Deserialize(reader);
+                }
+                catch (Exception exception)
+                {
+                    logger.LogError("Closed connection: " + conn + ". This can happen if the other side accidentally (or an attacker intentionally) sent invalid data. Reason: " + exception);
+                    conn.Disconnect();
+                    return;
+                }
+
+                handler((C)conn, message);
+            };
 
         public bool UnpackMessage(NetworkReader messageReader, out int msgType)
         {

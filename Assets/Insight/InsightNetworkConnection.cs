@@ -72,45 +72,15 @@ namespace Insight
             return InvokeHandler(msgType, null);
         }
 
-        public bool InvokeHandler(short msgType, NetworkReader reader)
+        public bool InvokeHandler(int msgType, NetworkReader reader, int channelId = 0)
         {
-            InsightNetworkMessageDelegate msgDelegate;
-            if (m_MessageHandlers.TryGetValue(msgType, out msgDelegate))
+            if (m_MessageHandlers.TryGetValue(msgType, out InsightNetworkMessageDelegate msgDelegate))
             {
-                InsightNetworkMessage message = new InsightNetworkMessage();
-                message.msgType = msgType;
-                message.reader = reader;
-
-                msgDelegate(message);
+                msgDelegate(this, reader, channelId);
                 return true;
             }
-            logger.LogError("NetworkConnection InvokeHandler no handler for " + msgType);
+            if (logger.LogEnabled()) logger.Log("Unknown message ID " + msgType + " " + this + ". May be due to no existing RegisterHandler for this message.");
             return false;
-        }
-
-        public bool InvokeHandler(InsightNetworkMessage netMsg)
-        {
-            InsightNetworkMessageDelegate msgDelegate;
-            if (m_MessageHandlers.TryGetValue(netMsg.msgType, out msgDelegate))
-            {
-                msgDelegate(netMsg);
-                return true;
-            }
-            return false;
-        }
-
-        public void RegisterHandler(short msgType, InsightNetworkMessageDelegate handler)
-        {
-            if (m_MessageHandlers.ContainsKey(msgType))
-            {
-                logger.Log("NetworkConnection.RegisterHandler replacing " + msgType);
-            }
-            m_MessageHandlers[msgType] = handler;
-        }
-
-        public void UnregisterHandler(short msgType)
-        {
-            m_MessageHandlers.Remove(msgType);
         }
 
         public virtual bool Send(byte[] bytes)
@@ -139,7 +109,7 @@ namespace Insight
             return TransportSend(bytes);
         }
 
-        public virtual void TransportReceive(ArraySegment<byte> data)
+        public virtual void TransportReceive(ArraySegment<byte> data, int channelId)
         {
             // unpack message
             NetworkReader reader = new NetworkReader(data);
@@ -151,23 +121,16 @@ namespace Insight
                 int callbackId = reader.ReadInt32();
 
                 // try to invoke the handler for that message
-                InsightNetworkMessageDelegate msgDelegate;
-                if (m_MessageHandlers.TryGetValue(msgType, out msgDelegate))
+                if (InvokeHandler(msgType, reader, channelId))
                 {
-                    // create message here instead of caching it. so we can add it to queue more easily.
-                    InsightNetworkMessage msg = new InsightNetworkMessage(this, callbackId);
-                    msg.msgType = msgType;
-                    msg.reader = reader;
-
-                    msgDelegate(msg);
                     lastMessageTime = Time.time;
                 }
-            }
 
-            else
-            {
-                //NOTE: this throws away the rest of the buffer. Need moar error codes
-                logger.LogError("Unknown message ID " + msgType + " connId:" + connectionId);
+                else
+                {
+                    //NOTE: this throws away the rest of the buffer. Need moar error codes
+                    logger.LogError("Unknown message ID " + msgType + " connId:" + connectionId);
+                }
             }
         }
 
@@ -196,62 +159,25 @@ namespace Insight
                 return server;
             }
         }
-    }
-
-    public class InsightNetworkMessage
-    {
-        public int msgType;
-        InsightNetworkConnection conn;
-        public NetworkReader reader;
-        public int callbackId { get; protected set; }
-        public int connectionId { get { return conn.connectionId; } }
-
-        public InsightNetworkMessage()
-        {
-
-        }
-
-        public InsightNetworkMessage(InsightNetworkConnection conn)
-        {
-            this.conn = conn;
-        }
-
-        public InsightNetworkMessage(InsightNetworkConnection conn, int callbackId)
-        {
-            this.callbackId = callbackId;
-            this.conn = conn;
-        }
-
-        public TMsg ReadMessage<TMsg>() where TMsg : MessageBase, new()
-        {
-            TMsg msg = new TMsg();
-            msg.Deserialize(reader);
-            return msg;
-        }
-
-        public void ReadMessage<TMsg>(TMsg msg) where TMsg : MessageBase
-        {
-            msg.Deserialize(reader);
-        }
 
         public void Reply()
         {
             Reply(new Message());
         }
 
-        public void Reply(MessageBase msg)
+        public void Reply(Message msg)
         {
             NetworkWriter writer = new NetworkWriter();
-            int msgType = conn.GetActiveInsight().GetId(default(MessageBase) != null ? typeof(MessageBase) : msg.GetType());
+            int msgType = GetActiveInsight().GetId(default(Message) != null ? typeof(Message) : msg.GetType());
             writer.WriteUInt16((ushort)msgType);
 
-            writer.WriteInt32(callbackId);
+            writer.WriteInt32(msg.callbackId);
             msg.Serialize(writer);
 
-            conn.Send(writer.ToArray());
+            Send(writer.ToArray());
         }
     }
 
     // Handles network messages on client and server
-    public delegate void InsightNetworkMessageDelegate(InsightNetworkMessage netMsg);
+    public delegate void InsightNetworkMessageDelegate(InsightNetworkConnection conn, NetworkReader reader, int channelId);
 }

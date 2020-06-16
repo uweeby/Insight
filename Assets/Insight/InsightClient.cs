@@ -164,7 +164,7 @@ namespace Insight
                 }
                 else if (messageHandlers.TryGetValue(msgType, out msgDelegate))
                 {
-                    msgDelegate(msg);
+                    insightNetworkConnection.InvokeHandler(msgType, reader, channelId);
                 }
             }
             else

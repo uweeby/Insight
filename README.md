@@ -3,9 +3,6 @@
 
 Insight is a Simple Message Server for Unity based on Mirror. It can operate on its network connection or alongside a NetworkMannager. Inspired by MasterServerFramework it can be expanded with flexible modules. Please see the [Wiki](https://github.com/uweenukr/Insight/wiki) for more detailed inforamtion.
 
-### Disclaimer  
-This software is currently alpha, and subject to change. Not to be used in production systems.  
-
 ### Requirements:  
 Mirror: https://github.com/vis2k/Mirror   
 Unity: 2018.2.20+  

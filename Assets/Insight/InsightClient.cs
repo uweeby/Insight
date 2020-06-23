@@ -71,6 +71,15 @@ namespace Insight
             _reconnectTimer = Time.realtimeSinceStartup + ReconnectDelayInSeconds;
         }
 
+        public void StartInsight(Uri uri)
+        {
+            transport.ClientConnect(uri);
+
+            OnStartInsight();
+
+            _reconnectTimer = Time.realtimeSinceStartup + ReconnectDelayInSeconds;
+        }
+
         public override void StopInsight()
         {
             transport.ClientDisconnect();

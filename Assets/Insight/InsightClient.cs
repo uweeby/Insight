@@ -51,6 +51,12 @@ namespace Insight
 
         public void StartInsight(string Address)
         {
+            if(string.IsNullOrEmpty(Address))
+            {
+                logger.LogError("[InsightClient] - Address provided in StartInsight is Null or Empty. Not Starting.");
+                return;
+            }
+
             networkAddress = Address;
 
             StartInsight();

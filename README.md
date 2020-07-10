@@ -5,7 +5,7 @@ Insight is a Simple Message Server for Unity based on Mirror. It can operate on 
 
 ### Requirements:  
 Mirror: https://github.com/vis2k/Mirror   
-Unity: 2018.2.20+  
+Unity: 2018.3.6+  
 
 ### Versioning:  
 Insight is normally built to target the current monthly/Asset Store release of Mirror. If you have any questions/issues please visit the Mirror Discord #Insight channel for support.  

@@ -10,7 +10,6 @@ Builds
 /Database.sqlite
 /JenkinsBuild.bat
 /UnityPackageManager
-/Packages
 
 \.vscode/settings\.json
 

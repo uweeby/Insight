@@ -32,7 +32,7 @@ namespace Insight
         {
             server.RegisterHandler<RegisterGameMsg>(HandleRegisterGameMsg);
             server.RegisterHandler<GameStatusMsg>(HandleGameStatusMsg);
-            server.RegisterHandler<JoinGamMsg>(HandleJoinGameMsg);
+            server.RegisterHandler<JoinGameMsg>(HandleJoinGameMsg);
             server.RegisterHandler<GameListMsg>(HandleGameListMsg);
         }
 
@@ -95,7 +95,7 @@ namespace Insight
 
         void HandleJoinGameMsg(InsightNetworkMessage netMsg)
         {
-            JoinGamMsg message = netMsg.ReadMessage<JoinGamMsg>();
+            JoinGameMsg message = netMsg.ReadMessage<JoinGameMsg>();
 
             logger.Log("[MatchMaking] - Player joining Match.");
 

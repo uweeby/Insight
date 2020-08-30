@@ -119,7 +119,7 @@ namespace Insight
     }
 
     //Sent from a palyer client when they want to join a game by its UniqueID
-    public class JoinGamMsg : Message
+    public class JoinGameMsg : Message
     {
         public string UniqueID;
     }

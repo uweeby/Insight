@@ -81,7 +81,7 @@ namespace Insight
 
         public void SendJoinGameMsg(string UniqueID)
         {
-            client.Send(new JoinGamMsg() { UniqueID = UniqueID });
+            client.Send(new JoinGameMsg() { UniqueID = UniqueID });
         }
 
         public void SendGetGameListMsg()

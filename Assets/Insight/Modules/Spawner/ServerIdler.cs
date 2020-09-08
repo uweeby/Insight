@@ -20,16 +20,16 @@ namespace Insight
         void UpdateIdleState()
         {
             //Cancel if players connect to the game.
-            if(NetworkManager.singleton.numPlayers > 0)
+            if(NetworkManager.singleton.numPlayers == 0)
             {
-                CancelInvoke();
+                logger.LogWarning("[ServerIdler] - No players connected within the allowed time. Shutting down server");
+
+                NetworkManager.singleton.StopServer();
+
+                Application.Quit();
             }
 
-            logger.LogWarning("[ServerIdler] - No players connected within the allowed time. Shutting down server");
-
-            NetworkManager.singleton.StopServer();
-
-            Application.Quit();
+            CancelInvoke();
         }
     }
 }

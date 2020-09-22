@@ -1,4 +1,4 @@
-﻿using Mirror;
+using Mirror;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -45,20 +45,11 @@ namespace Insight
 
         void Awake()
         {
-            spawnerProcesses = new RunningProcessContainer[MaximumProcesses];
-        }
-
-        void Start()
-        {
 #if UNITY_EDITOR
             ProcessPath = EditorPath;
 #endif
-      
-            spawnerProcesses = new RunningProcessContainer[MaximumProcesses];
 
-            for(int i = 0; i< spawnerProcesses.Length; i++) {
-                spawnerProcesses[i] = new RunningProcessContainer();
-            }
+            spawnerProcesses = new RunningProcessContainer[MaximumProcesses];
 
             InvokeRepeating("CheckSpawnedProcessHealth", HealthCheckPollRate, HealthCheckPollRate);
         }

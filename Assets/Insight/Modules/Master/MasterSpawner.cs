@@ -109,7 +109,6 @@ namespace Insight
         {
             SpawnerStatusMsg message = netMsg.ReadMessage<SpawnerStatusMsg>();
 
-
             for (int i = 0; i < registeredSpawners.Count; i++)
             {
                 if (registeredSpawners[i].connectionId == netMsg.connectionId)

@@ -192,13 +192,15 @@ namespace Insight
                 return false;
             }
 
+            //Update the collection with newly started process
+            spawnerProcesses[thisPort] = new RunningProcessContainer() { process = p, pid = p.Id, uniqueID = spawnProperties.UniqueID };
+
             //If registered to a master. Notify it of the current thread utilization
             if (client != null)
             {
                 client.Send(new SpawnerStatusMsg() { CurrentThreads = GetRunningProcessCount() });
             }
 
-            spawnerProcesses[thisPort] = new RunningProcessContainer() { process = p, pid = p.Id, uniqueID = spawnProperties.UniqueID};
             return true;
         }
 

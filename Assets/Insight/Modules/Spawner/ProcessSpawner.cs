@@ -1,4 +1,4 @@
-using Mirror;
+﻿using Mirror;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -134,6 +134,15 @@ namespace Insight
                     spawnerProcesses[i].uniqueID = "";
                     return;
                 }
+            }
+
+            //If running as a remote spawner report the current running process count back to the MasterSpawner
+            if(client != null)
+            {
+                client.Send(new SpawnerStatusMsg()
+                {
+                    CurrentThreads = GetRunningProcessCount(),
+                });
             }
         }
 

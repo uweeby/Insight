@@ -1,4 +1,4 @@
-using Mirror;
+﻿using Mirror;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -122,6 +122,15 @@ namespace Insight
         public string GetConnectionInfo(int connectionId)
         {
             return transport.ServerGetClientAddress(connectionId);
+        }
+
+        /// <summary>
+        /// Disconnect client by specified connectionId
+        /// </summary>
+        /// <param name="connectionId">ConnectionId to be disconnected</param>
+        public void Disconnect(int connectionId)
+        {
+            transport.ServerDisconnect(connectionId);
         }
 
         bool AddConnection(InsightNetworkConnection conn)

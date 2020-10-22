@@ -1,4 +1,4 @@
-﻿using Mirror;
+using Mirror;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -124,7 +124,7 @@ namespace Insight
             return transport.ServerGetClientAddress(connectionId);
         }
 
-        public bool AddConnection(InsightNetworkConnection conn)
+        bool AddConnection(InsightNetworkConnection conn)
         {
             if (!connections.ContainsKey(conn.connectionId))
             {
@@ -138,7 +138,7 @@ namespace Insight
             return false;
         }
 
-        public bool RemoveConnection(int connectionId)
+        bool RemoveConnection(int connectionId)
         {
             return connections.Remove(connectionId);
         }

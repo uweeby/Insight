@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Insight
 {
-    public class Message : MessageBase
+    public class Message : NetworkMessage
     {
         public CallbackStatus Status = CallbackStatus.Default;
     }

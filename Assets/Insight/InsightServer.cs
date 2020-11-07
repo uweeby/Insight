@@ -1,4 +1,4 @@
-using Mirror;
+﻿using Mirror;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -186,7 +186,8 @@ namespace Insight
         {
             if (transport.ServerActive())
             {
-                return transport.ServerSend(new List<int> {connectionId}, 0, new ArraySegment<byte>(data));
+                transport.ServerSend(connectionId, 0, new ArraySegment<byte>(data));
+                return true;
             }
             logger.LogError("Server.Send: not connected!", this);
             return false;

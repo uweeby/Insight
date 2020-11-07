@@ -152,7 +152,7 @@ namespace Insight
             return connections.Remove(connectionId);
         }
 
-        public bool SendToClient(int connectionId, Message msg, CallbackHandler callback = null)
+        public bool SendToClient<T>(int connectionId, T msg, CallbackHandler callback = null) where T : Message
         {
             if (transport.ServerActive())
             {
@@ -169,7 +169,7 @@ namespace Insight
 
                 writer.WriteInt32(callbackId);
 
-                msg.Serialize(writer);
+                Writer<T>.write.Invoke(writer, msg);
 
                 return connections[connectionId].Send(writer.ToArray());
             }
@@ -177,7 +177,7 @@ namespace Insight
             return false;
         }
 
-        public bool SendToClient(int connectionId, Message msg)
+        public bool SendToClient<T>(int connectionId, T msg) where T : Message
         {
             return SendToClient(connectionId, msg, null);
         }
@@ -193,7 +193,7 @@ namespace Insight
             return false;
         }
 
-        public bool SendToAll(Message msg, CallbackHandler callback, SendToAllFinishedCallbackHandler finishedCallback)
+        public bool SendToAll<T>(T msg, CallbackHandler callback, SendToAllFinishedCallbackHandler finishedCallback) where T : Message
         {
             if (transport.ServerActive())
             {
@@ -219,12 +219,12 @@ namespace Insight
             return false;
         }
 
-        public bool SendToAll(Message msg, CallbackHandler callback)
+        public bool SendToAll<T>(T msg, CallbackHandler callback) where T : Message
         {
             return SendToAll(msg, callback, null);
         }
 
-        public bool SendToAll(Message msg)
+        public bool SendToAll<T>(T msg) where T : Message
         {
             return SendToAll(msg, null, null);
         }

@@ -1,4 +1,4 @@
-﻿using Mirror;
+using Mirror;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -152,12 +152,12 @@ namespace Insight
             return connections.Remove(connectionId);
         }
 
-        public bool SendToClient(int connectionId, MessageBase msg, CallbackHandler callback = null)
+        public bool SendToClient(int connectionId, Message msg, CallbackHandler callback = null)
         {
             if (transport.ServerActive())
             {
                 NetworkWriter writer = new NetworkWriter();
-                int msgType = GetId(default(MessageBase) != null ? typeof(MessageBase) : msg.GetType());
+                int msgType = GetId(default(Message) != null ? typeof(Message) : msg.GetType());
                 writer.WriteUInt16((ushort)msgType);
 
                 int callbackId = 0;
@@ -177,7 +177,7 @@ namespace Insight
             return false;
         }
 
-        public bool SendToClient(int connectionId, MessageBase msg)
+        public bool SendToClient(int connectionId, Message msg)
         {
             return SendToClient(connectionId, msg, null);
         }
@@ -192,7 +192,7 @@ namespace Insight
             return false;
         }
 
-        public bool SendToAll(MessageBase msg, CallbackHandler callback, SendToAllFinishedCallbackHandler finishedCallback)
+        public bool SendToAll(Message msg, CallbackHandler callback, SendToAllFinishedCallbackHandler finishedCallback)
         {
             if (transport.ServerActive())
             {
@@ -218,12 +218,12 @@ namespace Insight
             return false;
         }
 
-        public bool SendToAll(MessageBase msg, CallbackHandler callback)
+        public bool SendToAll(Message msg, CallbackHandler callback)
         {
             return SendToAll(msg, callback, null);
         }
 
-        public bool SendToAll(MessageBase msg)
+        public bool SendToAll(Message msg)
         {
             return SendToAll(msg, null, null);
         }

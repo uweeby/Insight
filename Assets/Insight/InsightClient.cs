@@ -104,12 +104,12 @@ namespace Insight
             transport.ClientSend(0,  new ArraySegment<byte>(data));
         }
 
-        public void Send(MessageBase msg)
+        public void Send(Message msg)
         {
             Send(msg, null);
         }
 
-        public void Send(MessageBase msg, CallbackHandler callback)
+        public void Send(Message msg, CallbackHandler callback)
         {
             if (!transport.ClientConnected())
             {
@@ -118,7 +118,7 @@ namespace Insight
             }
 
             NetworkWriter writer = new NetworkWriter();
-            int msgType = GetId(default(MessageBase) != null ? typeof(MessageBase) : msg.GetType());
+            int msgType = GetId(default(Message) != null ? typeof(Message) : msg.GetType());
             writer.WriteUInt16((ushort)msgType);
 
             int callbackId = 0;

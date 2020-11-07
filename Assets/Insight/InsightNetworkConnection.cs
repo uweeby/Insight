@@ -222,14 +222,14 @@ namespace Insight
             this.conn = conn;
         }
 
-        public TMsg ReadMessage<TMsg>() where TMsg : MessageBase, new()
+        public TMsg ReadMessage<TMsg>() where TMsg : Message, new()
         {
             TMsg msg = new TMsg();
             msg.Deserialize(reader);
             return msg;
         }
 
-        public void ReadMessage<TMsg>(TMsg msg) where TMsg : MessageBase
+        public void ReadMessage<TMsg>(TMsg msg) where TMsg : Message
         {
             msg.Deserialize(reader);
         }
@@ -239,10 +239,10 @@ namespace Insight
             Reply(new Message());
         }
 
-        public void Reply(MessageBase msg)
+        public void Reply(Message msg)
         {
             NetworkWriter writer = new NetworkWriter();
-            int msgType = conn.GetActiveInsight().GetId(default(MessageBase) != null ? typeof(MessageBase) : msg.GetType());
+            int msgType = conn.GetActiveInsight().GetId(default(Message) != null ? typeof(Message) : msg.GetType());
             writer.WriteUInt16((ushort)msgType);
 
             writer.WriteInt32(callbackId);

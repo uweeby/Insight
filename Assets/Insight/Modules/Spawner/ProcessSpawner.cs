@@ -49,7 +49,10 @@ namespace Insight
             ProcessPath = EditorPath;
 #endif
 
-            spawnerProcesses = new RunningProcessContainer[MaximumProcesses];
+            for (int i = 0; i < spawnerProcesses.Length; i++)
+            {
+                spawnerProcesses[i] = new RunningProcessContainer();
+            }
 
             InvokeRepeating("CheckSpawnedProcessHealth", HealthCheckPollRate, HealthCheckPollRate);
         }

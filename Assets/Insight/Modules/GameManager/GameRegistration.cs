@@ -24,7 +24,7 @@ namespace Insight
         public override void Initialize(InsightClient insight, ModuleManager manager)
         {
             client = insight;
-            client.transport.OnClientConnected.AddListener(SendGameRegistrationToGameManager);
+            client.transport.OnClientConnected=SendGameRegistrationToGameManager;
 
             networkManagerTransport = Transport.activeTransport;
 

@@ -36,10 +36,10 @@ namespace Insight
             insightNetworkConnection.Initialize(this, networkAddress, clientID, connectionID);
             insightNetworkConnection.SetHandlers(messageHandlers);
 
-            transport.OnClientConnected.AddListener(OnConnected);
-            transport.OnClientDataReceived.AddListener(HandleBytes);
-            transport.OnClientDisconnected.AddListener(OnDisconnected);
-            transport.OnClientError.AddListener(OnError);
+            transport.OnClientConnected=OnConnected;
+            transport.OnClientDataReceived=HandleBytes;
+            transport.OnClientDisconnected=OnDisconnected;
+            transport.OnClientError=OnError;
         }
 
         public virtual void Update()

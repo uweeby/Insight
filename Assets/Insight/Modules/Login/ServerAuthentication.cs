@@ -21,7 +21,7 @@ namespace Insight
 
             RegisterHandlers();
 
-            server.transport.OnServerDisconnected.AddListener(HandleDisconnect);
+            server.transport.OnServerDisconnected=HandleDisconnect;
         }
 
         void RegisterHandlers()

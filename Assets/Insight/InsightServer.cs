@@ -22,10 +22,10 @@ namespace Insight
 
             Application.runInBackground = true;
 
-            transport.OnServerConnected.AddListener(HandleConnect);
-            transport.OnServerDisconnected.AddListener(HandleDisconnect);
-            transport.OnServerDataReceived.AddListener(HandleData);
-            transport.OnServerError.AddListener(OnError);
+            transport.OnServerConnected=HandleConnect;
+            transport.OnServerDisconnected=HandleDisconnect;
+            transport.OnServerDataReceived=HandleData;
+            transport.OnServerError=OnError;
 
             if (AutoStart)
             {

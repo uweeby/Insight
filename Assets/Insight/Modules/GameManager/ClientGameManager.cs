@@ -7,8 +7,6 @@ namespace Insight
 {
     public class ClientGameManager : InsightModule
     {
-        static readonly ILogger logger = LogFactory.GetLogger(typeof(ClientGameManager));
-
         InsightClient client;
         Transport networkManagerTransport;
 
@@ -33,7 +31,7 @@ namespace Insight
         {
             ChangeServerMsg message = netMsg.ReadMessage<ChangeServerMsg>();
 
-            logger.Log("[InsightClient] - Connecting to GameServer: " + message.NetworkAddress + ":" + message.NetworkPort + "/" + message.SceneName);
+            Debug.Log("[InsightClient] - Connecting to GameServer: " + message.NetworkAddress + ":" + message.NetworkPort + "/" + message.SceneName);
 
             if(networkManagerTransport.GetType().GetField("port") != null) {
                 networkManagerTransport.GetType().GetField("port").SetValue(networkManagerTransport, message.NetworkPort);
@@ -54,13 +52,13 @@ namespace Insight
         {
             GameListMsg message = netMsg.ReadMessage<GameListMsg>();
 
-            logger.Log("[InsightClient] - Received Games List");
+            Debug.Log("[InsightClient] - Received Games List");
 
             gamesList.Clear();
 
             foreach (GameContainer game in message.gamesArray)
             {
-                logger.Log(game.SceneName);
+                Debug.Log(game.SceneName);
 
                 gamesList.Add(new GameContainer()
                 {

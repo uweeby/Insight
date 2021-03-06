@@ -5,8 +5,6 @@ namespace Insight
 {
     public class ServerIdler : InsightModule
     {
-        static readonly ILogger logger = LogFactory.GetLogger(typeof(ServerIdler));
-
         public int MaxMinutesOfIdle;
 
         public override void Initialize(InsightClient insight, ModuleManager manager)
@@ -22,7 +20,7 @@ namespace Insight
             //Cancel if players connect to the game.
             if(NetworkManager.singleton.numPlayers == 0)
             {
-                logger.LogWarning("[ServerIdler] - No players connected within the allowed time. Shutting down server");
+                Debug.LogWarning("[ServerIdler] - No players connected within the allowed time. Shutting down server");
 
                 NetworkManager.singleton.StopServer();
 

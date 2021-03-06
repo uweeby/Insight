@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class ChatClient : InsightModule
 {
-    static readonly ILogger logger = LogFactory.GetLogger(typeof(ChatClient));
-
     InsightClient client;
 
     //Used in Example Scene:
@@ -25,7 +23,7 @@ public class ChatClient : InsightModule
 
     public void HandleChatMsg(InsightNetworkMessage netMsg)
     {
-        logger.Log("[InsightClient] - HandleChatMsg()");
+        Debug.Log("[InsightClient] - HandleChatMsg()");
 
         ChatMsg message = netMsg.ReadMessage<ChatMsg>();
 

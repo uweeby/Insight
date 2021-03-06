@@ -5,8 +5,6 @@ namespace Insight
 {
     public class ChatServer : InsightModule
     {
-        static readonly ILogger logger = LogFactory.GetLogger(typeof(ChatServer));
-
         InsightServer server;
         ServerAuthentication authModule;
 
@@ -33,7 +31,7 @@ namespace Insight
 
         void HandleChatMsg(InsightNetworkMessage netMsg)
         {
-            logger.Log("[ChatServer] - Received Chat Message.");
+            Debug.Log("[ChatServer] - Received Chat Message.");
 
             ChatMsg message = netMsg.ReadMessage<ChatMsg>();
 

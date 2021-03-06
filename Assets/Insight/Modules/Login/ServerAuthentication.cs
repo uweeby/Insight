@@ -7,8 +7,6 @@ namespace Insight
 {
     public class ServerAuthentication : InsightModule
     {
-        static readonly ILogger logger = LogFactory.GetLogger(typeof(ServerAuthentication));
-
         public bool EnforceAuthentication; //Only enabled on the 'Login' example for ease of use of other examples.
 
         InsightServer server;
@@ -35,7 +33,7 @@ namespace Insight
         {
             LoginMsg message = netMsg.ReadMessage<LoginMsg>();
 
-            logger.Log("[ServerAuthentication] - Login Received: " + message.AccountName + " / " + message.AccountPassword);
+            Debug.Log("[ServerAuthentication] - Login Received: " + message.AccountName + " / " + message.AccountPassword);
 
             if(EnforceAuthentication)
             {

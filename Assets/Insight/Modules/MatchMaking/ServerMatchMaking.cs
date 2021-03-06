@@ -9,7 +9,7 @@ namespace Insight
 {
     public class ServerMatchMaking : InsightModule
     {
-        static readonly ILogger logger = LogFactory.GetLogger(typeof(ServerMatchMaking));
+
 
         public InsightServer server;
         ModuleManager manager;
@@ -59,7 +59,7 @@ namespace Insight
 
         void HandleStartMatchSearchMsg(InsightNetworkMessage netMsg)
         {
-            logger.Log("[MatchMaking] - Player joining MatchMaking.");
+            Debug.Log("[MatchMaking] - Player joining MatchMaking.");
 
             playerQueue.Add(authModule.GetUserByConnection(netMsg.connectionId));
         }
@@ -80,13 +80,13 @@ namespace Insight
         {
             if (playerQueue.Count < MinimumPlayersForGame)
             {
-                logger.Log("[MatchMaking] - Minimum players in queue not reached.");
+                Debug.Log("[MatchMaking] - Minimum players in queue not reached.");
                 return;
             }
 
             if (masterSpawner.registeredSpawners.Count == 0)
             {
-                logger.Log("[MatchMaking] - No spawners for players in queue.");
+                Debug.Log("[MatchMaking] - No spawners for players in queue.");
                 return;
             }
 
@@ -159,8 +159,6 @@ namespace Insight
     [Serializable]
     public class MatchContainer
     {
-        static readonly ILogger logger = LogFactory.GetLogger(typeof(MatchContainer));
-
         public ServerMatchMaking matchModule;
         public GameContainer MatchServer;
         public List<UserContainer> matchUsers;
@@ -210,7 +208,7 @@ namespace Insight
                     CancelMatch();
                 }
 
-                logger.Log("Server not active at this time");
+                Debug.Log("Server not active at this time");
                 return false;
             }
             return true;
@@ -231,7 +229,7 @@ namespace Insight
 
         void CancelMatch()
         {
-            logger.LogError("Server failed to start within timoue period. Cancelling match.");
+            Debug.LogError("Server failed to start within timoue period. Cancelling match.");
 
             //TODO: Destroy the match process somewhere: MatchServer
 

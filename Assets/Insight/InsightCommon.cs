@@ -15,8 +15,6 @@ namespace Insight
 
     public abstract class InsightCommon : MonoBehaviour
 	{
-        static readonly ILogger logger = LogFactory.GetLogger(typeof(InsightCommon));
-
         public bool DontDestroy = true; //Sets DontDestroyOnLoad for this object. Default to true. Can be disabled via Inspector or runtime code.
         public bool AutoStart = true;
         public string networkAddress = "localhost";
@@ -49,7 +47,7 @@ namespace Insight
             {
                 _transport = _transport ?? GetComponent<Transport>();
                 if (_transport == null)
-                    logger.LogWarning("Insight has no Transport component. Networking won't work without a Transport");
+                    Debug.LogWarning("Insight has no Transport component. Networking won't work without a Transport");
                 return _transport;
             }
         }
@@ -59,7 +57,7 @@ namespace Insight
             int msgType = GetId<T>();
             if (messageHandlers.ContainsKey(msgType))
             {
-                logger.Log("NetworkConnection.RegisterHandler replacing " + msgType);
+                Debug.Log("NetworkConnection.RegisterHandler replacing " + msgType);
             }
             messageHandlers[msgType] = handler;
         }

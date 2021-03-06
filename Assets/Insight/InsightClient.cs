@@ -6,8 +6,6 @@ namespace Insight
 {
     public class InsightClient : InsightCommon
     {
-        static readonly ILogger logger = LogFactory.GetLogger(typeof(InsightClient));
-
         public bool AutoReconnect = true;
         protected int clientID = -1; //-1 = never connected, 0 = disconnected, 1 = connected
         protected int connectionID = 0;
@@ -53,7 +51,7 @@ namespace Insight
         {
             if(string.IsNullOrEmpty(Address))
             {
-                logger.LogError("[InsightClient] - Address provided in StartInsight is Null or Empty. Not Starting.");
+                Debug.LogError("[InsightClient] - Address provided in StartInsight is Null or Empty. Not Starting.");
                 return;
             }
 
@@ -92,7 +90,7 @@ namespace Insight
             {
                 if (!isConnected && (_reconnectTimer < Time.time))
                 {
-                    logger.Log("[InsightClient] - Trying to reconnect...");
+                    Debug.Log("[InsightClient] - Trying to reconnect...");
                     _reconnectTimer = Time.realtimeSinceStartup + ReconnectDelayInSeconds;
                     StartInsight();
                 }
@@ -113,7 +111,7 @@ namespace Insight
         {
             if (!transport.ClientConnected())
             {
-                logger.LogError("[InsightClient] - Client not connected!");
+                Debug.LogError("[InsightClient] - Client not connected!");
                 return;
             }
 
@@ -146,10 +144,10 @@ namespace Insight
         {
             if (insightNetworkConnection != null)
             {
-                logger.Log("[InsightClient] - Connected to Insight Server");
+                Debug.Log("[InsightClient] - Connected to Insight Server");
                 connectState = ConnectState.Connected;
             }
-            else logger.LogError("Skipped Connect message handling because m_Connection is null.");
+            else Debug.LogError("Skipped Connect message handling because m_Connection is null.");
         }
 
         void OnDisconnected()
@@ -185,31 +183,31 @@ namespace Insight
             else
             {
                 //NOTE: this throws away the rest of the buffer. Need moar error codes
-                logger.LogError("Unknown message ID " + msgType);// + " connId:" + connectionId);
+                Debug.LogError("Unknown message ID " + msgType);// + " connId:" + connectionId);
             }
         }
 
         void OnError(Exception exception)
         {
             // TODO Let's discuss how we will handle errors
-            logger.LogException(exception);
+            Debug.LogException(exception);
         }
 
         void OnApplicationQuit()
         {
-            logger.Log("[InsightClient] Stopping Client");
+            Debug.Log("[InsightClient] Stopping Client");
             StopInsight();
         }
 
         ////------------Virtual Handlers-------------
         public virtual void OnStartInsight()
         {
-            logger.Log("[InsightClient] - Connecting to Insight Server: " + networkAddress);
+            Debug.Log("[InsightClient] - Connecting to Insight Server: " + networkAddress);
         }
 
         public virtual void OnStopInsight()
         {
-            logger.Log("[InsightClient] - Disconnecting from Insight Server");
+            Debug.Log("[InsightClient] - Disconnecting from Insight Server");
         }
     }
 }

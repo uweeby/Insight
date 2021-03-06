@@ -7,8 +7,6 @@ namespace Insight
 {
     public class ServerGameManager : InsightModule
     {
-        static readonly ILogger logger = LogFactory.GetLogger(typeof(ServerGameManager));
-
         InsightServer server;
         MasterSpawner masterSpawner;
 
@@ -40,7 +38,7 @@ namespace Insight
         {
             RegisterGameMsg message = netMsg.ReadMessage<RegisterGameMsg>();
 
-            logger.Log("[GameManager] - Received GameRegistration request");
+            Debug.Log("[GameManager] - Received GameRegistration request");
 
             registeredGameServers.Add(new GameContainer()
             {
@@ -59,7 +57,7 @@ namespace Insight
         {
             GameStatusMsg message = netMsg.ReadMessage<GameStatusMsg>();
 
-            logger.Log("[GameManager] - Received Game status update");
+            Debug.Log("[GameManager] - Received Game status update");
 
             foreach (GameContainer game in registeredGameServers)
             {
@@ -85,7 +83,7 @@ namespace Insight
 
         void HandleGameListMsg(InsightNetworkMessage netMsg)
         {
-            logger.Log("[MatchMaking] - Player Requesting Match list");
+            Debug.Log("[MatchMaking] - Player Requesting Match list");
 
             GameListMsg gamesListMsg = new GameListMsg();
             gamesListMsg.Load(registeredGameServers);
@@ -97,7 +95,7 @@ namespace Insight
         {
             JoinGameMsg message = netMsg.ReadMessage<JoinGameMsg>();
 
-            logger.Log("[MatchMaking] - Player joining Match.");
+            Debug.Log("[MatchMaking] - Player joining Match.");
 
             GameContainer game = GetGameByUniqueID(message.UniqueID);
 

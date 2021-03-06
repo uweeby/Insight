@@ -7,8 +7,6 @@ namespace Insight
 {
     public class ClientAuthentication : InsightModule
     {
-        static readonly ILogger logger = LogFactory.GetLogger(typeof(ClientAuthentication));
-
         InsightClient client;
 
         public string uniqueID;
@@ -40,15 +38,15 @@ namespace Insight
                     uniqueID = msg.UniqueID;
                     loginSucessful = true;
                     loginResponse = "Login Successful!";
-                    logger.Log("[ClientAuthentication] - Login Successful!");
+                    Debug.Log("[ClientAuthentication] - Login Successful!");
                 }
                 if (msg.Status == CallbackStatus.Error)
                 {
-                    logger.LogError("[ClientAuthentication] - Callback Error: Login error");
+                    Debug.LogError("[ClientAuthentication] - Callback Error: Login error");
                 }
                 if (msg.Status == CallbackStatus.Timeout)
                 {
-                    logger.LogError("[ClientAuthentication] - Callback Error: Login attempt timed out");
+                    Debug.LogError("[ClientAuthentication] - Callback Error: Login attempt timed out");
                 }
             });
         }
